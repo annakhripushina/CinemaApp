@@ -10,7 +10,7 @@ import android.widget.*
 
 class CinemaActivity : AppCompatActivity() {
     private lateinit var input : EditText
-    private var сomment: StringBuilder = StringBuilder()
+    private var comment: StringBuilder = StringBuilder()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,9 +51,9 @@ class CinemaActivity : AppCompatActivity() {
 
         input.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {
-                сomment.clear()
-                сomment.append(s)
-                intent.putExtra(RESULT_COMMENT, сomment.toString())
+                comment.clear()
+                comment.append(s)
+                intent.putExtra(RESULT_COMMENT, comment.toString())
             }
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
