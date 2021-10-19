@@ -1,58 +1,71 @@
 package com.example.cinema_app
 
 import android.content.Intent
-import android.graphics.Color
-import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.view.View
-import android.widget.Button
-import android.widget.CheckBox
-import android.widget.ImageView
-import android.widget.TextView
+import android.text.Editable
+import android.text.TextWatcher
+import android.widget.*
+
 
 class CinemaActivity : AppCompatActivity() {
+    private lateinit var input : EditText
+    private var сomment: StringBuilder = StringBuilder()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_cinema)
 
-        val idImage = intent.getIntExtra("extra_image", -1)
-        val idDescription = intent.getIntExtra("extra_desc", -1)
-        val idTitle = intent.getStringExtra("extra_title")
-        var like = intent.getBooleanExtra("extra_like", false)
+        val cinema = intent.getParcelableExtra<Cinema>("extra_cinema")!!
+        val image = cinema.image
+        val description = cinema.description
+        val title = cinema.title
 
-        findViewById<ImageView>(R.id.imageDetail).setImageResource(idImage)
-        findViewById<TextView>(R.id.textDetail).setText(idDescription)
+        var like = cinema.like
+
+        image?.let { findViewById<ImageView>(R.id.imageDetail).setImageResource(it) }
+        description?.let { findViewById<TextView>(R.id.textDetail).setText(it) }
+        title?.let { findViewById<TextView>(R.id.titleDetail).setText(it) }
         findViewById<CheckBox>(R.id.checkBoxLike).isChecked = like
 
         findViewById<Button>(R.id.inviteFriend).setOnClickListener {
             val emailIntent = Intent(Intent.ACTION_SEND)
-            emailIntent.putExtra(Intent.EXTRA_TEXT, "Привет! Приглашаю тебя посмотреть фильм \"$idTitle\".")
+            emailIntent.putExtra(Intent.EXTRA_TEXT, "Привет! Приглашаю тебя посмотреть фильм \"$title\".")
             emailIntent.type = "text/plain"
             startActivity(Intent.createChooser(emailIntent,
-                "Send Email Using: "))
+                "Отправить приглашение через: "))
         }
 
         val intent = Intent()
-
         findViewById<CheckBox>(R.id.checkBoxLike).setOnCheckedChangeListener{ _, isChecked ->
             if (isChecked){
                 like = true
                 intent.putExtra(RESULT_LIKE, like)
-                Log.d("LIKE", like.toString())
             }else{
                 like = false
                 intent.putExtra(RESULT_LIKE, like)
-                Log.d("LIKE", like.toString())
             }
         }
-        setResult(RESULT_CANCELED, intent)
 
+        input = findViewById(R.id.commentText)
 
+        input.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable) {
+                сomment.clear()
+                сomment.append(s)
+                intent.putExtra(RESULT_COMMENT, сomment.toString())
+            }
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+            }
+        })
+
+        setResult(RESULT_FIRST_USER, intent)
 
     }
+
     companion object {
         const val RESULT_LIKE = "like"
+        const val RESULT_COMMENT = "comment"
     }
 }

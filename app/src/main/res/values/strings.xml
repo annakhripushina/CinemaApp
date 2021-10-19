@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">cinema_app</string>
-    <string name="imageViewDescription">Звездный путь</string>
+    <string name="imageView1Description">Звездный путь</string>
     <string name="imageView2Description">Стартрек. Возмездие</string>
     <string name="imageView3Description">Стартрек. Бесконечность</string>
     <string name="img1TextView">Звездный путь</string>
@@ -26,5 +26,7 @@
     </string>
     <string name="imgDetailDescription">Изображение фильма</string>
     <string name="refTextColor">#b3225e</string>
+    <string name="commentText">Введите комментарий</string>
+    <string name="inviteText">Пригласить</string>
 
 </resources>

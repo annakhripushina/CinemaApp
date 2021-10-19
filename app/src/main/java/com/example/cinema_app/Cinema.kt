@@ -1,7 +1,9 @@
 package com.example.cinema_app
 
-import android.graphics.drawable.Drawable
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 
-class Cinema (val idTitle: Int, val idDescription: Int?, val idImage: Int?, var like: Boolean ) {
+@Parcelize
+data class Cinema (val title: Int, val description: Int?, val image: Int?, val like: Boolean ) : Parcelable {
 
 }
