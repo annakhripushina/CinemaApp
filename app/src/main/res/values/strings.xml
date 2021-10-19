@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">cinema_app</string>
+    <string name="app_name">Поиск фильмов</string>
     <string name="imageView1Description">Звездный путь</string>
     <string name="imageView2Description">Стартрек. Возмездие</string>
     <string name="imageView3Description">Стартрек. Бесконечность</string>
