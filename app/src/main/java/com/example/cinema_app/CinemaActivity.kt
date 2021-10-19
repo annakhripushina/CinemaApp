@@ -25,7 +25,7 @@ class CinemaActivity : AppCompatActivity() {
 
         image?.let { findViewById<ImageView>(R.id.imageDetail).setImageResource(it) }
         description?.let { findViewById<TextView>(R.id.textDetail).setText(it) }
-        title?.let { findViewById<TextView>(R.id.titleDetail).setText(it) }
+        title.let { findViewById<TextView>(R.id.titleDetail).setText(it) }
         findViewById<CheckBox>(R.id.checkBoxLike).isChecked = like
 
         findViewById<Button>(R.id.inviteFriend).setOnClickListener {
@@ -56,8 +56,7 @@ class CinemaActivity : AppCompatActivity() {
                 intent.putExtra(RESULT_COMMENT, comment.toString())
             }
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-            }
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
         })
 
         setResult(RESULT_FIRST_USER, intent)
