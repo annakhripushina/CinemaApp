@@ -1,27 +1,28 @@
 package com.example.cinema_app
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
 
 
 class CinemaActivity : AppCompatActivity() {
     private lateinit var input : EditText
-    private var comment: StringBuilder = StringBuilder()
+    private var comment: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_cinema)
 
+        input = findViewById(R.id.commentText)
         val cinema = intent.getParcelableExtra<Cinema>("extra_cinema")!!
         val image = cinema.image
         val description = cinema.description
         val title = cinema.title
-
         var like = cinema.like
+        var intent = Intent()
 
         image?.let { findViewById<ImageView>(R.id.imageDetail).setImageResource(it) }
         description?.let { findViewById<TextView>(R.id.textDetail).setText(it) }
@@ -36,7 +37,6 @@ class CinemaActivity : AppCompatActivity() {
                 "Отправить приглашение через: "))
         }
 
-        val intent = Intent()
         findViewById<CheckBox>(R.id.checkBoxLike).setOnCheckedChangeListener{ _, isChecked ->
             if (isChecked){
                 like = true
@@ -45,15 +45,17 @@ class CinemaActivity : AppCompatActivity() {
                 like = false
                 intent.putExtra(RESULT_LIKE, like)
             }
+            when (cinema.id){
+                1 -> CinemaHolder.cinema1.like = like
+                2 -> CinemaHolder.cinema2.like = like
+                3 -> CinemaHolder.cinema3.like = like
+            }
         }
-
-        input = findViewById(R.id.commentText)
 
         input.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {
-                comment.clear()
-                comment.append(s)
-                intent.putExtra(RESULT_COMMENT, comment.toString())
+                comment = input.getText().toString()
+                intent.putExtra(RESULT_COMMENT, comment)
             }
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}

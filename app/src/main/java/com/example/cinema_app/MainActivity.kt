@@ -2,57 +2,67 @@ package com.example.cinema_app
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.graphics.Color
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.*
+import android.widget.Button
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var textView: TextView
+    private lateinit var secondTextView: TextView
+    private lateinit var thirdTextView: TextView
+    private lateinit var firstButton: Button
+    private lateinit var secondButton: Button
+    private lateinit var thirdButton: Button
+    private var textViewColors = TextViewColors(R.color.black, R.color.black, R.color.black)
 
     @SuppressLint("UseCompatLoadingForDrawables")
     override fun onCreate(savedInstanceState: Bundle?) {
 
-        val cinema1 = Cinema(R.string.img1TextView, R.string.img1Description, R.drawable.img_1, false)
-        val cinema2 = Cinema(R.string.img2TextView, R.string.img2Description, R.drawable.img_2, false)
-        val cinema3 = Cinema(R.string.img3TextView, R.string.img3Description, R.drawable.img_3, false)
-
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        fun onDetailClick(idButton: Int, idTextView: Int, cinema: Cinema){
-            findViewById<Button>(idButton).setOnClickListener{
-                val intent = Intent(this, CinemaActivity::class.java)
-                findViewById<TextView>(idTextView).setTextColor(Color.parseColor(getString(R.string.refTextColor)))
-                intent.putExtra(EXTRA_CINEMA, cinema)
-                startActivityForResult(intent, REQUEST_CODE)
-            }
-        }
-
-        onDetailClick(R.id.button1, R.id.textView1, cinema1)
-        onDetailClick(R.id.button2, R.id.textView2, cinema2)
-        onDetailClick(R.id.button3, R.id.textView3, cinema3)
-
         textView = findViewById(R.id.textView1)
+        secondTextView = findViewById(R.id.textView2)
+        thirdTextView = findViewById(R.id.textView3)
+        firstButton = findViewById(R.id.button1)
+        secondButton = findViewById(R.id.button2)
+        thirdButton = findViewById(R.id.button3)
+
+        firstButton.setOnClickListener{
+            cinemaClicked(CinemaHolder.cinema1,textView)
+        }
+        secondButton.setOnClickListener{
+            cinemaClicked(CinemaHolder.cinema2,secondTextView)
+        }
+        thirdButton.setOnClickListener{
+            cinemaClicked(CinemaHolder.cinema3,thirdTextView)
+        }
 
         savedInstanceState?.let { state ->
-           textView.setTextColor(Color.parseColor(state.getString(STATE_COLOR_TEXT, "")))
+            textViewColors = state.getParcelable<TextViewColors>(STATE_COLOR_TEXT)!!
+            textView.setTextColor(resources.getColor(textViewColors.firstTextColor))
+            secondTextView.setTextColor(resources.getColor(textViewColors.secondTextColor))
+            thirdTextView.setTextColor(resources.getColor(textViewColors.thirdTextColor))
         }
-
     }
 
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        textView.setTextColor(Color.parseColor(savedInstanceState.getString(STATE_COLOR_TEXT, "")))
+    private fun cinemaClicked(cinema: Cinema, textView: TextView){
+        val intent = Intent(this, CinemaActivity::class.java)
+        textView.setTextColor(resources.getColor(R.color.refTextColor))
+        when (cinema.id) {
+            1 -> textViewColors.firstTextColor = R.color.refTextColor
+            2 -> textViewColors.secondTextColor = R.color.refTextColor
+            3 -> textViewColors.thirdTextColor = R.color.refTextColor
+        }
+        intent.putExtra(EXTRA_CINEMA, cinema)
+        startActivityForResult(intent, REQUEST_CODE)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        val intColor = textView.currentTextColor
-        val hexColor = Integer.toHexString(intColor).substring(2)
-        outState.putString(STATE_COLOR_TEXT, "#$hexColor")
+        outState.putParcelable(STATE_COLOR_TEXT, textViewColors)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
