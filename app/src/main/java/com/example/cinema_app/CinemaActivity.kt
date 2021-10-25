@@ -9,43 +9,56 @@ import androidx.appcompat.app.AppCompatActivity
 
 
 class CinemaActivity : AppCompatActivity() {
-    private lateinit var input : EditText
+
     private var comment: String = ""
+    private lateinit var input: EditText
+    private lateinit var checkBox: CheckBox
+    private lateinit var button: Button
+    private lateinit var title: TextView
+    private lateinit var description: TextView
+    private lateinit var imageView: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_cinema)
 
-        input = findViewById(R.id.commentText)
         val cinema = intent.getParcelableExtra<Cinema>("extra_cinema")!!
+        initViews()
+        populateViews(cinema)
+        setClickListeners(cinema)
+
+        setResult(RESULT_FIRST_USER, intent)
+    }
+
+    private fun populateViews(cinema: Cinema) {
         val image = cinema.image
-        val description = cinema.description
-        val title = cinema.title
-        var like = cinema.like
-        var intent = Intent()
+        val descriptionId = cinema.description
+        val cinemaTitleId = cinema.title
 
-        image?.let { findViewById<ImageView>(R.id.imageDetail).setImageResource(it) }
-        description?.let { findViewById<TextView>(R.id.textDetail).setText(it) }
-        title.let { findViewById<TextView>(R.id.titleDetail).setText(it) }
-        findViewById<CheckBox>(R.id.checkBoxLike).isChecked = like
+        image?.let { imageView.setImageResource(it) }
+        descriptionId?.let { description.setText(it) }
+        title.setText(cinemaTitleId)
+        checkBox.isChecked = cinema.like
+    }
 
-        findViewById<Button>(R.id.inviteFriend).setOnClickListener {
+    private fun setClickListeners(cinema: Cinema) {
+        var like: Boolean
+        button.setOnClickListener {
             val emailIntent = Intent(Intent.ACTION_SEND)
             emailIntent.putExtra(Intent.EXTRA_TEXT, "Привет! Приглашаю тебя посмотреть фильм \"$title\".")
             emailIntent.type = "text/plain"
-            startActivity(Intent.createChooser(emailIntent,
-                "Отправить приглашение через: "))
+            startActivity(Intent.createChooser(emailIntent, "Отправить приглашение через: "))
         }
 
-        findViewById<CheckBox>(R.id.checkBoxLike).setOnCheckedChangeListener{ _, isChecked ->
-            if (isChecked){
+        checkBox.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
                 like = true
                 intent.putExtra(RESULT_LIKE, like)
-            }else{
+            } else {
                 like = false
                 intent.putExtra(RESULT_LIKE, like)
             }
-            when (cinema.id){
+            when (cinema.id) {
                 1 -> CinemaHolder.cinema1.like = like
                 2 -> CinemaHolder.cinema2.like = like
                 3 -> CinemaHolder.cinema3.like = like
@@ -57,12 +70,18 @@ class CinemaActivity : AppCompatActivity() {
                 comment = input.getText().toString()
                 intent.putExtra(RESULT_COMMENT, comment)
             }
+
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
         })
+    }
 
-        setResult(RESULT_FIRST_USER, intent)
-
+    private fun initViews() {
+        input = findViewById(R.id.commentText)
+        checkBox = findViewById(R.id.checkBoxLike)
+        button = findViewById(R.id.inviteFriend)
+        title = findViewById(R.id.titleDetail)
+        description = findViewById(R.id.textDetail)
     }
 
     companion object {

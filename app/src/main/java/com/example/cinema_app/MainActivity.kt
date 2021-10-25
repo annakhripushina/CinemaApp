@@ -7,6 +7,7 @@ import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 
 class MainActivity : AppCompatActivity() {
 
@@ -23,38 +24,45 @@ class MainActivity : AppCompatActivity() {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        initViews()
+        setClickListeners()
+
+        savedInstanceState?.let { state ->
+            textViewColors = state.getParcelable(STATE_COLOR_TEXT)!!
+            textView.setTextColor(ContextCompat.getColor(this, textViewColors.firstTextColorId))
+            secondTextView.setTextColor(ContextCompat.getColor(this, textViewColors.secondTextColorId))
+            thirdTextView.setTextColor(ContextCompat.getColor(this, textViewColors.thirdTextColorId))
+        }
+    }
+
+    private fun setClickListeners() {
+        firstButton.setOnClickListener {
+            cinemaClicked(CinemaHolder.cinema1, textView)
+        }
+        secondButton.setOnClickListener {
+            cinemaClicked(CinemaHolder.cinema2, secondTextView)
+        }
+        thirdButton.setOnClickListener {
+            cinemaClicked(CinemaHolder.cinema3, thirdTextView)
+        }
+    }
+
+    private fun initViews() {
         textView = findViewById(R.id.textView1)
         secondTextView = findViewById(R.id.textView2)
         thirdTextView = findViewById(R.id.textView3)
         firstButton = findViewById(R.id.button1)
         secondButton = findViewById(R.id.button2)
         thirdButton = findViewById(R.id.button3)
-
-        firstButton.setOnClickListener{
-            cinemaClicked(CinemaHolder.cinema1,textView)
-        }
-        secondButton.setOnClickListener{
-            cinemaClicked(CinemaHolder.cinema2,secondTextView)
-        }
-        thirdButton.setOnClickListener{
-            cinemaClicked(CinemaHolder.cinema3,thirdTextView)
-        }
-
-        savedInstanceState?.let { state ->
-            textViewColors = state.getParcelable<TextViewColors>(STATE_COLOR_TEXT)!!
-            textView.setTextColor(resources.getColor(textViewColors.firstTextColor))
-            secondTextView.setTextColor(resources.getColor(textViewColors.secondTextColor))
-            thirdTextView.setTextColor(resources.getColor(textViewColors.thirdTextColor))
-        }
     }
 
-    private fun cinemaClicked(cinema: Cinema, textView: TextView){
+    private fun cinemaClicked(cinema: Cinema, textView: TextView) {
         val intent = Intent(this, CinemaActivity::class.java)
         textView.setTextColor(resources.getColor(R.color.refTextColor))
         when (cinema.id) {
-            1 -> textViewColors.firstTextColor = R.color.refTextColor
-            2 -> textViewColors.secondTextColor = R.color.refTextColor
-            3 -> textViewColors.thirdTextColor = R.color.refTextColor
+            1 -> textViewColors.firstTextColorId = R.color.refTextColor
+            2 -> textViewColors.secondTextColorId = R.color.refTextColor
+            3 -> textViewColors.thirdTextColorId = R.color.refTextColor
         }
         intent.putExtra(EXTRA_CINEMA, cinema)
         startActivityForResult(intent, REQUEST_CODE)
@@ -73,14 +81,12 @@ class MainActivity : AppCompatActivity() {
                             + " comment: " + data.getStringExtra(CinemaActivity.RESULT_COMMENT))
                 }
             }
-        }
-        else super.onActivityResult(requestCode, resultCode, data)
+        } else super.onActivityResult(requestCode, resultCode, data)
     }
 
-    companion object{
+    companion object {
         const val EXTRA_CINEMA = "extra_cinema"
         const val STATE_COLOR_TEXT = "color_text"
         const val REQUEST_CODE = 123
     }
-
 }
