@@ -58,11 +58,7 @@ class CinemaActivity : AppCompatActivity() {
                 like = false
                 intent.putExtra(RESULT_LIKE, like)
             }
-            when (cinema.id) {
-                1 -> CinemaHolder.cinema1.like = like
-                2 -> CinemaHolder.cinema2.like = like
-                3 -> CinemaHolder.cinema3.like = like
-            }
+            cinema.like = like
         }
 
         input.addTextChangedListener(object : TextWatcher {
@@ -82,6 +78,8 @@ class CinemaActivity : AppCompatActivity() {
         button = findViewById(R.id.inviteFriend)
         title = findViewById(R.id.titleDetail)
         description = findViewById(R.id.textDetail)
+        imageView = findViewById(R.id.imageDetail)
+
     }
 
     companion object {
