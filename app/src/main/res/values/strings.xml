@@ -28,5 +28,6 @@
     <string name="refTextColor">#b3225e</string>
     <string name="commentText">Введите комментарий</string>
     <string name="inviteText">Пригласить</string>
+    <string name="favoriteTitle">Избранное</string>
 
 </resources>

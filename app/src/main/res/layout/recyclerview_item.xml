@@ -23,7 +23,7 @@
         android:breakStrategy="simple"
         android:fontFamily="sans-serif"
         android:textAlignment="viewStart"
-        android:textColor="@color/black"
+
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@id/imageView"

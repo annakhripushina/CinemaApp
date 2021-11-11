@@ -51,14 +51,10 @@ class CinemaActivity : AppCompatActivity() {
         }
 
         checkBox.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                like = true
-                intent.putExtra(RESULT_LIKE, like)
-            } else {
-                like = false
-                intent.putExtra(RESULT_LIKE, like)
-            }
-            cinema.like = like
+            like = isChecked
+            CinemaHolder.cinemaList[cinema.id].like = like
+            //cinema.like = like
+            intent.putExtra(RESULT_LIKE, like)
         }
 
         input.addTextChangedListener(object : TextWatcher {
@@ -79,7 +75,6 @@ class CinemaActivity : AppCompatActivity() {
         title = findViewById(R.id.titleDetail)
         description = findViewById(R.id.textDetail)
         imageView = findViewById(R.id.imageDetail)
-
     }
 
     companion object {

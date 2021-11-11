@@ -1,0 +1,36 @@
+Index: app/src/main/java/com/example/cinema_app/MainActivity.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.cinema_app\r\n\r\nimport android.annotation.SuppressLint\r\nimport android.content.Intent\r\nimport android.os.Bundle\r\nimport android.util.Log\r\nimport android.widget.Button\r\nimport android.widget.TextView\r\nimport androidx.appcompat.app.AppCompatActivity\r\n\r\nclass MainActivity : AppCompatActivity() {\r\n\r\n    private lateinit var textView: TextView\r\n    private lateinit var secondTextView: TextView\r\n    private lateinit var thirdTextView: TextView\r\n    private lateinit var firstButton: Button\r\n    private lateinit var secondButton: Button\r\n    private lateinit var thirdButton: Button\r\n    private var textViewColors = TextViewColors(R.color.black, R.color.black, R.color.black)\r\n\r\n    @SuppressLint(\"UseCompatLoadingForDrawables\")\r\n    override fun onCreate(savedInstanceState: Bundle?) {\r\n\r\n        super.onCreate(savedInstanceState)\r\n        setContentView(R.layout.activity_main)\r\n        textView = findViewById(R.id.textView1)\r\n        secondTextView = findViewById(R.id.textView2)\r\n        thirdTextView = findViewById(R.id.textView3)\r\n        firstButton = findViewById(R.id.button1)\r\n        secondButton = findViewById(R.id.button2)\r\n        thirdButton = findViewById(R.id.button3)\r\n\r\n        firstButton.setOnClickListener{\r\n            cinemaClicked(CinemaHolder.cinema1,textView)\r\n        }\r\n        secondButton.setOnClickListener{\r\n            cinemaClicked(CinemaHolder.cinema2,secondTextView)\r\n        }\r\n        thirdButton.setOnClickListener{\r\n            cinemaClicked(CinemaHolder.cinema3,thirdTextView)\r\n        }\r\n\r\n        savedInstanceState?.let { state ->\r\n            textViewColors = state.getParcelable<TextViewColors>(STATE_COLOR_TEXT)!!\r\n            textView.setTextColor(resources.getColor(textViewColors.firstTextColor))\r\n            secondTextView.setTextColor(resources.getColor(textViewColors.secondTextColor))\r\n            thirdTextView.setTextColor(resources.getColor(textViewColors.thirdTextColor))\r\n        }\r\n    }\r\n\r\n    private fun cinemaClicked(cinema: Cinema, textView: TextView){\r\n        val intent = Intent(this, CinemaActivity::class.java)\r\n        textView.setTextColor(resources.getColor(R.color.refTextColor))\r\n        when (cinema.id) {\r\n            1 -> textViewColors.firstTextColor = R.color.refTextColor\r\n            2 -> textViewColors.secondTextColor = R.color.refTextColor\r\n            3 -> textViewColors.thirdTextColor = R.color.refTextColor\r\n        }\r\n        intent.putExtra(EXTRA_CINEMA, cinema)\r\n        startActivityForResult(intent, REQUEST_CODE)\r\n    }\r\n\r\n    override fun onSaveInstanceState(outState: Bundle) {\r\n        super.onSaveInstanceState(outState)\r\n        outState.putParcelable(STATE_COLOR_TEXT, textViewColors)\r\n    }\r\n\r\n    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {\r\n        if (requestCode == REQUEST_CODE) {\r\n            if (resultCode == RESULT_FIRST_USER) {\r\n                if (data != null) {\r\n                    Log.d(\"TAG_REQUEST\", \"like: \" + data.getBooleanExtra(CinemaActivity.RESULT_LIKE, false)\r\n                            + \" comment: \" + data.getStringExtra(CinemaActivity.RESULT_COMMENT))\r\n                }\r\n            }\r\n        }\r\n        else super.onActivityResult(requestCode, resultCode, data)\r\n    }\r\n\r\n    companion object{\r\n        const val EXTRA_CINEMA = \"extra_cinema\"\r\n        const val STATE_COLOR_TEXT = \"color_text\"\r\n        const val REQUEST_CODE = 123\r\n    }\r\n\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/cinema_app/MainActivity.kt b/app/src/main/java/com/example/cinema_app/MainActivity.kt
+--- a/app/src/main/java/com/example/cinema_app/MainActivity.kt	
++++ b/app/src/main/java/com/example/cinema_app/MainActivity.kt	
+@@ -16,7 +16,7 @@
+     private lateinit var firstButton: Button
+     private lateinit var secondButton: Button
+     private lateinit var thirdButton: Button
+-    private var textViewColors = TextViewColors(R.color.black, R.color.black, R.color.black)
++    private var textViewColors: TextViewColors = TextViewColors(R.color.black, R.color.black, R.color.black)
+ 
+     @SuppressLint("UseCompatLoadingForDrawables")
+     override fun onCreate(savedInstanceState: Bundle?) {
+Index: .idea/gradle.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"GradleSettings\">\r\n    <option name=\"linkedExternalProjectsSettings\">\r\n      <GradleProjectSettings>\r\n        <option name=\"testRunner\" value=\"GRADLE\" />\r\n        <option name=\"distributionType\" value=\"DEFAULT_WRAPPED\" />\r\n        <option name=\"externalProjectPath\" value=\"$PROJECT_DIR$\" />\r\n        <option name=\"modules\">\r\n          <set>\r\n            <option value=\"$PROJECT_DIR$\" />\r\n            <option value=\"$PROJECT_DIR$/app\" />\r\n          </set>\r\n        </option>\r\n        <option name=\"resolveModulePerSourceSet\" value=\"false\" />\r\n      </GradleProjectSettings>\r\n    </option>\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/gradle.xml b/.idea/gradle.xml
+--- a/.idea/gradle.xml	
++++ b/.idea/gradle.xml	
+@@ -1,5 +1,6 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <project version="4">
++  <component name="GradleMigrationSettings" migrationVersion="1" />
+   <component name="GradleSettings">
+     <option name="linkedExternalProjectsSettings">
+       <GradleProjectSettings>

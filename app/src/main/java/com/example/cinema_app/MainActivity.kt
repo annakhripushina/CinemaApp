@@ -2,6 +2,7 @@ package com.example.cinema_app
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
@@ -10,93 +11,35 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import android.os.Parcelable
 import android.util.Log
+import androidx.core.view.get
+
 
 
 class MainActivity : AppCompatActivity() {
 
-   /*private lateinit var textView: TextView
-    private lateinit var secondTextView: TextView
-    private lateinit var thirdTextView: TextView
-    private lateinit var firstButton: Button
-    private lateinit var secondButton: Button
-    private lateinit var thirdButton: Button
-    private var textViewColors = TextViewColors(R.color.black, R.color.black, R.color.black)*/
-
     private val recyclerView by lazy { findViewById<RecyclerView>(R.id.recyclerView)}
 
-    private var mBundleRecyclerViewState: Bundle? = null
     @SuppressLint("UseCompatLoadingForDrawables")
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        initRecycler()
-
- /*       initViews()
-        setClickListeners()
-*/
         savedInstanceState?.let { state ->
-            //val savedRecyclerLayoutState: Parcelable? =
-             //   savedInstanceState.getParcelable(STATE_COLOR_TEXT)
-           // recyclerView.layoutManager?.onRestoreInstanceState(savedRecyclerLayoutState);
-            if (mBundleRecyclerViewState != null) {
-                val listState = mBundleRecyclerViewState!!.getParcelable<Parcelable>(STATE_COLOR_TEXT)
-                recyclerView.layoutManager?.onRestoreInstanceState(listState)
-            }
-            /*textViewColors = state.getParcelable(STATE_COLOR_TEXT)!!
-            textView.setTextColor(ContextCompat.getColor(this, textViewColors.firstTextColorId))
-            secondTextView.setTextColor(ContextCompat.getColor(this, textViewColors.secondTextColorId))
-            thirdTextView.setTextColor(ContextCompat.getColor(this, textViewColors.thirdTextColorId))*/
+            CinemaHolder.cinemaList = state.getParcelableArrayList(STATE_COLOR_TEXT)!!
         }
-
-
+        initRecycler()
     }
 
-
- /*   private fun setClickListeners() {
-        firstButton.setOnClickListener {
-            cinemaClicked(CinemaHolder.cinema1, textView)
-        }
-        secondButton.setOnClickListener {
-            cinemaClicked(CinemaHolder.cinema2, secondTextView)
-        }
-        thirdButton.setOnClickListener {
-            cinemaClicked(CinemaHolder.cinema3, thirdTextView)
-        }
-    }
-
-    private fun initViews() {
-        textView = findViewById(R.id.textView1)
-        secondTextView = findViewById(R.id.textView2)
-        thirdTextView = findViewById(R.id.textView3)
-        firstButton = findViewById(R.id.button1)
-        secondButton = findViewById(R.id.button2)
-        thirdButton = findViewById(R.id.button3)
-    }
-
-    private fun cinemaClicked(cinema: Cinema, textView: TextView) {
-        val intent = Intent(this, CinemaActivity::class.java)
-        textView.setTextColor(resources.getColor(R.color.refTextColor))
-        when (cinema.id) {
-            1 -> textViewColors.firstTextColorId = R.color.refTextColor
-            2 -> textViewColors.secondTextColorId = R.color.refTextColor
-            3 -> textViewColors.thirdTextColorId = R.color.refTextColor
-        }
-        intent.putExtra(EXTRA_CINEMA, cinema)
-        startActivityForResult(intent, REQUEST_CODE)
-    }
-*/
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        //val layoutManager = LinearLayoutManager(this)
-        //recyclerView.layoutManager = layoutManager
-        //outState.putParcelable(STATE_COLOR_TEXT, recyclerView.layoutManager?.onSaveInstanceState());
-     mBundleRecyclerViewState = Bundle()
-     val listState: Parcelable = recyclerView.layoutManager?.onSaveInstanceState()!!
-     mBundleRecyclerViewState!!.putParcelable(STATE_COLOR_TEXT, listState)
+        outState.putParcelableArrayList(STATE_COLOR_TEXT, CinemaHolder.cinemaList)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        CinemaHolder.cinemaList = savedInstanceState.getParcelableArrayList(STATE_COLOR_TEXT)!!
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -110,18 +53,12 @@ class MainActivity : AppCompatActivity() {
         } else super.onActivityResult(requestCode, resultCode, data)
     }
 
- /*   companion object {
-        const val EXTRA_CINEMA = "extra_cinema"
-        const val STATE_COLOR_TEXT = "color_text"
-        const val REQUEST_CODE = 123
-    }*/
-
     private fun initRecycler() {
-        recyclerView.adapter = CinemaAdapter(CinemaHolder.movies, object : CinemaAdapter.CinemaClickListener{
+        recyclerView.adapter = CinemaAdapter(CinemaHolder.cinemaList, object : CinemaAdapter.CinemaClickListener{
             override fun onCinemaClick(cinemaItem: Cinema, itemView: View, position: Int) {
                 val intent = Intent(this@MainActivity, CinemaActivity::class.java)
-                itemView.findViewById<TextView>(R.id.titleView).setTextColor(resources.getColor(R.color.refTextColor))
-                cinemaItem.titleColor = R.color.refTextColor
+                itemView.findViewById<TextView>(R.id.titleView).setTextColor(Color.MAGENTA) //R.color.refTextColor
+                cinemaItem.titleColor = Color.MAGENTA
                 intent.putExtra(EXTRA_CINEMA, cinemaItem)
                 intent.putExtra("extra_position", position)
                 startActivityForResult(intent, REQUEST_CODE)
