@@ -1,23 +1,30 @@
 package com.example.cinema_app
 
 import android.annotation.SuppressLint
+import android.app.Dialog
 import android.content.Intent
+import android.content.res.Configuration.ORIENTATION_LANDSCAPE
+import android.content.res.Configuration.ORIENTATION_PORTRAIT
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import android.os.Parcelable
 import android.util.Log
+import android.widget.Button
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.view.get
-
+import androidx.fragment.app.FragmentManager
 
 
 class MainActivity : AppCompatActivity() {
 
     private val recyclerView by lazy { findViewById<RecyclerView>(R.id.recyclerView)}
+    private var favouriteList: ArrayList <Cinema> = ArrayList()
 
     @SuppressLint("UseCompatLoadingForDrawables")
 
@@ -26,20 +33,35 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        setGridByOrientation(resources.configuration.orientation)
+        //recyclerView.layoutManager = GridLayoutManager(applicationContext,2)
+
         savedInstanceState?.let { state ->
-            CinemaHolder.cinemaList = state.getParcelableArrayList(STATE_COLOR_TEXT)!!
+            CinemaHolder.cinemaList = state.getParcelableArrayList(CINEMA_LIST)!!
+            favouriteList = state.getParcelableArrayList(FAVOURITE_LIST)!!
         }
         initRecycler()
+        onClickFavourite()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putParcelableArrayList(STATE_COLOR_TEXT, CinemaHolder.cinemaList)
+        outState.putParcelableArrayList(CINEMA_LIST, CinemaHolder.cinemaList)
+        outState.putParcelableArrayList(FAVOURITE_LIST, favouriteList)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-        CinemaHolder.cinemaList = savedInstanceState.getParcelableArrayList(STATE_COLOR_TEXT)!!
+        CinemaHolder.cinemaList = savedInstanceState.getParcelableArrayList(CINEMA_LIST)!!
+        favouriteList = savedInstanceState.getParcelableArrayList(FAVOURITE_LIST)!!
+    }
+
+    fun onClickFavourite() {
+        findViewById<Button>(R.id.buttonFavourite).setOnClickListener {
+            val intent = Intent(this@MainActivity, FavouriteActivity::class.java)
+            intent.putParcelableArrayListExtra("extra_fav", favouriteList)
+            startActivityForResult(intent, REQUEST_FAVOURITE)
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -50,7 +72,23 @@ class MainActivity : AppCompatActivity() {
                             + " comment: " + data.getStringExtra(CinemaActivity.RESULT_COMMENT))
                 }
             }
-        } else super.onActivityResult(requestCode, resultCode, data)
+        }
+        else if (requestCode == REQUEST_FAVOURITE) {
+            if (resultCode == RESULT_FIRST_USER) {
+                if (data != null) {
+                    favouriteList = data.getParcelableArrayListExtra<Cinema>(FavouriteActivity.RESULT_FAVOURITE_LIST) as ArrayList<Cinema>
+                }
+            }
+        }
+        else super.onActivityResult(requestCode, resultCode, data)
+    }
+
+    override fun onBackPressed() {
+        DialogBack().show(supportFragmentManager, "dialog")
+    }
+
+    fun superOnBackPressed(){
+        super.onBackPressed()
     }
 
     private fun initRecycler() {
@@ -63,14 +101,33 @@ class MainActivity : AppCompatActivity() {
                 intent.putExtra("extra_position", position)
                 startActivityForResult(intent, REQUEST_CODE)
             }
-            override fun onFavoriteClick(cinemaItem: Cinema, position: Int) {
+
+            override fun onLongCinemaClick(cinemaItem: Cinema, itemView: View, position: Int) {
+                cinemaItem.favorite = true
+                favouriteList.add(cinemaItem)
+                Toast.makeText(applicationContext, "Фильм добавлен в список избранного",Toast.LENGTH_SHORT).show()
             }
+
         }
         )
     }
+
+    private fun setGridByOrientation(orientation: Int) {
+        when (orientation) {
+            ORIENTATION_LANDSCAPE -> {
+                recyclerView.layoutManager = GridLayoutManager(applicationContext,2)
+            }
+            ORIENTATION_PORTRAIT -> {
+                recyclerView.layoutManager = GridLayoutManager(applicationContext,1)
+            }
+        }
+    }
+
     companion object {
         const val EXTRA_CINEMA = "extra_cinema"
-        const val STATE_COLOR_TEXT = "color_text"
+        const val CINEMA_LIST = "cinema_list"
+        const val FAVOURITE_LIST = "favourite_list"
         const val REQUEST_CODE = 123
+        const val REQUEST_FAVOURITE = 111
     }
 }

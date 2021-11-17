@@ -42,14 +42,14 @@
                 tools:ignore="NestedWeights" />
 
             <Button
-                android:id="@+id/inviteFriend"
+                android:id="@+id/buttonInvite"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
                 android:layout_marginBottom="10dp"
                 android:layout_marginEnd="20dp"
                 android:layout_weight="1"
-                android:text="@string/inviteText"
+                android:text="@string/buttonInvite"
                 tools:ignore="RtlHardcoded" />
         </LinearLayout>
 

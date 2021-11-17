@@ -1,35 +1,37 @@
 package com.example.cinema_app
 
 import android.annotation.SuppressLint
+import android.graphics.Color
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import android.view.View
+import android.widget.TextView
 
 
-class CinemaAdapter(
+class FavouriteAdapter(
     private val items: ArrayList<Cinema>,
-    private val listener: CinemaClickListener
-    ) : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
+    private val listener: FavouriteClickListener
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        return CinemaViewHolder(inflater.inflate(R.layout.recyclerview_item, parent, false))
+        return FavouriteViewHolder(inflater.inflate(R.layout.favorite_item, parent, false))
     }
 
     @SuppressLint("ResourceAsColor")
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
-            is CinemaViewHolder -> {
+            is FavouriteViewHolder -> {
                 holder.bind(items[position], listener)
             }}
     }
 
     override fun getItemCount(): Int = items.size
 
-    interface CinemaClickListener {
+    interface FavouriteClickListener {
         fun onCinemaClick(cinemaItem: Cinema, itemView: View, position: Int)
-        fun onLongCinemaClick(cinemaItem: Cinema, itemView: View, position: Int)
+        fun onDeleteClick(position: Int)
     }
 
 }

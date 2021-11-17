@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Cinema_app">
         <activity
+            android:name=".FavouriteActivity"
+            android:exported="false" />
+        <activity
             android:name=".CinemaActivity"
             android:exported="false" />
         <activity

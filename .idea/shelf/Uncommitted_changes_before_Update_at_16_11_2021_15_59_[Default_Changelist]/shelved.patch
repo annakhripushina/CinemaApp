@@ -1,0 +1,114 @@
+Index: app/src/main/java/com/example/cinema_app/CinemaAdapter.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.cinema_app\r\n\r\nimport android.view.LayoutInflater\r\nimport android.view.ViewGroup\r\nimport androidx.recyclerview.widget.RecyclerView\r\nimport android.view.View\r\n\r\n\r\nclass CinemaAdapter(\r\n    private val items: ArrayList<Cinema>,\r\n    private val listener: CinemaClickListener\r\n    ) : RecyclerView.Adapter<RecyclerView.ViewHolder>(){\r\n    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {\r\n        val inflater = LayoutInflater.from(parent.context)\r\n        return CinemaViewHolder(inflater.inflate(R.layout.recyclerview_item, parent, false))\r\n    }\r\n\r\n    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {\r\n//        holder.itemView.setOnClickListener {\r\n//            listener.onCinemaClick(\r\n//                items[position],\r\n//                holder.itemView,\r\n//                position\r\n//            )\r\n//        }\r\n\r\n        when (holder) {\r\n            is CinemaViewHolder -> {\r\n                holder.bind(items[position], listener)\r\n            }}\r\n\r\n    }\r\n\r\n    override fun getItemCount(): Int = items.size\r\n\r\n    interface CinemaClickListener {\r\n        fun onCinemaClick(cinemaItem: Cinema, itemView: View, position: Int)\r\n        fun onFavoriteClick(cinemaItem: Cinema, position: Int)\r\n    }\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/cinema_app/CinemaAdapter.kt b/app/src/main/java/com/example/cinema_app/CinemaAdapter.kt
+--- a/app/src/main/java/com/example/cinema_app/CinemaAdapter.kt	(revision 58fc3bec7dc0b69b82b3ba2bba329907ee4b8843)
++++ b/app/src/main/java/com/example/cinema_app/CinemaAdapter.kt	(date 1636482096545)
+@@ -27,6 +27,12 @@
+         when (holder) {
+             is CinemaViewHolder -> {
+                 holder.bind(items[position], listener)
++                if (items[position].selected) { //Refactor: use selected approach as discuss on the animation lecture
++                    holder.itemTitle.setTextColor(getColor(context, R.color.selected))
++                }
++                viewHolder.itemTitle.setOnClickListener {
++                    itemClickListener(movies[position])
++                }
+             }}
+ 
+     }
+Index: app/src/main/java/com/example/cinema_app/CinemaHolder.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.cinema_app\r\n\r\nimport android.annotation.SuppressLint\r\n\r\nobject CinemaHolder{\r\n    @SuppressLint(\"ResourceAsColor\")\r\n    val movies = arrayListOf<Cinema>(\r\n    Cinema(1, R.string.img1TextView, R.string.img1Description, R.drawable.img_1, R.color.black,false, false),\r\n    Cinema(2, R.string.img2TextView, R.string.img2Description, R.drawable.img_2, R.color.black,false, false),\r\n    Cinema(3, R.string.img3TextView, R.string.img3Description, R.drawable.img_3, R.color.black, false, false))\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/cinema_app/CinemaHolder.kt b/app/src/main/java/com/example/cinema_app/CinemaHolder.kt
+--- a/app/src/main/java/com/example/cinema_app/CinemaHolder.kt	(revision 58fc3bec7dc0b69b82b3ba2bba329907ee4b8843)
++++ b/app/src/main/java/com/example/cinema_app/CinemaHolder.kt	(date 1636482096536)
+@@ -5,7 +5,11 @@
+ object CinemaHolder{
+     @SuppressLint("ResourceAsColor")
+     val movies = arrayListOf<Cinema>(
+-    Cinema(1, R.string.img1TextView, R.string.img1Description, R.drawable.img_1, R.color.black,false, false),
+-    Cinema(2, R.string.img2TextView, R.string.img2Description, R.drawable.img_2, R.color.black,false, false),
+-    Cinema(3, R.string.img3TextView, R.string.img3Description, R.drawable.img_3, R.color.black, false, false))
++    Cinema(1, R.string.img1TextView, R.string.img1Description, R.drawable.img_1, R.color.black,false, false, false),
++    Cinema(2, R.string.img2TextView, R.string.img2Description, R.drawable.img_2, R.color.black,false, false, false),
++    Cinema(3, R.string.img3TextView, R.string.img3Description, R.drawable.img_3, R.color.black, false, false, false),
++    Cinema(1, R.string.img1TextView, R.string.img1Description, R.drawable.img_1, R.color.black,false, false,false),
++    Cinema(2, R.string.img2TextView, R.string.img2Description, R.drawable.img_2, R.color.black,false, false, false),
++    Cinema(3, R.string.img3TextView, R.string.img3Description, R.drawable.img_3, R.color.black, false, false,false))
++
+ }
+\ No newline at end of file
+Index: app/src/main/java/com/example/cinema_app/MainActivity.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.cinema_app\r\n\r\nimport android.annotation.SuppressLint\r\nimport android.content.Intent\r\nimport android.os.Bundle\r\nimport android.view.View\r\nimport android.widget.TextView\r\nimport androidx.appcompat.app.AppCompatActivity\r\nimport androidx.recyclerview.widget.LinearLayoutManager\r\nimport androidx.recyclerview.widget.RecyclerView\r\nimport android.os.Parcelable\r\nimport android.util.Log\r\n\r\n\r\nclass MainActivity : AppCompatActivity() {\r\n\r\n   /*private lateinit var textView: TextView\r\n    private lateinit var secondTextView: TextView\r\n    private lateinit var thirdTextView: TextView\r\n    private lateinit var firstButton: Button\r\n    private lateinit var secondButton: Button\r\n    private lateinit var thirdButton: Button\r\n    private var textViewColors = TextViewColors(R.color.black, R.color.black, R.color.black)*/\r\n\r\n    private val recyclerView by lazy { findViewById<RecyclerView>(R.id.recyclerView)}\r\n\r\n    private var mBundleRecyclerViewState: Bundle? = null\r\n    @SuppressLint(\"UseCompatLoadingForDrawables\")\r\n\r\n\r\n    override fun onCreate(savedInstanceState: Bundle?) {\r\n\r\n        super.onCreate(savedInstanceState)\r\n        setContentView(R.layout.activity_main)\r\n\r\n        initRecycler()\r\n\r\n /*       initViews()\r\n        setClickListeners()\r\n*/\r\n        savedInstanceState?.let { state ->\r\n            //val savedRecyclerLayoutState: Parcelable? =\r\n             //   savedInstanceState.getParcelable(STATE_COLOR_TEXT)\r\n           // recyclerView.layoutManager?.onRestoreInstanceState(savedRecyclerLayoutState);\r\n            if (mBundleRecyclerViewState != null) {\r\n                val listState = mBundleRecyclerViewState!!.getParcelable<Parcelable>(STATE_COLOR_TEXT)\r\n                recyclerView.layoutManager?.onRestoreInstanceState(listState)\r\n            }\r\n            /*textViewColors = state.getParcelable(STATE_COLOR_TEXT)!!\r\n            textView.setTextColor(ContextCompat.getColor(this, textViewColors.firstTextColorId))\r\n            secondTextView.setTextColor(ContextCompat.getColor(this, textViewColors.secondTextColorId))\r\n            thirdTextView.setTextColor(ContextCompat.getColor(this, textViewColors.thirdTextColorId))*/\r\n        }\r\n\r\n\r\n    }\r\n\r\n\r\n /*   private fun setClickListeners() {\r\n        firstButton.setOnClickListener {\r\n            cinemaClicked(CinemaHolder.cinema1, textView)\r\n        }\r\n        secondButton.setOnClickListener {\r\n            cinemaClicked(CinemaHolder.cinema2, secondTextView)\r\n        }\r\n        thirdButton.setOnClickListener {\r\n            cinemaClicked(CinemaHolder.cinema3, thirdTextView)\r\n        }\r\n    }\r\n\r\n    private fun initViews() {\r\n        textView = findViewById(R.id.textView1)\r\n        secondTextView = findViewById(R.id.textView2)\r\n        thirdTextView = findViewById(R.id.textView3)\r\n        firstButton = findViewById(R.id.button1)\r\n        secondButton = findViewById(R.id.button2)\r\n        thirdButton = findViewById(R.id.button3)\r\n    }\r\n\r\n    private fun cinemaClicked(cinema: Cinema, textView: TextView) {\r\n        val intent = Intent(this, CinemaActivity::class.java)\r\n        textView.setTextColor(resources.getColor(R.color.refTextColor))\r\n        when (cinema.id) {\r\n            1 -> textViewColors.firstTextColorId = R.color.refTextColor\r\n            2 -> textViewColors.secondTextColorId = R.color.refTextColor\r\n            3 -> textViewColors.thirdTextColorId = R.color.refTextColor\r\n        }\r\n        intent.putExtra(EXTRA_CINEMA, cinema)\r\n        startActivityForResult(intent, REQUEST_CODE)\r\n    }\r\n*/\r\n    override fun onSaveInstanceState(outState: Bundle) {\r\n        super.onSaveInstanceState(outState)\r\n        //val layoutManager = LinearLayoutManager(this)\r\n        //recyclerView.layoutManager = layoutManager\r\n        //outState.putParcelable(STATE_COLOR_TEXT, recyclerView.layoutManager?.onSaveInstanceState());\r\n     mBundleRecyclerViewState = Bundle()\r\n     val listState: Parcelable = recyclerView.layoutManager?.onSaveInstanceState()!!\r\n     mBundleRecyclerViewState!!.putParcelable(STATE_COLOR_TEXT, listState)\r\n    }\r\n\r\n    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {\r\n        if (requestCode == REQUEST_CODE) {\r\n            if (resultCode == RESULT_FIRST_USER) {\r\n                if (data != null) {\r\n                    Log.d(\"TAG_REQUEST\", \"like: \" + data.getBooleanExtra(CinemaActivity.RESULT_LIKE, false)\r\n                            + \" comment: \" + data.getStringExtra(CinemaActivity.RESULT_COMMENT))\r\n                }\r\n            }\r\n        } else super.onActivityResult(requestCode, resultCode, data)\r\n    }\r\n\r\n /*   companion object {\r\n        const val EXTRA_CINEMA = \"extra_cinema\"\r\n        const val STATE_COLOR_TEXT = \"color_text\"\r\n        const val REQUEST_CODE = 123\r\n    }*/\r\n\r\n    private fun initRecycler() {\r\n        recyclerView.adapter = CinemaAdapter(CinemaHolder.movies, object : CinemaAdapter.CinemaClickListener{\r\n            override fun onCinemaClick(cinemaItem: Cinema, itemView: View, position: Int) {\r\n                val intent = Intent(this@MainActivity, CinemaActivity::class.java)\r\n                itemView.findViewById<TextView>(R.id.titleView).setTextColor(resources.getColor(R.color.refTextColor))\r\n                cinemaItem.titleColor = R.color.refTextColor\r\n                intent.putExtra(EXTRA_CINEMA, cinemaItem)\r\n                intent.putExtra(\"extra_position\", position)\r\n                startActivityForResult(intent, REQUEST_CODE)\r\n            }\r\n            override fun onFavoriteClick(cinemaItem: Cinema, position: Int) {\r\n            }\r\n        }\r\n        )\r\n    }\r\n    companion object {\r\n        const val EXTRA_CINEMA = \"extra_cinema\"\r\n        const val STATE_COLOR_TEXT = \"color_text\"\r\n        const val REQUEST_CODE = 123\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/cinema_app/MainActivity.kt b/app/src/main/java/com/example/cinema_app/MainActivity.kt
+--- a/app/src/main/java/com/example/cinema_app/MainActivity.kt	(revision 58fc3bec7dc0b69b82b3ba2bba329907ee4b8843)
++++ b/app/src/main/java/com/example/cinema_app/MainActivity.kt	(date 1636481003397)
+@@ -89,14 +89,31 @@
+         startActivityForResult(intent, REQUEST_CODE)
+     }
+ */
+-    override fun onSaveInstanceState(outState: Bundle) {
+-        super.onSaveInstanceState(outState)
++    var mLayoutManagerState: Parcelable? = null
++    override fun onSaveInstanceState(state: Bundle) {
++        super.onSaveInstanceState(state)
+         //val layoutManager = LinearLayoutManager(this)
+         //recyclerView.layoutManager = layoutManager
+         //outState.putParcelable(STATE_COLOR_TEXT, recyclerView.layoutManager?.onSaveInstanceState());
+-     mBundleRecyclerViewState = Bundle()
++
++    /* mBundleRecyclerViewState = Bundle()
+      val listState: Parcelable = recyclerView.layoutManager?.onSaveInstanceState()!!
+-     mBundleRecyclerViewState!!.putParcelable(STATE_COLOR_TEXT, listState)
++     mBundleRecyclerViewState!!.putParcelable(STATE_COLOR_TEXT, listState)*/
++        state.putParcelable("StoreRecyclerView", recyclerView.layoutManager?.onSaveInstanceState());
++
++
++    }
++    //при повороте
++    override fun onRestoreInstanceState(state: Bundle) {
++        super.onRestoreInstanceState(state)
++        mLayoutManagerState = state.getParcelable("StoreRecyclerView")
++    }
++    //при выходе
++    override fun onResume() {
++        super.onResume()
++        if (mLayoutManagerState != null) {
++            recyclerView.layoutManager!!.onRestoreInstanceState(mLayoutManagerState)
++        }
+     }
+ 
+     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+Index: app/src/main/java/com/example/cinema_app/Cinema.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.cinema_app\r\n\r\nimport android.os.Parcelable\r\nimport androidx.annotation.ColorInt\r\nimport androidx.annotation.ColorRes\r\nimport androidx.annotation.DrawableRes\r\nimport androidx.annotation.StringRes\r\nimport kotlinx.parcelize.Parcelize\r\n\r\n@Parcelize\r\ndata class Cinema(\r\n        val id: Int,\r\n        @StringRes val title: Int,\r\n        @StringRes val description: Int,\r\n        @DrawableRes val image: Int,\r\n        @ColorInt var titleColor: Int,\r\n        var like: Boolean,\r\n        var favorite: Boolean\r\n) : Parcelable
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/cinema_app/Cinema.kt b/app/src/main/java/com/example/cinema_app/Cinema.kt
+--- a/app/src/main/java/com/example/cinema_app/Cinema.kt	(revision 58fc3bec7dc0b69b82b3ba2bba329907ee4b8843)
++++ b/app/src/main/java/com/example/cinema_app/Cinema.kt	(date 1636482096554)
+@@ -15,5 +15,6 @@
+         @DrawableRes val image: Int,
+         @ColorInt var titleColor: Int,
+         var like: Boolean,
+-        var favorite: Boolean
++        var favorite: Boolean,
++        var selected: Boolean
+ ) : Parcelable
+\ No newline at end of file

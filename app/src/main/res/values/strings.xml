@@ -1,4 +1,4 @@
-<resources>
+<resources translatable="false">
     <string name="app_name">Поиск фильмов</string>
     <string name="imageView1Description">Звездный путь</string>
     <string name="imageView2Description">Стартрек. Возмездие</string>
@@ -25,9 +25,9 @@
         с таинственной силой, ставящей под угрозу не только их миссию и стабильность Федерации, но и весь миропорядок.
     </string>
     <string name="imgDetailDescription">Изображение фильма</string>
-    <string name="refTextColor">#b3225e</string>
     <string name="commentText">Введите комментарий</string>
-    <string name="inviteText">Пригласить</string>
+    <string name="buttonInvite">Пригласить</string>
     <string name="favoriteTitle">Избранное</string>
+    <string name="buttonDetail">Детали</string>
 
 </resources>

@@ -45,7 +45,7 @@ class CinemaActivity : AppCompatActivity() {
         var like: Boolean
         button.setOnClickListener {
             val emailIntent = Intent(Intent.ACTION_SEND)
-            emailIntent.putExtra(Intent.EXTRA_TEXT, "Привет! Приглашаю тебя посмотреть фильм \"$title\".")
+            emailIntent.putExtra(Intent.EXTRA_TEXT, "Привет! Приглашаю тебя посмотреть фильм \"${title.text}\".")
             emailIntent.type = "text/plain"
             startActivity(Intent.createChooser(emailIntent, "Отправить приглашение через: "))
         }
@@ -71,7 +71,7 @@ class CinemaActivity : AppCompatActivity() {
     private fun initViews() {
         input = findViewById(R.id.commentText)
         checkBox = findViewById(R.id.checkBoxLike)
-        button = findViewById(R.id.inviteFriend)
+        button = findViewById(R.id.buttonInvite)
         title = findViewById(R.id.titleDetail)
         description = findViewById(R.id.textDetail)
         imageView = findViewById(R.id.imageDetail)
