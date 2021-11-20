@@ -53,7 +53,6 @@ class CinemaActivity : AppCompatActivity() {
         checkBox.setOnCheckedChangeListener { _, isChecked ->
             like = isChecked
             CinemaHolder.cinemaList[cinema.id].like = like
-            //cinema.like = like
             intent.putExtra(RESULT_LIKE, like)
         }
 

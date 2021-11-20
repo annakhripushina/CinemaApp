@@ -56,8 +56,7 @@ class FavouriteActivity : AppCompatActivity() {
                 startActivityForResult(intent, MainActivity.REQUEST_CODE)
             }
 
-            override fun onDeleteClick(position: Int) {
-                Log.d("TAG", position.toString())
+            override fun onDeleteClick(cinemaItem: Cinema, position: Int) {
                 favouriteList.removeAt(position)
                 recyclerView.adapter?.notifyItemRemoved(position)
                 isEmptyList()
@@ -78,7 +77,6 @@ class FavouriteActivity : AppCompatActivity() {
     }
 
     companion object {
-        const val STATE_COLOR_TEXT = "color_text"
         const val RESULT_FAVOURITE_LIST = "FAVOURITE_LIST"
     }
 }

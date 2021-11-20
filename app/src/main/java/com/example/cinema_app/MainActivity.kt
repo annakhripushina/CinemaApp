@@ -68,6 +68,7 @@ class MainActivity : AppCompatActivity() {
             if (resultCode == RESULT_FIRST_USER) {
                 if (data != null) {
                     favouriteList = data.getParcelableArrayListExtra<Cinema>(FavouriteActivity.RESULT_FAVOURITE_LIST) as ArrayList<Cinema>
+
                 }
             }
         }
@@ -94,8 +95,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onLongCinemaClick(cinemaItem: Cinema, itemView: View, position: Int) {
-                if (!cinemaItem.favorite) {
-                    cinemaItem.favorite = true
+                if (cinemaItem !in favouriteList){
                     favouriteList.add(cinemaItem)
                     Toast.makeText(applicationContext, "Фильм добавлен в список избранного",Toast.LENGTH_SHORT).show()
                 }

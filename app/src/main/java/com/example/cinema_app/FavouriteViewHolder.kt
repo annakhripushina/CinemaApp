@@ -21,6 +21,7 @@ class FavouriteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         buttonDelete.setOnClickListener {
             listener.onDeleteClick(
+                item,
                 adapterPosition
             )
         }

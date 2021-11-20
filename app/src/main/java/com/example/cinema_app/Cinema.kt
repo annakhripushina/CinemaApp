@@ -13,6 +13,5 @@ data class Cinema(
         @StringRes val description: Int,
         @DrawableRes val image: Int,
         @ColorInt var titleColor: Int,
-        var like: Boolean,
-        var favorite: Boolean
+        var like: Boolean
 ) : Parcelable
