@@ -6,8 +6,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.view.View.INVISIBLE
-import android.view.ViewGroup
+import android.view.View.VISIBLE
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
@@ -24,7 +23,15 @@ class FavouriteActivity : AppCompatActivity() {
         setContentView(R.layout.activity_favorite)
         setGridByOrientation(resources.configuration.orientation)
         favouriteList = intent.getParcelableArrayListExtra<Cinema>("extra_fav")!!
+        isEmptyList()
+        recyclerView.addItemDecoration(MyItemDecorator(this))
 
+    }
+
+    private fun isEmptyList(){
+        if (favouriteList.isEmpty()){
+            findViewById<TextView>(R.id.emptyList).visibility = VISIBLE
+        }
     }
 
     override fun onResume() {
@@ -53,9 +60,12 @@ class FavouriteActivity : AppCompatActivity() {
                 Log.d("TAG", position.toString())
                 favouriteList.removeAt(position)
                 recyclerView.adapter?.notifyItemRemoved(position)
+                isEmptyList()
             }
-    })
+        }
+        )
     }
+
     private fun setGridByOrientation(orientation: Int) {
         when (orientation) {
             Configuration.ORIENTATION_LANDSCAPE -> {
@@ -66,6 +76,7 @@ class FavouriteActivity : AppCompatActivity() {
             }
         }
     }
+
     companion object {
         const val STATE_COLOR_TEXT = "color_text"
         const val RESULT_FAVOURITE_LIST = "FAVOURITE_LIST"

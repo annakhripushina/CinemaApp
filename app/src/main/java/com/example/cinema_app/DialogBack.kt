@@ -2,18 +2,10 @@ package com.example.cinema_app
 
 import android.app.AlertDialog
 import android.app.Dialog
-import android.os.Bundle
-import androidx.fragment.app.DialogFragment
 import android.content.DialogInterface
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.content.Context
-import android.content.Intent
+import android.os.Bundle
 import android.util.Log
-import android.widget.Button
-import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.DialogFragment
 
 
 class DialogBack: DialogFragment() {
@@ -25,13 +17,6 @@ class DialogBack: DialogFragment() {
             .setPositiveButton("Да") { dialog, which -> (activity as MainActivity).superOnBackPressed()} //??? finish() / super.onBackPressed()
             .create()
     }
-
-    /*override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        dialogView = inflater!!.inflate(R.layout.dialog_back, container, false)
-        return inflater.inflate(R.layout.dialog_back, container, false)
-    }
-*/
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.d("TAG_Create", "CREATE")

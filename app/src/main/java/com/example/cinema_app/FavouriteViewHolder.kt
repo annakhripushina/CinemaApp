@@ -1,8 +1,6 @@
 package com.example.cinema_app
 
 import android.annotation.SuppressLint
-import android.graphics.Color
-import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -34,7 +32,6 @@ class FavouriteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
                 adapterPosition
             )
         }
-
     }
 
 }

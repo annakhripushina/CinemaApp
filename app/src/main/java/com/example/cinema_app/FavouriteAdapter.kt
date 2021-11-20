@@ -1,12 +1,10 @@
 package com.example.cinema_app
 
 import android.annotation.SuppressLint
-import android.graphics.Color
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import android.view.View
-import android.widget.TextView
 
 
 class FavouriteAdapter(
@@ -24,7 +22,8 @@ class FavouriteAdapter(
         when (holder) {
             is FavouriteViewHolder -> {
                 holder.bind(items[position], listener)
-            }}
+            }
+        }
     }
 
     override fun getItemCount(): Int = items.size

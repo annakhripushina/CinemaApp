@@ -1,7 +1,6 @@
 package com.example.cinema_app
 
 import android.annotation.SuppressLint
-import android.app.Dialog
 import android.content.Intent
 import android.content.res.Configuration.ORIENTATION_LANDSCAPE
 import android.content.res.Configuration.ORIENTATION_PORTRAIT
@@ -12,13 +11,9 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import android.os.Parcelable
 import android.util.Log
 import android.widget.Button
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
-import androidx.core.view.get
-import androidx.fragment.app.FragmentManager
 
 
 class MainActivity : AppCompatActivity() {
@@ -29,12 +24,8 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("UseCompatLoadingForDrawables")
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        setGridByOrientation(resources.configuration.orientation)
-        //recyclerView.layoutManager = GridLayoutManager(applicationContext,2)
 
         savedInstanceState?.let { state ->
             CinemaHolder.cinemaList = state.getParcelableArrayList(CINEMA_LIST)!!
@@ -56,7 +47,7 @@ class MainActivity : AppCompatActivity() {
         favouriteList = savedInstanceState.getParcelableArrayList(FAVOURITE_LIST)!!
     }
 
-    fun onClickFavourite() {
+    private fun onClickFavourite() {
         findViewById<Button>(R.id.buttonFavourite).setOnClickListener {
             val intent = Intent(this@MainActivity, FavouriteActivity::class.java)
             intent.putParcelableArrayListExtra("extra_fav", favouriteList)
@@ -103,13 +94,16 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onLongCinemaClick(cinemaItem: Cinema, itemView: View, position: Int) {
-                cinemaItem.favorite = true
-                favouriteList.add(cinemaItem)
-                Toast.makeText(applicationContext, "Фильм добавлен в список избранного",Toast.LENGTH_SHORT).show()
+                if (!cinemaItem.favorite) {
+                    cinemaItem.favorite = true
+                    favouriteList.add(cinemaItem)
+                    Toast.makeText(applicationContext, "Фильм добавлен в список избранного",Toast.LENGTH_SHORT).show()
+                }
             }
-
         }
         )
+        setGridByOrientation(resources.configuration.orientation)
+        recyclerView.addItemDecoration(MyItemDecorator(this))
     }
 
     private fun setGridByOrientation(orientation: Int) {
