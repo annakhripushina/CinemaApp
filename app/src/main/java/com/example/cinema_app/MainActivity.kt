@@ -26,8 +26,8 @@ class MainActivity : AppCompatActivity() {
         const val REQUEST_FAVOURITE = 111
     }
 
-    private val recyclerView by lazy { findViewById<RecyclerView>(R.id.recyclerView) }
-    private var favouriteList: ArrayList<Cinema> = ArrayList()
+    /*private val recyclerView by lazy { findViewById<RecyclerView>(R.id.recyclerView) }
+    private var favouriteList: ArrayList<Cinema> = ArrayList()*/
 
     @SuppressLint("UseCompatLoadingForDrawables")
 
@@ -35,21 +35,39 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        savedInstanceState?.let { state ->
-            CinemaHolder.cinemaList = state.getParcelableArrayList(CINEMA_LIST)!!
-            favouriteList = state.getParcelableArrayList(FAVOURITE_LIST)!!
+        if(savedInstanceState == null){
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.containerActivity, CinemaListActivity())
+                //.addToBackStack("cinemaListActivity")
+                .commit()
         }
-        initRecycler()
-        onClickFavourite()
+
+
+        /*savedInstanceState?.let { state ->
+
+            //CinemaHolder.cinemaList = state.getParcelableArrayList(CINEMA_LIST)!!
+            //favouriteList = state.getParcelableArrayList(FAVOURITE_LIST)!!
+        }*/
+        /*initRecycler()
+        onClickFavourite()*/
+    }
+    override fun onBackPressed() {
+        val count = supportFragmentManager.backStackEntryCount
+        if (count == 0) {
+            DialogBack().show(supportFragmentManager, "dialog")
+        } else {
+            supportFragmentManager.popBackStack()
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putParcelableArrayList(CINEMA_LIST, CinemaHolder.cinemaList)
-        outState.putParcelableArrayList(FAVOURITE_LIST, favouriteList)
+
+        //outState.putParcelableArrayList(CINEMA_LIST, CinemaHolder.cinemaList)
+        //outState.putParcelableArrayList(FAVOURITE_LIST, favouriteList)
     }
 
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+ /*   override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         CinemaHolder.cinemaList = savedInstanceState.getParcelableArrayList(CINEMA_LIST)!!
         favouriteList = savedInstanceState.getParcelableArrayList(FAVOURITE_LIST)!!
@@ -103,7 +121,10 @@ class MainActivity : AppCompatActivity() {
                     cinemaItem.titleColor = Color.MAGENTA
                     intent.putExtra(EXTRA_CINEMA, cinemaItem)
                     intent.putExtra("extra_position", position)
-                    startActivityForResult(intent, REQUEST_CODE)
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.containerActivity, CinemaActivity())
+                        .commit()
+                    //startActivityForResult(intent, REQUEST_CODE)
                 }
 
                 override fun onLongCinemaClick(cinemaItem: Cinema, itemView: View, position: Int) {
@@ -132,5 +153,5 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
+*/
 }
