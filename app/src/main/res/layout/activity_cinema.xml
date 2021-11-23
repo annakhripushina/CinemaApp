@@ -63,8 +63,7 @@
             android:hint="@string/commentText"
             android:textColor="#757575"
             android:autofillHints="no"
-            android:inputType="textAutoCorrect"
-            />
+            android:inputType="textAutoCorrect" />
 
         <TextView
             android:id="@+id/titleDetail"

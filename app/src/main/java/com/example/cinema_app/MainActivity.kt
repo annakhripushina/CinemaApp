@@ -6,20 +6,28 @@ import android.content.res.Configuration.ORIENTATION_LANDSCAPE
 import android.content.res.Configuration.ORIENTATION_PORTRAIT
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import android.util.Log
-import android.widget.Button
-import android.widget.Toast
 
 
 class MainActivity : AppCompatActivity() {
 
-    private val recyclerView by lazy { findViewById<RecyclerView>(R.id.recyclerView)}
-    private var favouriteList: ArrayList <Cinema> = ArrayList()
+    companion object {
+        const val EXTRA_CINEMA = "extra_cinema"
+        const val CINEMA_LIST = "cinema_list"
+        const val FAVOURITE_LIST = "favourite_list"
+        const val REQUEST_CODE = 123
+        const val REQUEST_FAVOURITE = 111
+    }
+
+    private val recyclerView by lazy { findViewById<RecyclerView>(R.id.recyclerView) }
+    private var favouriteList: ArrayList<Cinema> = ArrayList()
 
     @SuppressLint("UseCompatLoadingForDrawables")
 
@@ -59,69 +67,70 @@ class MainActivity : AppCompatActivity() {
         if (requestCode == REQUEST_CODE) {
             if (resultCode == RESULT_FIRST_USER) {
                 if (data != null) {
-                    Log.d("TAG_REQUEST", "like: " + data.getBooleanExtra(CinemaActivity.RESULT_LIKE, false)
-                            + " comment: " + data.getStringExtra(CinemaActivity.RESULT_COMMENT))
+                    Log.d(
+                        "TAG_REQUEST",
+                        "like: " + data.getBooleanExtra(CinemaActivity.RESULT_LIKE, false)
+                                + " comment: " + data.getStringExtra(CinemaActivity.RESULT_COMMENT)
+                    )
                 }
             }
-        }
-        else if (requestCode == REQUEST_FAVOURITE) {
+        } else if (requestCode == REQUEST_FAVOURITE) {
             if (resultCode == RESULT_FIRST_USER) {
                 if (data != null) {
-                    favouriteList = data.getParcelableArrayListExtra<Cinema>(FavouriteActivity.RESULT_FAVOURITE_LIST) as ArrayList<Cinema>
+                    favouriteList =
+                        data.getParcelableArrayListExtra<Cinema>(FavouriteActivity.RESULT_FAVOURITE_LIST) as ArrayList<Cinema>
 
                 }
             }
-        }
-        else super.onActivityResult(requestCode, resultCode, data)
+        } else super.onActivityResult(requestCode, resultCode, data)
     }
 
     override fun onBackPressed() {
         DialogBack().show(supportFragmentManager, "dialog")
     }
 
-    fun superOnBackPressed(){
+    fun superOnBackPressed() {
         super.onBackPressed()
     }
 
     private fun initRecycler() {
-        recyclerView.adapter = CinemaAdapter(CinemaHolder.cinemaList, object : CinemaAdapter.CinemaClickListener{
-            override fun onCinemaClick(cinemaItem: Cinema, itemView: View, position: Int) {
-                val intent = Intent(this@MainActivity, CinemaActivity::class.java)
-                itemView.findViewById<TextView>(R.id.titleView).setTextColor(Color.MAGENTA) //R.color.refTextColor
-                cinemaItem.titleColor = Color.MAGENTA
-                intent.putExtra(EXTRA_CINEMA, cinemaItem)
-                intent.putExtra("extra_position", position)
-                startActivityForResult(intent, REQUEST_CODE)
-            }
+        recyclerView.adapter =
+            CinemaAdapter(CinemaHolder.cinemaList, object : CinemaAdapter.CinemaClickListener {
+                override fun onCinemaClick(cinemaItem: Cinema, itemView: View, position: Int) {
+                    val intent = Intent(this@MainActivity, CinemaActivity::class.java)
+                    itemView.findViewById<TextView>(R.id.titleView)
+                        .setTextColor(Color.MAGENTA) //R.color.refTextColor
+                    cinemaItem.titleColor = Color.MAGENTA
+                    intent.putExtra(EXTRA_CINEMA, cinemaItem)
+                    intent.putExtra("extra_position", position)
+                    startActivityForResult(intent, REQUEST_CODE)
+                }
 
-            override fun onLongCinemaClick(cinemaItem: Cinema, itemView: View, position: Int) {
-                if (cinemaItem !in favouriteList){
-                    favouriteList.add(cinemaItem)
-                    Toast.makeText(applicationContext, "Фильм добавлен в список избранного",Toast.LENGTH_SHORT).show()
+                override fun onLongCinemaClick(cinemaItem: Cinema, itemView: View, position: Int) {
+                    if (cinemaItem !in favouriteList) {
+                        favouriteList.add(cinemaItem)
+                        Toast.makeText(
+                            applicationContext,
+                            "Фильм добавлен в список избранного",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 }
             }
-        }
-        )
+            )
         setGridByOrientation(resources.configuration.orientation)
-        recyclerView.addItemDecoration(MyItemDecorator(this))
+        recyclerView.addItemDecoration(MyItemDecorator())
     }
 
     private fun setGridByOrientation(orientation: Int) {
         when (orientation) {
             ORIENTATION_LANDSCAPE -> {
-                recyclerView.layoutManager = GridLayoutManager(applicationContext,2)
+                recyclerView.layoutManager = GridLayoutManager(applicationContext, 2)
             }
             ORIENTATION_PORTRAIT -> {
-                recyclerView.layoutManager = GridLayoutManager(applicationContext,1)
+                recyclerView.layoutManager = GridLayoutManager(applicationContext, 1)
             }
         }
     }
 
-    companion object {
-        const val EXTRA_CINEMA = "extra_cinema"
-        const val CINEMA_LIST = "cinema_list"
-        const val FAVOURITE_LIST = "favourite_list"
-        const val REQUEST_CODE = 123
-        const val REQUEST_FAVOURITE = 111
-    }
 }

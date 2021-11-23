@@ -1,16 +1,13 @@
 package com.example.cinema_app
 
-import android.content.Context
-import android.graphics.*
-import android.graphics.drawable.Drawable
+import android.graphics.Canvas
+import android.graphics.Rect
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 
-class MyItemDecorator(context: Context) : ItemDecoration() {
-    private val viewForm : Drawable? = ContextCompat.getDrawable(context, R.drawable.chat_message_bg)
-    private val viewColor = ContextCompat.getColor(context, R.color.white)
+class MyItemDecorator() : ItemDecoration() {
 
     override fun getItemOffsets(
         outRect: Rect,
@@ -18,7 +15,7 @@ class MyItemDecorator(context: Context) : ItemDecoration() {
         parent: RecyclerView,
         state: RecyclerView.State
     ) {
-        outRect.set(20,20,20,20)
+        outRect.set(20, 20, 20, 20)
     }
 
     override fun onDraw(c: Canvas, parent: RecyclerView) {
@@ -29,7 +26,8 @@ class MyItemDecorator(context: Context) : ItemDecoration() {
     }
 
     private fun drawItemView(child: View, c: Canvas) {
-        val drawable = viewForm
+        val drawable = ContextCompat.getDrawable(child.context, R.drawable.chat_message_bg)
+        val viewColor = ContextCompat.getColor(child.context, R.color.white)
         val right = child.right
         val left = child.left
         val bottom = child.bottom

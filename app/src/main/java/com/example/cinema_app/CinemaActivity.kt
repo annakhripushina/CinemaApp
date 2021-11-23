@@ -10,6 +10,11 @@ import androidx.appcompat.app.AppCompatActivity
 
 class CinemaActivity : AppCompatActivity() {
 
+    companion object {
+        const val RESULT_LIKE = "like"
+        const val RESULT_COMMENT = "comment"
+    }
+
     private var comment: String = ""
     private lateinit var input: EditText
     private lateinit var checkBox: CheckBox
@@ -45,7 +50,10 @@ class CinemaActivity : AppCompatActivity() {
         var like: Boolean
         button.setOnClickListener {
             val emailIntent = Intent(Intent.ACTION_SEND)
-            emailIntent.putExtra(Intent.EXTRA_TEXT, "Привет! Приглашаю тебя посмотреть фильм \"${title.text}\".")
+            emailIntent.putExtra(
+                Intent.EXTRA_TEXT,
+                "Привет! Приглашаю тебя посмотреть фильм \"${title.text}\"."
+            )
             emailIntent.type = "text/plain"
             startActivity(Intent.createChooser(emailIntent, "Отправить приглашение через: "))
         }
@@ -76,8 +84,4 @@ class CinemaActivity : AppCompatActivity() {
         imageView = findViewById(R.id.imageDetail)
     }
 
-    companion object {
-        const val RESULT_LIKE = "like"
-        const val RESULT_COMMENT = "comment"
-    }
 }

@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 class FavouriteAdapter(
     private val items: ArrayList<Cinema>,
     private val listener: FavouriteClickListener
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)

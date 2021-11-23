@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 class CinemaAdapter(
     private val items: ArrayList<Cinema>,
     private val listener: CinemaClickListener
-    ) : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -22,7 +22,8 @@ class CinemaAdapter(
         when (holder) {
             is CinemaViewHolder -> {
                 holder.bind(items[position], listener)
-            }}
+            }
+        }
     }
 
     override fun getItemCount(): Int = items.size
