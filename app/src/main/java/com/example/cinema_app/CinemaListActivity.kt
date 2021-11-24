@@ -1,6 +1,5 @@
 package com.example.cinema_app
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.res.Configuration.ORIENTATION_LANDSCAPE
 import android.content.res.Configuration.ORIENTATION_PORTRAIT
@@ -12,13 +11,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.setFragmentResultListener
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.snackbar.Snackbar
 
 
 class CinemaListActivity : Fragment() {
@@ -29,10 +28,9 @@ class CinemaListActivity : Fragment() {
         const val CINEMA_LIST = "cinema_list"
         const val EXTRA_FAV = "extra_fav"
         const val FAVOURITE_LIST = "favourite_list"
-
     }
 
-    private lateinit var recyclerView : RecyclerView
+    private lateinit var recyclerView: RecyclerView
     private var favouriteList: ArrayList<Cinema> = ArrayList()
     private var comment: String = ""
     private var like: Boolean = false
@@ -44,46 +42,45 @@ class CinemaListActivity : Fragment() {
     ): View? = inflater.inflate(
         R.layout.activity_list,
         container,
-        false)
+        false
+    )
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         recyclerView = view.findViewById(R.id.recyclerView)
 
-        savedInstanceState?.let { state ->
-            CinemaHolder.cinemaList = state.getParcelableArrayList(CINEMA_LIST)!!
-            favouriteList = state.getParcelableArrayList(FAVOURITE_LIST)!!
+        if (savedInstanceState == null)
+            setFragmentResultListener(FavouriteActivity.RESULT_FAVOURITE_LIST) { _, result ->
+                favouriteList = result.getParcelableArrayList(FAVOURITE_LIST)!!
+            }
+        else {
+            CinemaHolder.cinemaList = savedInstanceState.getParcelableArrayList(CINEMA_LIST)!!
+            favouriteList = savedInstanceState.getParcelableArrayList(FAVOURITE_LIST)!!
         }
 
         initRecycler()
         onActivityResult()
-        onClickFavourite()
+
     }
 
-  override fun onSaveInstanceState(outState: Bundle) {
+    override fun onStop() {
+        setFragmentResult(
+            EXTRA_FAV,
+            Bundle().apply {
+                putParcelableArrayList(FAVOURITE_LIST, favouriteList)
+            }
+        )
+        super.onStop()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putParcelableArrayList(CINEMA_LIST, CinemaHolder.cinemaList)
         outState.putParcelableArrayList(FAVOURITE_LIST, favouriteList)
     }
 
-    private fun onClickFavourite() {
-        view?.findViewById<Button>(R.id.buttonFavourite)?.setOnClickListener {
 
-            setFragmentResult(
-                EXTRA_FAV,
-                Bundle().apply {
-                    putParcelableArrayList(FAVOURITE_LIST, favouriteList)
-                }
-            )
-
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.containerActivity, FavouriteActivity())
-                .addToBackStack("favouriteActivity")
-                .commit()
-        }
-    }
-
-    private fun onActivityResult(){
+    private fun onActivityResult() {
         setFragmentResultListener(CinemaActivity.RESULT_ACTION) { _, result ->
             like = result.getBoolean(CinemaActivity.RESULT_LIKE)
             comment = result.getString(CinemaActivity.RESULT_COMMENT).toString()
@@ -103,7 +100,7 @@ class CinemaListActivity : Fragment() {
                         .setTextColor(Color.MAGENTA) //R.color.refTextColor
                     cinemaItem.titleColor = Color.MAGENTA
 
-                   setFragmentResult(
+                    setFragmentResult(
                         EXTRA_CINEMA,
                         Bundle().apply {
                             putParcelable(ITEM_CINEMA, cinemaItem)
@@ -119,12 +116,23 @@ class CinemaListActivity : Fragment() {
                 override fun onLongCinemaClick(cinemaItem: Cinema, itemView: View, position: Int) {
                     if (cinemaItem !in favouriteList) {
                         favouriteList.add(cinemaItem)
-                        Toast.makeText(
-                            view?.context,
+
+                        val snackAddFavourite = Snackbar.make(
+                            itemView,
                             "Фильм добавлен в список избранного",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                            Snackbar.LENGTH_LONG
+                        )
+
+                        snackAddFavourite.setAction("Отмена") {
+                            favouriteList.remove(cinemaItem)
+                            snackAddFavourite.dismiss()
+                        }
+                        snackAddFavourite.anchorView = activity?.findViewById(R.id.navigate)
+
+                        snackAddFavourite.show()
+
                     }
+
                 }
             }
             )
