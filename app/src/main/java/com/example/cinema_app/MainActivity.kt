@@ -2,12 +2,8 @@ package com.example.cinema_app
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.setFragmentResult
-import androidx.fragment.app.setFragmentResultListener
 import com.google.android.material.bottomnavigation.BottomNavigationView
-
 
 class MainActivity : AppCompatActivity() {
 
@@ -25,30 +21,33 @@ class MainActivity : AppCompatActivity() {
 
         val navigate: BottomNavigationView = findViewById(R.id.navigate)
 
-        navigate.setOnNavigationItemSelectedListener {
-            when (it.itemId){
+        navigate.setOnItemSelectedListener {
+            when (it.itemId) {
                 R.id.nav_cinema -> {
                     supportFragmentManager.beginTransaction()
-                        .replace(R.id.containerActivity, CinemaListActivity())
+                        .replace(R.id.containerActivity, CinemaListActivity(), "cinemaListActivity")
                         .commit()
                 }
                 R.id.nav_favourite -> {
                     supportFragmentManager.beginTransaction()
-                        .replace(R.id.containerActivity, FavouriteActivity())
-                        .addToBackStack("favouriteActivity")
+                        .replace(R.id.containerActivity, FavouriteActivity(), "favouriteActivity")
                         .commit()
                 }
             }
             true
         }
-        navigate.setOnNavigationItemReselectedListener {
+        navigate.setOnItemReselectedListener {
+            if (supportFragmentManager.findFragmentByTag("cinemaActivity")?.isVisible == true) {
+                supportFragmentManager.popBackStack()
+            }
             true
         }
     }
 
     override fun onBackPressed() {
-        val count = supportFragmentManager.backStackEntryCount
-        if (count == 0) {
+        //val count = supportFragmentManager.backStackEntryCount
+        //if (count == 0) {
+        if (supportFragmentManager.findFragmentByTag("cinemaActivity")?.isVisible != true) {
             DialogBack().show(supportFragmentManager, "dialog")
         } else {
             supportFragmentManager.popBackStack()

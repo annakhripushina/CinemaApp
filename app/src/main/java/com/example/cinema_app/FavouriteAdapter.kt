@@ -32,5 +32,4 @@ class FavouriteAdapter(
         fun onCinemaClick(cinemaItem: Cinema, itemView: View, position: Int)
         fun onDeleteClick(cinemaItem: Cinema, position: Int)
     }
-
 }

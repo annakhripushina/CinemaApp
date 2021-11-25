@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.setFragmentResultListener
@@ -26,9 +27,9 @@ class CinemaActivity : Fragment() {
     private lateinit var input: EditText
     private lateinit var checkBox: CheckBox
     private lateinit var button: Button
-    private lateinit var title: TextView
     private lateinit var description: TextView
     private lateinit var imageView: ImageView
+    private lateinit var titleToolbar: Toolbar
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -50,14 +51,12 @@ class CinemaActivity : Fragment() {
                 cinema = result.getParcelable(CinemaListActivity.ITEM_CINEMA)!!
                 populateViews(cinema)
                 setClickListeners(cinema)
-
             }
         else {
             cinema = savedInstanceState.getParcelable("CINEMA_LIST")!!
             populateViews(cinema)
             setClickListeners(cinema)
         }
-
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -71,9 +70,9 @@ class CinemaActivity : Fragment() {
         val descriptionId = cinema.description
         val cinemaTitleId = cinema.title
 
-        image?.let { imageView.setImageResource(it) }
-        descriptionId?.let { description.setText(it) }
-        title.setText(cinemaTitleId)
+        image.let { imageView.setImageResource(it) }
+        descriptionId.let { description.setText(it) }
+        titleToolbar.title = getText(cinemaTitleId)
         checkBox.isChecked = cinema.like
     }
 
@@ -83,7 +82,7 @@ class CinemaActivity : Fragment() {
             val emailIntent = Intent(Intent.ACTION_SEND)
             emailIntent.putExtra(
                 Intent.EXTRA_TEXT,
-                "Привет! Приглашаю тебя посмотреть фильм \"${title.text}\"."
+                "Привет! Приглашаю тебя посмотреть фильм \"${titleToolbar.title}\"."
             )
             emailIntent.type = "text/plain"
             startActivity(Intent.createChooser(emailIntent, "Отправить приглашение через: "))
@@ -101,7 +100,7 @@ class CinemaActivity : Fragment() {
 
         input.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {
-                comment = input.getText().toString()
+                comment = input.text.toString()
                 setFragmentResult(
                     RESULT_ACTION,
                     Bundle().apply {
@@ -113,16 +112,15 @@ class CinemaActivity : Fragment() {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
         })
-
     }
 
     private fun initViews(view: View) {
         input = view.findViewById(R.id.commentText)
         checkBox = view.findViewById(R.id.checkBoxLike)
         button = view.findViewById(R.id.buttonInvite)
-        title = view.findViewById(R.id.titleDetail)
+        titleToolbar = view.findViewById(R.id.toolbar)
         description = view.findViewById(R.id.textDetail)
         imageView = view.findViewById(R.id.imageDetail)
-    }
 
+    }
 }

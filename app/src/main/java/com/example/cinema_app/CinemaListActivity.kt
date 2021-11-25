@@ -1,6 +1,5 @@
 package com.example.cinema_app
 
-import android.content.Intent
 import android.content.res.Configuration.ORIENTATION_LANDSCAPE
 import android.content.res.Configuration.ORIENTATION_PORTRAIT
 import android.graphics.Color
@@ -9,14 +8,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.setFragmentResultListener
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.snackbar.Snackbar
 
 
@@ -60,7 +57,6 @@ class CinemaListActivity : Fragment() {
 
         initRecycler()
         onActivityResult()
-
     }
 
     override fun onStop() {
@@ -95,9 +91,8 @@ class CinemaListActivity : Fragment() {
         recyclerView.adapter =
             CinemaAdapter(CinemaHolder.cinemaList, object : CinemaAdapter.CinemaClickListener {
                 override fun onCinemaClick(cinemaItem: Cinema, itemView: View, position: Int) {
-                    val intent = Intent(view?.context, CinemaListActivity::class.java)
                     itemView.findViewById<TextView>(R.id.titleView)
-                        .setTextColor(Color.MAGENTA) //R.color.refTextColor
+                        .setTextColor(Color.MAGENTA)
                     cinemaItem.titleColor = Color.MAGENTA
 
                     setFragmentResult(
@@ -108,7 +103,7 @@ class CinemaListActivity : Fragment() {
                     )
 
                     parentFragmentManager.beginTransaction()
-                        .replace(R.id.containerActivity, CinemaActivity())
+                        .replace(R.id.containerActivity, CinemaActivity(), "cinemaActivity")
                         .addToBackStack("cinemaActivity")
                         .commit()
                 }
@@ -127,12 +122,10 @@ class CinemaListActivity : Fragment() {
                             favouriteList.remove(cinemaItem)
                             snackAddFavourite.dismiss()
                         }
+
                         snackAddFavourite.anchorView = activity?.findViewById(R.id.navigate)
-
                         snackAddFavourite.show()
-
                     }
-
                 }
             }
             )
@@ -150,5 +143,4 @@ class CinemaListActivity : Fragment() {
             }
         }
     }
-
 }

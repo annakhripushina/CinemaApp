@@ -7,7 +7,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 
-class MyItemDecorator() : ItemDecoration() {
+class MyItemDecorator : ItemDecoration() {
 
     override fun getItemOffsets(
         outRect: Rect,

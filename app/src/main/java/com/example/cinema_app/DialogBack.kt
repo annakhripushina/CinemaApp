@@ -20,5 +20,4 @@ class DialogBack : DialogFragment() {
         super.onCreate(savedInstanceState)
         isCancelable = false
     }
-
 }

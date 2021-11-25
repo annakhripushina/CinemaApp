@@ -34,5 +34,4 @@ class FavouriteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             )
         }
     }
-
 }

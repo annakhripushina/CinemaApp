@@ -86,7 +86,7 @@ class FavouriteActivity : Fragment() {
             FavouriteAdapter(favouriteList, object : FavouriteAdapter.FavouriteClickListener {
                 override fun onCinemaClick(cinemaItem: Cinema, itemView: View, position: Int) {
                     itemView.findViewById<TextView>(R.id.titleView)
-                        .setTextColor(Color.MAGENTA) //R.color.refTextColor
+                        .setTextColor(Color.MAGENTA)
                     cinemaItem.titleColor = Color.MAGENTA
                     setFragmentResult(
                         CinemaListActivity.EXTRA_CINEMA,
@@ -96,7 +96,7 @@ class FavouriteActivity : Fragment() {
                     )
 
                     parentFragmentManager.beginTransaction()
-                        .replace(R.id.containerActivity, CinemaActivity())
+                        .replace(R.id.containerActivity, CinemaActivity(), "cinemaActivity")
                         .addToBackStack("cinemaActivity")
                         .commit()
                 }
@@ -117,10 +117,8 @@ class FavouriteActivity : Fragment() {
                         view?.let { isEmptyList(it) }
                     }
                     snackDeleteFavourite.show()
-
                 }
-            }
-            )
+            })
     }
 
     private fun setGridByOrientation(orientation: Int) {
@@ -133,5 +131,4 @@ class FavouriteActivity : Fragment() {
             }
         }
     }
-
 }
