@@ -22,7 +22,7 @@ class FavouriteActivity : Fragment() {
         const val RESULT_FAVOURITE_LIST = "FAVOURITE_LIST"
     }
 
-    private lateinit var recyclerView: RecyclerView//val recyclerView by lazy { findViewById<RecyclerView>(R.id.recyclerViewFavourite) }
+    private lateinit var recyclerView: RecyclerView
     private lateinit var favouriteList: ArrayList<Cinema>
 
     override fun onCreateView(
