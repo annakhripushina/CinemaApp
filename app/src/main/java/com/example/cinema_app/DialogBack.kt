@@ -7,12 +7,11 @@ import androidx.fragment.app.DialogFragment
 
 
 class DialogBack : DialogFragment() {
-
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return AlertDialog.Builder(requireContext())
             .setView(R.layout.dialog_back)
-            .setNegativeButton("Нет") { dialog, which -> }
-            .setPositiveButton("Да") { dialog, which -> (activity as MainActivity).finish() }
+            .setNegativeButton("Нет") { _, _ -> }
+            .setPositiveButton("Да") { _, _ -> (activity as MainActivity).finish() }
             .create()
     }
 

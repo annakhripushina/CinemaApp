@@ -8,8 +8,9 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 class MainActivity : AppCompatActivity() {
 
     @SuppressLint("UseCompatLoadingForDrawables")
-
     override fun onCreate(savedInstanceState: Bundle?) {
+        val navigate: BottomNavigationView = findViewById(R.id.navigate)
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
@@ -18,8 +19,6 @@ class MainActivity : AppCompatActivity() {
                 .replace(R.id.containerActivity, CinemaListActivity())
                 .commit()
         }
-
-        val navigate: BottomNavigationView = findViewById(R.id.navigate)
 
         navigate.setOnItemSelectedListener {
             when (it.itemId) {
@@ -45,8 +44,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        //val count = supportFragmentManager.backStackEntryCount
-        //if (count == 0) {
         if (supportFragmentManager.findFragmentByTag("cinemaActivity")?.isVisible != true) {
             DialogBack().show(supportFragmentManager, "dialog")
         } else {

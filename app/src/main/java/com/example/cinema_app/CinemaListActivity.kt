@@ -18,7 +18,6 @@ import com.google.android.material.snackbar.Snackbar
 
 
 class CinemaListActivity : Fragment() {
-
     companion object {
         const val EXTRA_CINEMA = "extra_cinema"
         const val ITEM_CINEMA = "item_cinema"
@@ -30,7 +29,7 @@ class CinemaListActivity : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private var favouriteList: ArrayList<Cinema> = ArrayList()
     private var comment: String = ""
-    private var like: Boolean = false
+    private var hasLiked: Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -78,11 +77,11 @@ class CinemaListActivity : Fragment() {
 
     private fun onActivityResult() {
         setFragmentResultListener(CinemaActivity.RESULT_ACTION) { _, result ->
-            like = result.getBoolean(CinemaActivity.RESULT_LIKE)
+            hasLiked = result.getBoolean(CinemaActivity.RESULT_LIKE)
             comment = result.getString(CinemaActivity.RESULT_COMMENT).toString()
             Log.d(
                 "TAG_REQUEST",
-                "like: $like comment: $comment"
+                "like: $hasLiked comment: $comment"
             )
         }
     }

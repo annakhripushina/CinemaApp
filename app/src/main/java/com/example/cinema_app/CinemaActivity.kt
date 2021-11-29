@@ -15,7 +15,6 @@ import androidx.fragment.app.setFragmentResultListener
 
 
 class CinemaActivity : Fragment() {
-
     companion object {
         const val RESULT_ACTION = "action_user"
         const val RESULT_LIKE = "like"
@@ -42,7 +41,6 @@ class CinemaActivity : Fragment() {
     )
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
         super.onViewCreated(view, savedInstanceState)
         initViews(view)
 
@@ -62,7 +60,6 @@ class CinemaActivity : Fragment() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putParcelable("CINEMA_LIST", cinema)
-
     }
 
     private fun populateViews(cinema: Cinema) {
@@ -73,11 +70,10 @@ class CinemaActivity : Fragment() {
         image.let { imageView.setImageResource(it) }
         descriptionId.let { description.setText(it) }
         titleToolbar.title = getText(cinemaTitleId)
-        checkBox.isChecked = cinema.like
+        checkBox.isChecked = cinema.hasLiked
     }
 
     private fun setClickListeners(cinema: Cinema) {
-
         button.setOnClickListener {
             val emailIntent = Intent(Intent.ACTION_SEND)
             emailIntent.putExtra(
@@ -89,7 +85,7 @@ class CinemaActivity : Fragment() {
         }
 
         checkBox.setOnCheckedChangeListener { _, isChecked ->
-            CinemaHolder.cinemaList[cinema.id].like = isChecked
+            CinemaHolder.cinemaList[cinema.id].hasLiked = isChecked
             setFragmentResult(
                 RESULT_ACTION,
                 Bundle().apply {
@@ -108,7 +104,6 @@ class CinemaActivity : Fragment() {
                     }
                 )
             }
-
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
         })

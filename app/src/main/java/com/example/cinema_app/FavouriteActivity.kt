@@ -18,7 +18,6 @@ import com.google.android.material.snackbar.Snackbar
 
 
 class FavouriteActivity : Fragment() {
-
     companion object {
         const val RESULT_FAVOURITE_LIST = "FAVOURITE_LIST"
     }
@@ -38,7 +37,7 @@ class FavouriteActivity : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        recyclerView = view.findViewById<RecyclerView>(R.id.recyclerViewFavourite)
+        recyclerView = view.findViewById(R.id.recyclerViewFavourite)
         setGridByOrientation(resources.configuration.orientation)
         recyclerView.addItemDecoration(MyItemDecorator())
 
@@ -78,7 +77,6 @@ class FavouriteActivity : Fragment() {
             }
         )
         super.onStop()
-
     }
 
     private fun initFavoriteRecycler() {
@@ -102,7 +100,6 @@ class FavouriteActivity : Fragment() {
                 }
 
                 override fun onDeleteClick(cinemaItem: Cinema, position: Int) {
-
                     favouriteList.removeAt(position)
                     recyclerView.adapter?.notifyItemRemoved(position)
                     view?.let { isEmptyList(it) }
