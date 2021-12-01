@@ -16,5 +16,4 @@ class CinemaListInteractor() {
         favouriteList.remove(cinemaItem)
     }
 
-
 }

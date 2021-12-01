@@ -11,23 +11,17 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.setFragmentResult
-import androidx.fragment.app.setFragmentResultListener
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.cinema_app.data.entity.Cinema
 import com.example.cinema_app.MyItemDecorator
 import com.example.cinema_app.R
+import com.example.cinema_app.data.entity.Cinema
 import com.example.cinema_app.presentation.view.cinemaList.CinemaActivity
-import com.example.cinema_app.presentation.view.cinemaList.CinemaListActivity
 import com.example.cinema_app.presentation.viewmodel.CinemaListViewModel
 import com.google.android.material.snackbar.Snackbar
 
 
 class FavouriteActivity : Fragment() {
-    companion object {
-        const val RESULT_FAVOURITE_LIST = "FAVOURITE_LIST"
-    }
     private val viewModel: CinemaListViewModel by activityViewModels()
     private lateinit var recyclerView: RecyclerView
     private lateinit var favouriteList: ArrayList<Cinema>
@@ -50,25 +44,8 @@ class FavouriteActivity : Fragment() {
 
         favouriteList = viewModel.favouriteList
         isEmptyList(view)
-       /* if (savedInstanceState == null) {
-            /*setFragmentResultListener(CinemaListActivity.EXTRA_FAV) { _, result ->
-                favouriteList = result.getParcelableArrayList(CinemaListActivity.FAVOURITE_LIST)!!
-                isEmptyList(view)
-            }*/
-            favouriteList = viewModel.favouriteList
-            isEmptyList(view)
-        }
-        else {
-            favouriteList = savedInstanceState.getParcelableArrayList("FAVOURITE_LIST")!!
-            isEmptyList(view)
-        }*/
 
     }
-
-    /*override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putParcelableArrayList("FAVOURITE_LIST", favouriteList)
-    }*/
 
     private fun isEmptyList(view: View) {
         if (favouriteList.isEmpty()) {
@@ -82,12 +59,6 @@ class FavouriteActivity : Fragment() {
     }
 
     override fun onStop() {
-       /* setFragmentResult(
-            RESULT_FAVOURITE_LIST,
-            Bundle().apply {
-                putParcelableArrayList(CinemaListActivity.FAVOURITE_LIST, favouriteList)
-            }
-        )*/
         viewModel.onSetFavouriteList(favouriteList)
         super.onStop()
     }
@@ -99,12 +70,7 @@ class FavouriteActivity : Fragment() {
                     itemView.findViewById<TextView>(R.id.titleView)
                         .setTextColor(Color.MAGENTA)
                     cinemaItem.titleColor = Color.MAGENTA
-                   /* setFragmentResult(
-                        CinemaListActivity.EXTRA_CINEMA,
-                        Bundle().apply {
-                            putParcelable(CinemaListActivity.ITEM_CINEMA, cinemaItem)
-                        }
-                    )*/
+
                     viewModel.onSetCinemaItem(cinemaItem)
 
                     parentFragmentManager.beginTransaction()
@@ -114,7 +80,6 @@ class FavouriteActivity : Fragment() {
                 }
 
                 override fun onDeleteClick(cinemaItem: Cinema, position: Int) {
-                    //favouriteList.removeAt(position)
                     viewModel.onRemoveFavouritePosition(favouriteList, position)
                     recyclerView.adapter?.notifyItemRemoved(position)
                     view?.let { isEmptyList(it) }
@@ -123,7 +88,6 @@ class FavouriteActivity : Fragment() {
                         Snackbar.make(view!!, "Фильм удален из Избранного", Snackbar.LENGTH_LONG)
 
                     snackDeleteFavourite.setAction("Отмена") {
-                        //favouriteList.add(position, cinemaItem)
                         viewModel.onAddFavouritePosition(favouriteList, position, cinemaItem)
                         recyclerView.adapter?.notifyItemInserted(position)
                         snackDeleteFavourite.dismiss()

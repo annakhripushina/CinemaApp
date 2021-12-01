@@ -1,6 +1,5 @@
 package com.example.cinema_app.presentation.view.favourite
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,7 +18,6 @@ class FavouriteAdapter(
         return FavouriteViewHolder(inflater.inflate(R.layout.favorite_item, parent, false))
     }
 
-    @SuppressLint("ResourceAsColor")
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is FavouriteViewHolder -> {

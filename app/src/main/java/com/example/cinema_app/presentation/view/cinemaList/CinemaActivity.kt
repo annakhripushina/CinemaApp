@@ -11,23 +11,14 @@ import android.widget.*
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.setFragmentResult
-import com.example.cinema_app.data.entity.Cinema
-import com.example.cinema_app.data.CinemaHolder
 import com.example.cinema_app.R
+import com.example.cinema_app.data.entity.Cinema
 import com.example.cinema_app.presentation.viewmodel.CinemaListViewModel
 
 
 class CinemaActivity : Fragment() {
-    companion object {
-        const val RESULT_ACTION = "action_user"
-        const val RESULT_LIKE = "like"
-        const val RESULT_COMMENT = "comment"
-    }
-
     private val viewModel: CinemaListViewModel by activityViewModels()
     private lateinit var cinema: Cinema
-    private var comment: String = ""
     private lateinit var input: EditText
     private lateinit var checkBox: CheckBox
     private lateinit var button: Button
@@ -49,25 +40,10 @@ class CinemaActivity : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initViews(view)
 
-        if (savedInstanceState == null)
-            /*setFragmentResultListener(CinemaListActivity.EXTRA_CINEMA) { _, result ->
-                cinema = result.getParcelable(CinemaListActivity.ITEM_CINEMA)!!
-                populateViews(cinema)
-                setClickListeners(cinema)
-            }*/
-        { cinema = viewModel.cinemaItem
-                populateViews(cinema)
-                setClickListeners(cinema)}
-        else {
-            cinema = savedInstanceState.getParcelable("CINEMA_LIST")!!
-            populateViews(cinema)
-            setClickListeners(cinema)
-        }
-    }
+        cinema = viewModel.cinemaItem
+        populateViews(cinema)
+        setClickListeners(cinema)
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putParcelable("CINEMA_LIST", cinema)
     }
 
     private fun populateViews(cinema: Cinema) {
@@ -93,26 +69,12 @@ class CinemaActivity : Fragment() {
         }
 
         checkBox.setOnCheckedChangeListener { _, isChecked ->
-            /*CinemaHolder.cinemaList[cinema.id].hasLiked = isChecked
-            setFragmentResult(
-                RESULT_ACTION,
-                Bundle().apply {
-                    putBoolean(RESULT_LIKE, isChecked)
-                }
-            )*/
             viewModel.onSetLikeClickListener(cinema.id, isChecked)
         }
 
         input.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {
-                /*comment = input.text.toString()
-                setFragmentResult(
-                    RESULT_ACTION,
-                    Bundle().apply {
-                        putString(RESULT_COMMENT, comment)
-                    }
-                )*/
-                viewModel.onTextChangedListener(input)
+                viewModel.onSetComment(input)
             }
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}

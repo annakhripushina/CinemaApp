@@ -11,26 +11,16 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.setFragmentResult
-import androidx.fragment.app.setFragmentResultListener
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.cinema_app.*
-import com.example.cinema_app.data.CinemaHolder
+import com.example.cinema_app.MyItemDecorator
+import com.example.cinema_app.R
 import com.example.cinema_app.data.entity.Cinema
 import com.example.cinema_app.presentation.viewmodel.CinemaListViewModel
 import com.google.android.material.snackbar.Snackbar
 
 
 class CinemaListActivity : Fragment() {
-    companion object {
-        const val EXTRA_CINEMA = "extra_cinema"
-        const val ITEM_CINEMA = "item_cinema"
-        const val CINEMA_LIST = "cinema_list"
-        const val EXTRA_FAV = "extra_fav"
-        const val FAVOURITE_LIST = "favourite_list"
-    }
-
     private lateinit var recyclerView: RecyclerView
     private var favouriteList: ArrayList<Cinema> = ArrayList()
     private var comment: String = ""
@@ -54,46 +44,17 @@ class CinemaListActivity : Fragment() {
 
         viewModel.onGetCinemaList()
         favouriteList = viewModel.favouriteList
-       /* if (savedInstanceState == null)
-            setFragmentResultListener(FavouriteActivity.RESULT_FAVOURITE_LIST) { _, result ->
-                favouriteList = result.getParcelableArrayList(FAVOURITE_LIST)!!
-            }
-        else {
-            CinemaHolder.cinemaList = savedInstanceState.getParcelableArrayList(CINEMA_LIST)!!
-            favouriteList = savedInstanceState.getParcelableArrayList(FAVOURITE_LIST)!!
-        }*/
 
         initRecycler()
         onActivityResult()
     }
 
     override fun onStop() {
-        /*setFragmentResult(
-            EXTRA_FAV,
-            Bundle().apply {
-                putParcelableArrayList(FAVOURITE_LIST, favouriteList)
-            }
-        )*/
         viewModel.onSetFavouriteList(favouriteList)
         super.onStop()
     }
 
-  /*  override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putParcelableArrayList(CINEMA_LIST, CinemaHolder.cinemaList)
-        outState.putParcelableArrayList(FAVOURITE_LIST, favouriteList)
-    }
-*/
-
-    private fun onActivityResult() {
-        /*setFragmentResultListener(CinemaActivity.RESULT_ACTION) { _, result ->
-            hasLiked = result.getBoolean(CinemaActivity.RESULT_LIKE)
-            comment = result.getString(CinemaActivity.RESULT_COMMENT).toString()
-            Log.d(
-                "TAG_REQUEST",
-                "like: $hasLiked comment: $comment"
-            )
-        }*/
+     private fun onActivityResult() {
         hasLiked = viewModel.hasLiked
         comment = viewModel.comment
         Log.d(
@@ -108,14 +69,7 @@ class CinemaListActivity : Fragment() {
                 override fun onCinemaClick(cinemaItem: Cinema, itemView: View, position: Int) {
                     itemView.findViewById<TextView>(R.id.titleView)
                         .setTextColor(Color.MAGENTA)
-                    cinemaItem.titleColor = Color.MAGENTA
-
-//                    setFragmentResult(
-//                        EXTRA_CINEMA,
-//                        Bundle().apply {
-//                            putParcelable(ITEM_CINEMA, cinemaItem)
-//                        }
-//                    )
+                    cinemaItem.titleColor = Color.MAGENTA //???
 
                     viewModel.onSetCinemaItem(cinemaItem)
 
@@ -127,7 +81,6 @@ class CinemaListActivity : Fragment() {
 
                 override fun onLongCinemaClick(cinemaItem: Cinema, itemView: View, position: Int) {
                     if (cinemaItem !in favouriteList) {
-                        //favouriteList.add(cinemaItem)
                         viewModel.onAddFavouriteItem(favouriteList,cinemaItem)
 
                         val snackAddFavourite = Snackbar.make(
@@ -137,7 +90,6 @@ class CinemaListActivity : Fragment() {
                         )
 
                         snackAddFavourite.setAction("Отмена") {
-                            //favouriteList.remove(cinemaItem)
                             viewModel.onRemoveFavouriteItem(favouriteList, cinemaItem)
                             snackAddFavourite.dismiss()
                         }
