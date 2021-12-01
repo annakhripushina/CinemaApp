@@ -78,12 +78,12 @@ class CinemaListActivity : Fragment() {
         super.onStop()
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
+  /*  override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putParcelableArrayList(CINEMA_LIST, CinemaHolder.cinemaList)
         outState.putParcelableArrayList(FAVOURITE_LIST, favouriteList)
     }
-
+*/
 
     private fun onActivityResult() {
         /*setFragmentResultListener(CinemaActivity.RESULT_ACTION) { _, result ->
