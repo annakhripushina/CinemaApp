@@ -1,16 +1,17 @@
-package com.example.cinema_app
+package com.example.cinema_app.presentation.view
 
 import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.example.cinema_app.presentation.view.cinemaList.CinemaListActivity
+import com.example.cinema_app.presentation.view.favourite.FavouriteActivity
+import com.example.cinema_app.R
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
 
     @SuppressLint("UseCompatLoadingForDrawables")
     override fun onCreate(savedInstanceState: Bundle?) {
-        val navigate: BottomNavigationView = findViewById(R.id.navigate)
-
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
@@ -19,6 +20,8 @@ class MainActivity : AppCompatActivity() {
                 .replace(R.id.containerActivity, CinemaListActivity())
                 .commit()
         }
+
+        val navigate: BottomNavigationView = findViewById(R.id.navigate)
 
         navigate.setOnItemSelectedListener {
             when (it.itemId) {

@@ -1,9 +1,10 @@
-package com.example.cinema_app
+package com.example.cinema_app.presentation.view
 
 import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
 import androidx.fragment.app.DialogFragment
+import com.example.cinema_app.R
 
 
 class DialogBack : DialogFragment() {

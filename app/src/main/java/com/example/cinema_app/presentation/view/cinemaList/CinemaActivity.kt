@@ -1,4 +1,4 @@
-package com.example.cinema_app
+package com.example.cinema_app.presentation.view.cinemaList
 
 import android.content.Intent
 import android.os.Bundle
@@ -10,8 +10,12 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResult
-import androidx.fragment.app.setFragmentResultListener
+import com.example.cinema_app.data.entity.Cinema
+import com.example.cinema_app.data.CinemaHolder
+import com.example.cinema_app.R
+import com.example.cinema_app.presentation.viewmodel.CinemaListViewModel
 
 
 class CinemaActivity : Fragment() {
@@ -21,6 +25,7 @@ class CinemaActivity : Fragment() {
         const val RESULT_COMMENT = "comment"
     }
 
+    private val viewModel: CinemaListViewModel by activityViewModels()
     private lateinit var cinema: Cinema
     private var comment: String = ""
     private lateinit var input: EditText
@@ -45,11 +50,14 @@ class CinemaActivity : Fragment() {
         initViews(view)
 
         if (savedInstanceState == null)
-            setFragmentResultListener(CinemaListActivity.EXTRA_CINEMA) { _, result ->
+            /*setFragmentResultListener(CinemaListActivity.EXTRA_CINEMA) { _, result ->
                 cinema = result.getParcelable(CinemaListActivity.ITEM_CINEMA)!!
                 populateViews(cinema)
                 setClickListeners(cinema)
-            }
+            }*/
+        { cinema = viewModel.cinemaItem
+                populateViews(cinema)
+                setClickListeners(cinema)}
         else {
             cinema = savedInstanceState.getParcelable("CINEMA_LIST")!!
             populateViews(cinema)
@@ -85,24 +93,26 @@ class CinemaActivity : Fragment() {
         }
 
         checkBox.setOnCheckedChangeListener { _, isChecked ->
-            CinemaHolder.cinemaList[cinema.id].hasLiked = isChecked
+            /*CinemaHolder.cinemaList[cinema.id].hasLiked = isChecked
             setFragmentResult(
                 RESULT_ACTION,
                 Bundle().apply {
                     putBoolean(RESULT_LIKE, isChecked)
                 }
-            )
+            )*/
+            viewModel.onSetLikeClickListener(cinema.id, isChecked)
         }
 
         input.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {
-                comment = input.text.toString()
+                /*comment = input.text.toString()
                 setFragmentResult(
                     RESULT_ACTION,
                     Bundle().apply {
                         putString(RESULT_COMMENT, comment)
                     }
-                )
+                )*/
+                viewModel.onTextChangedListener(input)
             }
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}

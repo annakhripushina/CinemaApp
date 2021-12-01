@@ -1,4 +1,4 @@
-package com.example.cinema_app
+package com.example.cinema_app.data.entity
 
 import android.os.Parcelable
 import androidx.annotation.ColorInt

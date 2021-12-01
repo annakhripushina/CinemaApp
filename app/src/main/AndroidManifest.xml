@@ -11,15 +11,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Cinema_app">
         <activity
-            android:name=".FavouriteActivity"
+            android:name=".presentation.view.favourite.FavouriteActivity"
             android:exported="false"
             tools:ignore="Instantiatable" />
         <activity
-            android:name=".CinemaActivity"
+            android:name=".presentation.view.cinemaList.CinemaActivity"
             android:exported="false"
             tools:ignore="Instantiatable" />
         <activity
-            android:name=".MainActivity"
+            android:name=".presentation.view.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -1,7 +1,9 @@
-package com.example.cinema_app
+package com.example.cinema_app.data
 
 import android.annotation.SuppressLint
 import android.graphics.Color
+import com.example.cinema_app.R
+import com.example.cinema_app.data.entity.Cinema
 
 object CinemaHolder {
     @SuppressLint("ResourceAsColor")

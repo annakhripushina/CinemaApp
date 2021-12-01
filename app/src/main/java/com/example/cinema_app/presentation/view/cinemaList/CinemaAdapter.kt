@@ -1,10 +1,12 @@
-package com.example.cinema_app
+package com.example.cinema_app.presentation.view.cinemaList
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.cinema_app.data.entity.Cinema
+import com.example.cinema_app.R
 
 
 class CinemaAdapter(
