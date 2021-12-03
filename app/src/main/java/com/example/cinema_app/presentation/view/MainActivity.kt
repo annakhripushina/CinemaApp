@@ -8,11 +8,15 @@ import com.example.cinema_app.presentation.view.favourite.FavouriteActivity
 import com.example.cinema_app.R
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
+
 class MainActivity : AppCompatActivity() {
 
     @SuppressLint("UseCompatLoadingForDrawables")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
+        
         setContentView(R.layout.activity_main)
 
         if (savedInstanceState == null) {

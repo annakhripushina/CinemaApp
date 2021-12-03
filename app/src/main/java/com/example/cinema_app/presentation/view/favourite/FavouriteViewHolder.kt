@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cinema_app.data.entity.Cinema
 import com.example.cinema_app.R
@@ -18,7 +19,7 @@ class FavouriteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     @SuppressLint("ResourceAsColor")
     fun bind(item: Cinema, listener: FavouriteAdapter.FavouriteClickListener) {
         titleView.setText(item.title)
-        imageView.setImageResource(item.image)
+        imageView.setImageURI(item.image.toUri())
         titleView.setTextColor(item.titleColor)
 
         buttonDelete.setOnClickListener {

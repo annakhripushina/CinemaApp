@@ -1,9 +1,9 @@
 package com.example.cinema_app.domain
 
-import com.example.cinema_app.data.CinemaHolder
+import com.example.cinema_app.data.entity.Cinema
 
 class CinemaDetailInteractor {
-    fun onSetLikeClickListener(cinemaId: Int, isChecked: Boolean){
-        CinemaHolder.cinemaList[cinemaId].hasLiked = isChecked
+    fun onSetLikeClickListener(cinemaItem: Cinema, isChecked: Boolean){
+        cinemaItem.hasLiked = isChecked
     }
 }

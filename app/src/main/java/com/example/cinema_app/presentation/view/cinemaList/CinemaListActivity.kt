@@ -7,10 +7,15 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.INVISIBLE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cinema_app.MyItemDecorator
@@ -22,9 +27,48 @@ import com.google.android.material.snackbar.Snackbar
 
 class CinemaListActivity : Fragment() {
     private lateinit var recyclerView: RecyclerView
+    private lateinit var progressBar: ProgressBar
     private var favouriteList: ArrayList<Cinema> = ArrayList()
     private var comment: String = ""
     private var hasLiked: Boolean = false
+    private var cinema: ArrayList<Cinema> = ArrayList()
+
+
+    private val adapter = CinemaAdapter(object : CinemaAdapter.CinemaClickListener {
+        override fun onCinemaClick(cinemaItem: Cinema, itemView: View, position: Int) {
+            itemView.findViewById<TextView>(R.id.titleView)
+                .setTextColor(Color.MAGENTA)
+            cinemaItem.titleColor = Color.MAGENTA
+
+            viewModel.onSetCinemaItem(cinemaItem)
+
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.containerActivity, CinemaActivity(), "cinemaActivity")
+                .addToBackStack("cinemaActivity")
+                .commit()
+        }
+
+        override fun onLongCinemaClick(cinemaItem: Cinema, itemView: View, position: Int) {
+            if (cinemaItem !in favouriteList) {
+                viewModel.onAddFavouriteItem(favouriteList,cinemaItem)
+
+                val snackAddFavourite = Snackbar.make(
+                    itemView,
+                    "Фильм добавлен в список избранного",
+                    Snackbar.LENGTH_LONG
+                )
+
+                snackAddFavourite.setAction("Отмена") {
+                    viewModel.onRemoveFavouriteItem(favouriteList, cinemaItem)
+                    snackAddFavourite.dismiss()
+                }
+
+                snackAddFavourite.anchorView = activity?.findViewById(R.id.navigate)
+                snackAddFavourite.show()
+            }
+        }
+    }
+    )
 
     private val viewModel: CinemaListViewModel by activityViewModels()
 
@@ -40,12 +84,24 @@ class CinemaListActivity : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        progressBar = view.findViewById(R.id.progressBar)
+        progressBar.visibility = VISIBLE
         recyclerView = view.findViewById(R.id.recyclerView)
 
-        viewModel.onGetCinemaList()
+        viewModel.onGetDataClick()
+        initRecycler()
+
+        viewModel.repos.observe(viewLifecycleOwner, Observer<ArrayList<Cinema>> { repos ->
+            progressBar.visibility = INVISIBLE
+            adapter.setItems(repos)
+        })
+
+        viewModel.error.observe(viewLifecycleOwner, Observer<String> { error ->
+            Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
+        })
+
         favouriteList = viewModel.favouriteList
 
-        initRecycler()
         onActivityResult()
     }
 
@@ -63,43 +119,9 @@ class CinemaListActivity : Fragment() {
         )
     }
 
+
     private fun initRecycler() {
-        recyclerView.adapter =
-            CinemaAdapter(viewModel.cinemaList, object : CinemaAdapter.CinemaClickListener {
-                override fun onCinemaClick(cinemaItem: Cinema, itemView: View, position: Int) {
-                    itemView.findViewById<TextView>(R.id.titleView)
-                        .setTextColor(Color.MAGENTA)
-                    cinemaItem.titleColor = Color.MAGENTA //???
-
-                    viewModel.onSetCinemaItem(cinemaItem)
-
-                    parentFragmentManager.beginTransaction()
-                        .replace(R.id.containerActivity, CinemaActivity(), "cinemaActivity")
-                        .addToBackStack("cinemaActivity")
-                        .commit()
-                }
-
-                override fun onLongCinemaClick(cinemaItem: Cinema, itemView: View, position: Int) {
-                    if (cinemaItem !in favouriteList) {
-                        viewModel.onAddFavouriteItem(favouriteList,cinemaItem)
-
-                        val snackAddFavourite = Snackbar.make(
-                            itemView,
-                            "Фильм добавлен в список избранного",
-                            Snackbar.LENGTH_LONG
-                        )
-
-                        snackAddFavourite.setAction("Отмена") {
-                            viewModel.onRemoveFavouriteItem(favouriteList, cinemaItem)
-                            snackAddFavourite.dismiss()
-                        }
-
-                        snackAddFavourite.anchorView = activity?.findViewById(R.id.navigate)
-                        snackAddFavourite.show()
-                    }
-                }
-            }
-            )
+        recyclerView.adapter = adapter
         setGridByOrientation(resources.configuration.orientation)
         recyclerView.addItemDecoration(MyItemDecorator())
     }

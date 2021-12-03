@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.widget.Toolbar
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.example.cinema_app.R
@@ -51,9 +52,9 @@ class CinemaActivity : Fragment() {
         val descriptionId = cinema.description
         val cinemaTitleId = cinema.title
 
-        image.let { imageView.setImageResource(it) }
+        image.let { imageView.setImageURI(it.toUri()) }
         descriptionId.let { description.setText(it) }
-        titleToolbar.title = getText(cinemaTitleId)
+        titleToolbar.title = cinemaTitleId
         checkBox.isChecked = cinema.hasLiked
     }
 
@@ -69,7 +70,7 @@ class CinemaActivity : Fragment() {
         }
 
         checkBox.setOnCheckedChangeListener { _, isChecked ->
-            viewModel.onSetLikeClickListener(cinema.id, isChecked)
+            viewModel.onSetLikeClickListener(cinema, isChecked)
         }
 
         input.addTextChangedListener(object : TextWatcher {

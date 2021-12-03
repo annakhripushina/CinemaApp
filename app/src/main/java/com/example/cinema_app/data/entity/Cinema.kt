@@ -9,9 +9,9 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class Cinema(
     val id: Int,
-    @StringRes val title: Int,
-    @StringRes val description: Int,
-    @DrawableRes val image: Int,
+    val title: String,
+    val description: String,
+    val image: String,
     @ColorInt var titleColor: Int,
     var hasLiked: Boolean
 ) : Parcelable

@@ -10,9 +10,18 @@ import com.example.cinema_app.R
 
 
 class CinemaAdapter(
-    private val items: ArrayList<Cinema>,
+    //private val items: ArrayList<Cinema>,
     private val listener: CinemaClickListener
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    private val items = java.util.ArrayList<Cinema>()
+
+    fun setItems(repos: ArrayList<Cinema>) {
+        items.clear()
+        items.addAll(repos)
+
+        notifyDataSetChanged()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
