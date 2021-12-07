@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/nav_cinema"
+    <item
+        android:id="@+id/nav_cinema"
         android:icon="@drawable/ic_baseline_movie_24"
-        android:title="Фильмы"/>
-    <item android:id="@+id/nav_favourite"
+        android:title="Фильмы" />
+    <item
+        android:id="@+id/nav_favourite"
         android:icon="@drawable/ic_baseline_stars_24"
-        android:title="Избранное"/>
+        android:title="Избранное" />
 </menu>

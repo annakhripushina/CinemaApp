@@ -6,6 +6,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.cinema_app.data.entity.Cinema
 import com.example.cinema_app.R
 
@@ -18,9 +19,16 @@ class FavouriteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     @SuppressLint("ResourceAsColor")
     fun bind(item: Cinema, listener: FavouriteAdapter.FavouriteClickListener) {
-        titleView.setText(item.title)
-        imageView.setImageURI(item.image.toUri())
+        titleView.text = item.title
         titleView.setTextColor(item.titleColor)
+
+        Glide.with(imageView.context)
+            .load(item.image)
+            //.placeholder(R.drawable.ic_image)
+            //.error(R.drawable.ic_error)
+            //.override(image2.resources.getDimensionPixelSize(R.dimen.image_size))
+            .centerCrop()
+            .into(imageView)
 
         buttonDelete.setOnClickListener {
             listener.onDeleteClick(

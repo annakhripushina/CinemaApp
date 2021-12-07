@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cinema_app.MyItemDecorator
 import com.example.cinema_app.R
@@ -31,8 +32,6 @@ class CinemaListActivity : Fragment() {
     private var favouriteList: ArrayList<Cinema> = ArrayList()
     private var comment: String = ""
     private var hasLiked: Boolean = false
-    private var cinema: ArrayList<Cinema> = ArrayList()
-
 
     private val adapter = CinemaAdapter(object : CinemaAdapter.CinemaClickListener {
         override fun onCinemaClick(cinemaItem: Cinema, itemView: View, position: Int) {
@@ -88,12 +87,14 @@ class CinemaListActivity : Fragment() {
         progressBar.visibility = VISIBLE
         recyclerView = view.findViewById(R.id.recyclerView)
 
-        viewModel.onGetDataClick()
+        if (viewModel.cinemaList.value == null)
+            viewModel.onGetCinemaList()
+
         initRecycler()
 
-        viewModel.repos.observe(viewLifecycleOwner, Observer<ArrayList<Cinema>> { repos ->
+        viewModel.cinemaList.observe(viewLifecycleOwner, Observer<ArrayList<Cinema>> { list ->
             progressBar.visibility = INVISIBLE
-            adapter.setItems(repos)
+            adapter.setItems(list)
         })
 
         viewModel.error.observe(viewLifecycleOwner, Observer<String> { error ->
@@ -101,8 +102,8 @@ class CinemaListActivity : Fragment() {
         })
 
         favouriteList = viewModel.favouriteList
-
         onActivityResult()
+
     }
 
     override fun onStop() {
@@ -119,11 +120,19 @@ class CinemaListActivity : Fragment() {
         )
     }
 
-
     private fun initRecycler() {
         recyclerView.adapter = adapter
         setGridByOrientation(resources.configuration.orientation)
         recyclerView.addItemDecoration(MyItemDecorator())
+
+        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener(){
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                if (!recyclerView.canScrollVertically(1) && newState==RecyclerView.SCROLL_STATE_IDLE) {
+                    Toast.makeText(context, "Загрузка...", Toast.LENGTH_SHORT).show()
+                    viewModel.onGetCinemaList()
+                }
+            }
+        })
     }
 
     private fun setGridByOrientation(orientation: Int) {

@@ -1,59 +1,36 @@
 package com.example.cinema_app.presentation.viewmodel
 
-import android.util.Log
 import android.widget.EditText
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.recyclerview.widget.RecyclerView
 import com.example.cinema_app.App
 import com.example.cinema_app.data.entity.Cinema
 import com.example.cinema_app.domain.CinemaDetailInteractor
 import com.example.cinema_app.domain.CinemaFavouriteInteractor
 import com.example.cinema_app.domain.CinemaListInteractor
+import com.example.cinema_app.utils.SingleLiveEvent
 
 class CinemaListViewModel: ViewModel() {
-
-    init {
-        Log.d("RepoListView", this.toString())
-    }
-
     private val cinemaInteractor = App.instance.cinemaInteractor
-
-    private val mRepos = MutableLiveData<ArrayList<Cinema>>()
-    private val mError = MutableLiveData<String>()
-    private val mSelectedRepoUrl = MutableLiveData<String>()
-
-    val repos: LiveData<ArrayList<Cinema>>
-        get() = mRepos
-
-    val error: LiveData<String>
-        get() = mError
-
-    fun onGetDataClick() {
-        cinemaInteractor.getCinema(object : CinemaListInteractor.GetRepoCallback {
-            override fun onSuccess(repos: ArrayList<Cinema>) {
-                mRepos.value = repos
-            }
-
-            override fun onError(error: String) {
-                mError.value = error
-            }
-        })
-    }
-
     private val cinemaDetailInteractor: CinemaDetailInteractor = CinemaDetailInteractor()
     private val cinemaFavouriteInteractor: CinemaFavouriteInteractor = CinemaFavouriteInteractor()
 
+    private val mCinemaList = MutableLiveData<ArrayList<Cinema>>()
+    private lateinit var mCinemaItem: Cinema
+    private var mFavouriteList: ArrayList<Cinema> = ArrayList()
 
     private var mComment: String = ""
     private var mHasLiked: Boolean = false
-    private lateinit var mCinemaItem: Cinema
-    private var mCinemaList: ArrayList<Cinema> = ArrayList()
-    private var mFavouriteList: ArrayList<Cinema> = ArrayList()
+    private val mError: MutableLiveData<String> = SingleLiveEvent()
+    private var mPage: Int = 1
+    private var mTotalPages: Int = 1
 
-    val cinemaList: ArrayList<Cinema>
+    val cinemaList: LiveData<ArrayList<Cinema>>
         get() = mCinemaList
+
+    val error: LiveData<String>
+        get() = mError
 
     val cinemaItem: Cinema
         get() = mCinemaItem
@@ -66,6 +43,19 @@ class CinemaListViewModel: ViewModel() {
 
     val favouriteList: ArrayList<Cinema>
         get() = mFavouriteList
+
+    fun onGetCinemaList() {
+        cinemaInteractor.getCinema(mPage, mTotalPages, object : CinemaListInteractor.GetCinemaCallback {
+            override fun onSuccess(cinemaList: ArrayList<Cinema>, page: Int, totalPages: Int) {
+                mPage = page
+                mTotalPages = totalPages
+                mCinemaList.value = cinemaList
+            }
+            override fun onError(error: String) {
+                mError.value = error
+            }
+        })
+    }
 
     fun onSetFavouriteList(favouriteList: ArrayList<Cinema>){
         mFavouriteList = favouriteList
@@ -99,6 +89,7 @@ class CinemaListViewModel: ViewModel() {
     fun onSetComment(input: EditText){
         mComment = input.text.toString()
     }
+
 
 }
 

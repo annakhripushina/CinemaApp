@@ -9,7 +9,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class App: Application() {
+class App : Application() {
 
     companion object {
         var BASE_URL = "https://api.themoviedb.org/3/"
@@ -18,7 +18,6 @@ class App: Application() {
             private set
     }
 
-    lateinit var api: CinemaService
     lateinit var cinemaInteractor: CinemaListInteractor
     lateinit var cinemaService: CinemaService
 
@@ -32,9 +31,6 @@ class App: Application() {
     }
 
     private fun initRetrofit() {
-        //val logging = HttpLoggingInterceptor()
-        //logging.level = HttpLoggingInterceptor.Level.BODY
-
         val okHttpClient = OkHttpClient.Builder()
             .addInterceptor { chain ->
                 return@addInterceptor chain.proceed(
@@ -63,8 +59,6 @@ class App: Application() {
             .build()
             .create(CinemaService::class.java)
 
-
-        //githubReposUpdater = GithubReposUpdater(githubService)
     }
 
     private fun initInteractor() {

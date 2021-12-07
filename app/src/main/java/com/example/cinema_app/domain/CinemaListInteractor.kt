@@ -2,6 +2,7 @@ package com.example.cinema_app.domain
 
 import android.graphics.Color
 import android.util.Log
+import androidx.lifecycle.LiveData
 import com.example.cinema_app.data.CinemaService
 import com.example.cinema_app.data.entity.Cinema
 import com.example.cinema_app.data.entity.CinemaListModel
@@ -11,14 +12,24 @@ import retrofit2.Response
 
 class CinemaListInteractor(private val cinemaService: CinemaService) {
     var items = ArrayList<Cinema>()
+    //var totalPage: Int = 2
+    //var page: Int = 1
 
-    fun getCinema(callback: GetRepoCallback) {
-        cinemaService.getCinemaPage().enqueue(object : Callback<CinemaListModel> {
+    fun getCinema(page: Int, totalPages: Int, callback: GetCinemaCallback) {
+       /* if (items.isNotEmpty() && page<totalPage){
+            page += 1
+        }*/
+        var vTotalPages: Int = totalPages
+        var vPage: Int = page
+        if (items.isNotEmpty() && page < totalPages){
+            vPage += 1
+        }
+        cinemaService.getCinemaPage(vPage).enqueue(object : Callback<CinemaListModel> {
             override fun onResponse(call: Call<CinemaListModel>, response: Response<CinemaListModel>) {
                 if (response.isSuccessful) {
-
-                    items.clear()
+                    //items.clear()
                     if (response.isSuccessful) {
+                        vTotalPages = response.body()?.totalPages!!
                         response.body()?.results
                             ?.forEach {
                                 items.add(
@@ -31,18 +42,16 @@ class CinemaListInteractor(private val cinemaService: CinemaService) {
                                         false
                                     )
                                 )
-                                Log.d("TAG_ITEMS", items[0].title)
                             }
                     }
 
-                    callback.onSuccess(items)
+                    callback.onSuccess(items, vPage, vTotalPages)
                 } else {
                     callback.onError("Error: ${response.code()}")
                 }
             }
 
             override fun onFailure(call: Call<CinemaListModel>, t: Throwable) {
-                Log.d("NENEN ", t.message.toString())
                 callback.onError("Network error probably...")
             }
         })
@@ -57,8 +66,8 @@ class CinemaListInteractor(private val cinemaService: CinemaService) {
         favouriteList.remove(cinemaItem)
     }
 
-    interface GetRepoCallback {
-        fun onSuccess(repos: ArrayList<Cinema>)
+    interface GetCinemaCallback {
+        fun onSuccess(cinemaList: ArrayList<Cinema>, page: Int, totalPages: Int)
         fun onError(error: String)
     }
 

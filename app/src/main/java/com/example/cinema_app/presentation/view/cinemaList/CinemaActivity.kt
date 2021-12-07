@@ -12,6 +12,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import com.bumptech.glide.Glide
 import com.example.cinema_app.R
 import com.example.cinema_app.data.entity.Cinema
 import com.example.cinema_app.presentation.viewmodel.CinemaListViewModel
@@ -48,12 +49,18 @@ class CinemaActivity : Fragment() {
     }
 
     private fun populateViews(cinema: Cinema) {
-        val image = cinema.image
         val descriptionId = cinema.description
         val cinemaTitleId = cinema.title
 
-        image.let { imageView.setImageURI(it.toUri()) }
-        descriptionId.let { description.setText(it) }
+        Glide.with(imageView.context)
+            .load(cinema.image)
+            //.placeholder(R.drawable.ic_image)
+            //.error(R.drawable.ic_error)
+            //.override(image2.resources.getDimensionPixelSize(R.dimen.image_size))
+            .centerCrop()
+            .into(imageView)
+
+        descriptionId.let { description.text = it }
         titleToolbar.title = cinemaTitleId
         checkBox.isChecked = cinema.hasLiked
     }

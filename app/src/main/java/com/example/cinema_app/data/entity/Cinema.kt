@@ -2,8 +2,6 @@ package com.example.cinema_app.data.entity
 
 import android.os.Parcelable
 import androidx.annotation.ColorInt
-import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
