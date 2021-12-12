@@ -1,5 +1,6 @@
 package com.example.cinema_app.presentation.view.favourite
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +15,7 @@ class FavouriteAdapter(
 
     private val items = ArrayList<Cinema>()
 
+    @SuppressLint("NotifyDataSetChanged")
     fun setItems(favoriteList: ArrayList<Cinema>) {
         items.clear()
         items.addAll(favoriteList)

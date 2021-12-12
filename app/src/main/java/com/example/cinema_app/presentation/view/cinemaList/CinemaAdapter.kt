@@ -15,6 +15,7 @@ class CinemaAdapter(
 
     private val items = ArrayList<Cinema>()
 
+    @SuppressLint("NotifyDataSetChanged")
     fun setItems(cinemaList: ArrayList<Cinema>) {
         items.clear()
         items.addAll(cinemaList)
