@@ -17,15 +17,11 @@ class CinemaViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     @SuppressLint("ResourceAsColor")
     fun bind(item: Cinema, listener: CinemaAdapter.CinemaClickListener) {
-        titleView.setText(item.title)
-        //imageView.setImageURI(item.image)
+        titleView.text = item.title
         titleView.setTextColor(item.titleColor)
 
         Glide.with(imageView.context)
             .load(item.image)
-            //.placeholder(R.drawable.ic_image)
-            //.error(R.drawable.ic_error)
-            //.override(image2.resources.getDimensionPixelSize(R.dimen.image_size))
             .centerCrop()
             .into(imageView)
 

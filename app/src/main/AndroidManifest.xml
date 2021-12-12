@@ -19,7 +19,7 @@
             android:exported="false"
             tools:ignore="Instantiatable" />
         <activity
-            android:name=".presentation.view.cinemaList.CinemaActivity"
+            android:name=".presentation.view.detail.CinemaActivity"
             android:exported="false"
             tools:ignore="Instantiatable" />
         <activity

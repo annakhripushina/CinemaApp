@@ -5,29 +5,23 @@ import androidx.lifecycle.LiveData
 import com.example.cinema_app.data.entity.Cinema
 import com.example.cinema_app.data.entity.FavouriteCinema
 import com.example.cinema_app.data.entity.LikedCinema
+import com.example.cinema_app.data.room.CinemaDao
 
 class CinemaRepository(private val cinemaDao: CinemaDao) {
-
-    // Room executes all queries on a separate thread.
-    // Observed LiveData will notify the observer when the data has changed.
     val allCinema: LiveData<List<Cinema>> = cinemaDao.getAll()
+    val allFavouriteCinema: LiveData<List<Cinema>> = cinemaDao.getFavouriteCinema()
+    val allLikedCinema: LiveData<List<LikedCinema>> = cinemaDao.getLikedCinema()
 
-    val favouriteCinema: LiveData<List<Cinema>> = cinemaDao.getFavouriteCinema()
-
-    // You must call this on a non-UI thread or your app will crash. So we're making this a
-    // suspend function so the caller methods know this.
-    // Like this, Room ensures that you're not doing any long running operations on the main
-    // thread, blocking the UI.
     @Suppress("RedundantSuspendModifier")
     @WorkerThread
-    suspend fun insert(cinemaItem: Cinema) {
-        cinemaDao.insert(cinemaItem)
+    suspend fun insertCinema(cinemaItem: Cinema) {
+        cinemaDao.insertCinema(cinemaItem)
     }
 
     @Suppress("RedundantSuspendModifier")
     @WorkerThread
-    suspend fun insertFavourite(cinemaItem: FavouriteCinema) {
-        cinemaDao.insertFavourite(cinemaItem)
+    suspend fun insertFavouriteCinema(cinemaItem: FavouriteCinema) {
+        cinemaDao.insertFavouriteCinema(cinemaItem)
     }
 
     @Suppress("RedundantSuspendModifier")
@@ -44,26 +38,20 @@ class CinemaRepository(private val cinemaDao: CinemaDao) {
 
     @Suppress("RedundantSuspendModifier")
     @WorkerThread
-    suspend fun deleteFavouriteItem(cinemaOriginalId: Int) {
-        cinemaDao.deleteFavouriteItem(cinemaOriginalId)
+    suspend fun deleteFavouriteCinema(cinemaOriginalId: Int) {
+        cinemaDao.deleteFavouriteCinema(cinemaOriginalId)
     }
 
     @Suppress("RedundantSuspendModifier")
     @WorkerThread
-    suspend fun deleteLikedItem(cinemaOriginalId: Int) {
-        cinemaDao.deleteLikedItem(cinemaOriginalId)
+    suspend fun deleteLikedCinema(cinemaOriginalId: Int) {
+        cinemaDao.deleteLikedCinema(cinemaOriginalId)
     }
 
     @Suppress("RedundantSuspendModifier")
     @WorkerThread
     suspend fun updateTitleColor(titleColor: Int, id: Int) {
         cinemaDao.updateTitleColor(titleColor, id)
-    }
-
-    @Suppress("RedundantSuspendModifier")
-    @WorkerThread
-    suspend fun getLikedCinema(cinemaOriginalId: Int): List<LikedCinema> {
-        return cinemaDao.getLikedCinema(cinemaOriginalId)
     }
 
 }

@@ -3,7 +3,7 @@ package com.example.cinema_app.domain
 import android.graphics.Color
 import com.example.cinema_app.data.CinemaService
 import com.example.cinema_app.data.entity.Cinema
-import com.example.cinema_app.data.entity.CinemaListModel
+import com.example.cinema_app.data.model.CinemaListModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -12,7 +12,7 @@ class CinemaListInteractor(private val cinemaService: CinemaService) {
     private var items = ArrayList<Cinema>()
 
     fun getCinema(page: Int, callback: GetCinemaCallback) {
-        var totalPages: Int = 1
+        var totalPages = 1
 
         cinemaService.getCinemaPage(page).enqueue(object : Callback<CinemaListModel> {
             override fun onResponse(
@@ -20,9 +20,7 @@ class CinemaListInteractor(private val cinemaService: CinemaService) {
                 response: Response<CinemaListModel>
             ) {
                 if (response.isSuccessful) {
-                    //if (vPage == 1) {
                     items.clear()
-                    //}
                     if (response.isSuccessful) {
                         totalPages = response.body()?.totalPages!!
                         response.body()?.results
@@ -34,7 +32,6 @@ class CinemaListInteractor(private val cinemaService: CinemaService) {
                                         it.overview,
                                         "https://image.tmdb.org/t/p/w500/" + it.poster_path,
                                         Color.BLACK
-                                        //false
                                     )
                                 )
                             }
@@ -53,19 +50,9 @@ class CinemaListInteractor(private val cinemaService: CinemaService) {
 
     }
 
-
-    fun onAddFavourite(favouriteList: ArrayList<Cinema>, cinemaItem: Cinema) {
-        favouriteList.add(cinemaItem)
-    }
-
-    fun onRemoveFavourite(favouriteList: ArrayList<Cinema>, cinemaItem: Cinema) {
-        favouriteList.remove(cinemaItem)
-    }
-
     interface GetCinemaCallback {
         fun onSuccess(cinemaList: ArrayList<Cinema>, page: Int, totalPages: Int)
         fun onError(error: String)
     }
-
 
 }

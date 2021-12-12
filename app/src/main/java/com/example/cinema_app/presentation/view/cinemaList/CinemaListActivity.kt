@@ -12,25 +12,32 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.cinema_app.MyItemDecorator
 import com.example.cinema_app.R
 import com.example.cinema_app.data.entity.Cinema
-import com.example.cinema_app.presentation.viewmodel.CinemaListViewModel
+import com.example.cinema_app.presentation.view.detail.CinemaActivity
+import com.example.cinema_app.presentation.viewmodel.CinemaViewModel
+import com.example.cinema_app.presentation.viewmodel.CinemaViewModelFactory
 import com.google.android.material.snackbar.Snackbar
 
 
 class CinemaListActivity : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var progressBar: ProgressBar
-    private val viewModel: CinemaListViewModel by activityViewModels()
+    private val viewModel: CinemaViewModel by activityViewModels {
+        CinemaViewModelFactory(
+            requireActivity().application
+        )
+    }
     private var comment: String = ""
     private var hasLiked: Boolean = false
+    private lateinit var swipeContainer: SwipeRefreshLayout
 
     private val adapter = CinemaAdapter(object : CinemaAdapter.CinemaClickListener {
         override fun onCinemaClick(cinemaItem: Cinema, itemView: View, position: Int) {
@@ -46,7 +53,7 @@ class CinemaListActivity : Fragment() {
         }
 
         override fun onLongCinemaClick(cinemaItem: Cinema, itemView: View, position: Int) {
-            viewModel.onAddFavouriteItem(cinemaItem)
+            viewModel.onAddFavouriteCinema(cinemaItem)
 
             val snackAddFavourite = Snackbar.make(
                 itemView,
@@ -54,7 +61,7 @@ class CinemaListActivity : Fragment() {
                 Snackbar.LENGTH_LONG
             )
             snackAddFavourite.setAction("Отмена") {
-                viewModel.onRemoveFavouriteItem(cinemaItem)
+                viewModel.onRemoveFavouriteCinema(cinemaItem)
                 snackAddFavourite.dismiss()
             }
             snackAddFavourite.anchorView = activity?.findViewById(R.id.navigate)
@@ -75,6 +82,7 @@ class CinemaListActivity : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        pullToRefresh(view)
         initRecycler(view)
 
         viewModel.allCinema.observe(viewLifecycleOwner, Observer { list ->
@@ -85,20 +93,22 @@ class CinemaListActivity : Fragment() {
         })
 
         viewModel.error.observe(viewLifecycleOwner, Observer { error ->
-            Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
+            val snackUpdateList = Snackbar.make(
+                view,
+                error,
+                Snackbar.LENGTH_LONG
+            )
+            snackUpdateList.setAction("Обновить") {
+                viewModel.onGetCinemaListPage()
+                snackUpdateList.dismiss()
+            }
+            snackUpdateList.anchorView = activity?.findViewById(R.id.navigate)
+            snackUpdateList.show()
+
         })
 
         onActivityResult()
 
-    }
-
-    private fun onActivityResult() {
-        hasLiked = viewModel.hasLiked
-        comment = viewModel.comment
-        Log.d(
-            "TAG_REQUEST",
-            "like: $hasLiked comment: $comment"
-        )
     }
 
     private fun initRecycler(view: View) {
@@ -113,13 +123,27 @@ class CinemaListActivity : Fragment() {
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 if (!recyclerView.canScrollVertically(1) && newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    viewModel.onGetCinemaListPages()
-                } else if (!recyclerView.canScrollVertically(-1) && newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    Toast.makeText(context, "Обновляем...", Toast.LENGTH_SHORT).show()
-                    viewModel.onGetCinemaList()
+                    viewModel.onGetCinemaListPage()
                 }
             }
         })
+    }
+
+    private fun onActivityResult() {
+        hasLiked = viewModel.hasLiked
+        comment = viewModel.comment
+        Log.d(
+            "TAG_REQUEST",
+            "like: $hasLiked comment: $comment"
+        )
+    }
+
+    private fun pullToRefresh(view: View) {
+        swipeContainer = view.findViewById(R.id.swipeContainer)
+        swipeContainer.setOnRefreshListener {
+            viewModel.onGetCinemaList()
+            swipeContainer.isRefreshing = false
+        }
     }
 
     private fun setGridByOrientation(orientation: Int) {

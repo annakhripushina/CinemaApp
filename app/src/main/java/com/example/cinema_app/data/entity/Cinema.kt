@@ -11,8 +11,7 @@ data class Cinema(
     val title: String,
     val description: String,
     val image: String,
-    @ColorInt var titleColor: Int,
-    //var hasLiked: Boolean
+    @ColorInt var titleColor: Int
 ) {
     @PrimaryKey(autoGenerate = true)
     var id: Int? = null

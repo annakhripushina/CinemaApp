@@ -17,13 +17,18 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.cinema_app.MyItemDecorator
 import com.example.cinema_app.R
 import com.example.cinema_app.data.entity.Cinema
-import com.example.cinema_app.presentation.view.cinemaList.CinemaActivity
-import com.example.cinema_app.presentation.viewmodel.CinemaListViewModel
+import com.example.cinema_app.presentation.view.detail.CinemaActivity
+import com.example.cinema_app.presentation.viewmodel.CinemaViewModel
+import com.example.cinema_app.presentation.viewmodel.CinemaViewModelFactory
 import com.google.android.material.snackbar.Snackbar
 
 
 class FavouriteActivity : Fragment() {
-    private val viewModel: CinemaListViewModel by activityViewModels()
+    private val viewModel: CinemaViewModel by activityViewModels {
+        CinemaViewModelFactory(
+            requireActivity().application
+        )
+    }
     private lateinit var recyclerView: RecyclerView
 
     private val adapter = FavouriteAdapter(object : FavouriteAdapter.FavouriteClickListener {
@@ -40,14 +45,14 @@ class FavouriteActivity : Fragment() {
         }
 
         override fun onDeleteClick(cinemaItem: Cinema, position: Int) {
-            viewModel.onRemoveFavouriteItem(cinemaItem)
+            viewModel.onRemoveFavouriteCinema(cinemaItem)
             view?.let { isEmptyList(it) }
 
             val snackDeleteFavourite =
                 Snackbar.make(view!!, "Фильм удален из Избранного", Snackbar.LENGTH_LONG)
 
             snackDeleteFavourite.setAction("Отмена") {
-                viewModel.onAddFavouriteItem(cinemaItem)
+                viewModel.onAddFavouriteCinema(cinemaItem)
                 snackDeleteFavourite.dismiss()
                 view?.let { isEmptyList(it) }
             }
@@ -70,7 +75,7 @@ class FavouriteActivity : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initFavoriteRecycler(view)
-        viewModel.allFavouriteList.observe(viewLifecycleOwner, Observer { list ->
+        viewModel.allFavouriteCinema.observe(viewLifecycleOwner, Observer { list ->
             list?.let {
                 adapter.setItems(list as ArrayList<Cinema>)
                 isEmptyList(view)

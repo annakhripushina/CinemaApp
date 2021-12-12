@@ -1,4 +1,4 @@
-package com.example.cinema_app.presentation.view.cinemaList
+package com.example.cinema_app.presentation.view.detail
 
 import android.content.Intent
 import android.os.Bundle
@@ -11,15 +11,20 @@ import android.widget.*
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
 import com.example.cinema_app.R
 import com.example.cinema_app.data.entity.Cinema
-import com.example.cinema_app.presentation.viewmodel.CinemaListViewModel
+import com.example.cinema_app.presentation.viewmodel.CinemaViewModel
+import com.example.cinema_app.presentation.viewmodel.CinemaViewModelFactory
 
 
 class CinemaActivity : Fragment() {
-    private val viewModel: CinemaListViewModel by activityViewModels()
-
+    private val viewModel: CinemaViewModel by activityViewModels {
+        CinemaViewModelFactory(
+            requireActivity().application
+        )
+    }
     private lateinit var cinema: Cinema
     private lateinit var input: EditText
     private lateinit var checkBox: CheckBox
@@ -46,6 +51,12 @@ class CinemaActivity : Fragment() {
         populateViews(cinema)
         setClickListeners(cinema)
 
+        viewModel.allLikedCinema.observe(viewLifecycleOwner, Observer { list ->
+            list?.let {
+                viewModel.getLike(cinema)
+                checkBox.isChecked = viewModel.hasLiked
+            }
+        })
     }
 
     private fun populateViews(cinema: Cinema) {
@@ -59,10 +70,6 @@ class CinemaActivity : Fragment() {
 
         descriptionId.let { description.text = it }
         titleToolbar.title = cinemaTitleId
-        viewModel.getLike(cinema)
-        checkBox.isChecked = viewModel.hasLiked
-    //viewModel.hasLiked(cinema)
-        //checkBox.isChecked = viewModel.hasLiked//cinema.hasLiked
     }
 
     private fun setClickListeners(cinema: Cinema) {
@@ -97,6 +104,5 @@ class CinemaActivity : Fragment() {
         titleToolbar = view.findViewById(R.id.toolbar)
         description = view.findViewById(R.id.textDetail)
         imageView = view.findViewById(R.id.imageDetail)
-
     }
 }
