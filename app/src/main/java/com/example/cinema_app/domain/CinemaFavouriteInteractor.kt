@@ -4,11 +4,15 @@ import com.example.cinema_app.data.entity.Cinema
 
 class CinemaFavouriteInteractor {
 
-    fun onAddFavouritePosition(favouriteList: ArrayList<Cinema>, position: Int, cinemaItem: Cinema) {
+    fun onAddFavouritePosition(
+        favouriteList: ArrayList<Cinema>,
+        position: Int,
+        cinemaItem: Cinema
+    ) {
         favouriteList.add(position, cinemaItem)
     }
 
-    fun onRemoveFavouritePosition(favouriteList: ArrayList<Cinema>, position: Int){
+    fun onRemoveFavouritePosition(favouriteList: ArrayList<Cinema>, position: Int) {
         favouriteList.removeAt(position)
     }
 

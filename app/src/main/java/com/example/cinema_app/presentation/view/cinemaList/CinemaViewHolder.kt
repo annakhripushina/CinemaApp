@@ -4,11 +4,10 @@ import android.annotation.SuppressLint
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.cinema_app.data.entity.Cinema
 import com.example.cinema_app.R
+import com.example.cinema_app.data.entity.Cinema
 
 
 class CinemaViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

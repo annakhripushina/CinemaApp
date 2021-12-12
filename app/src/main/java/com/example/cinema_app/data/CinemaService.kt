@@ -4,7 +4,6 @@ import com.example.cinema_app.data.entity.CinemaListModel
 import com.example.cinema_app.data.entity.CinemaModel
 import retrofit2.Call
 import retrofit2.http.GET
-import retrofit2.http.POST
 import retrofit2.http.Query
 
 

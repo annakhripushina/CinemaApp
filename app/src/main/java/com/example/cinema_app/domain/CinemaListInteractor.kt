@@ -1,8 +1,6 @@
 package com.example.cinema_app.domain
 
 import android.graphics.Color
-import android.util.Log
-import androidx.lifecycle.LiveData
 import com.example.cinema_app.data.CinemaService
 import com.example.cinema_app.data.entity.Cinema
 import com.example.cinema_app.data.entity.CinemaListModel
@@ -11,25 +9,22 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class CinemaListInteractor(private val cinemaService: CinemaService) {
-    var items = ArrayList<Cinema>()
-    //var totalPage: Int = 2
-    //var page: Int = 1
+    private var items = ArrayList<Cinema>()
 
-    fun getCinema(page: Int, totalPages: Int, callback: GetCinemaCallback) {
-       /* if (items.isNotEmpty() && page<totalPage){
-            page += 1
-        }*/
-        var vTotalPages: Int = totalPages
-        var vPage: Int = page
-        if (items.isNotEmpty() && page < totalPages){
-            vPage += 1
-        }
-        cinemaService.getCinemaPage(vPage).enqueue(object : Callback<CinemaListModel> {
-            override fun onResponse(call: Call<CinemaListModel>, response: Response<CinemaListModel>) {
+    fun getCinema(page: Int, callback: GetCinemaCallback) {
+        var totalPages: Int = 1
+
+        cinemaService.getCinemaPage(page).enqueue(object : Callback<CinemaListModel> {
+            override fun onResponse(
+                call: Call<CinemaListModel>,
+                response: Response<CinemaListModel>
+            ) {
                 if (response.isSuccessful) {
-                    //items.clear()
+                    //if (vPage == 1) {
+                    items.clear()
+                    //}
                     if (response.isSuccessful) {
-                        vTotalPages = response.body()?.totalPages!!
+                        totalPages = response.body()?.totalPages!!
                         response.body()?.results
                             ?.forEach {
                                 items.add(
@@ -38,14 +33,14 @@ class CinemaListInteractor(private val cinemaService: CinemaService) {
                                         it.original_title,
                                         it.overview,
                                         "https://image.tmdb.org/t/p/w500/" + it.poster_path,
-                                        Color.BLACK,
-                                        false
+                                        Color.BLACK
+                                        //false
                                     )
                                 )
                             }
                     }
 
-                    callback.onSuccess(items, vPage, vTotalPages)
+                    callback.onSuccess(items, page, totalPages)
                 } else {
                     callback.onError("Error: ${response.code()}")
                 }
@@ -58,11 +53,12 @@ class CinemaListInteractor(private val cinemaService: CinemaService) {
 
     }
 
+
     fun onAddFavourite(favouriteList: ArrayList<Cinema>, cinemaItem: Cinema) {
         favouriteList.add(cinemaItem)
     }
 
-    fun onRemoveFavourite(favouriteList: ArrayList<Cinema>, cinemaItem: Cinema){
+    fun onRemoveFavourite(favouriteList: ArrayList<Cinema>, cinemaItem: Cinema) {
         favouriteList.remove(cinemaItem)
     }
 

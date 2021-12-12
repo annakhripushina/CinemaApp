@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.widget.Toolbar
-import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.bumptech.glide.Glide
@@ -20,6 +19,7 @@ import com.example.cinema_app.presentation.viewmodel.CinemaListViewModel
 
 class CinemaActivity : Fragment() {
     private val viewModel: CinemaListViewModel by activityViewModels()
+
     private lateinit var cinema: Cinema
     private lateinit var input: EditText
     private lateinit var checkBox: CheckBox
@@ -54,15 +54,15 @@ class CinemaActivity : Fragment() {
 
         Glide.with(imageView.context)
             .load(cinema.image)
-            //.placeholder(R.drawable.ic_image)
-            //.error(R.drawable.ic_error)
-            //.override(image2.resources.getDimensionPixelSize(R.dimen.image_size))
             .centerCrop()
             .into(imageView)
 
         descriptionId.let { description.text = it }
         titleToolbar.title = cinemaTitleId
-        checkBox.isChecked = cinema.hasLiked
+        viewModel.getLike(cinema)
+        checkBox.isChecked = viewModel.hasLiked
+    //viewModel.hasLiked(cinema)
+        //checkBox.isChecked = viewModel.hasLiked//cinema.hasLiked
     }
 
     private fun setClickListeners(cinema: Cinema) {
@@ -84,6 +84,7 @@ class CinemaActivity : Fragment() {
             override fun afterTextChanged(s: Editable) {
                 viewModel.onSetComment(input)
             }
+
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
         })

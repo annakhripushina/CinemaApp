@@ -5,15 +5,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.cinema_app.data.entity.Cinema
 import com.example.cinema_app.R
+import com.example.cinema_app.data.entity.Cinema
 
 
 class CinemaAdapter(
     private val listener: CinemaClickListener
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private val items = java.util.ArrayList<Cinema>()
+    private val items = ArrayList<Cinema>()
 
     fun setItems(cinemaList: ArrayList<Cinema>) {
         items.clear()

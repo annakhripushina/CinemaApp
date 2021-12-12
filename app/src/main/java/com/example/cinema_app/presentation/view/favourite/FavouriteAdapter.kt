@@ -4,14 +4,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.cinema_app.data.entity.Cinema
 import com.example.cinema_app.R
+import com.example.cinema_app.data.entity.Cinema
 
 
 class FavouriteAdapter(
-    private val items: ArrayList<Cinema>,
     private val listener: FavouriteClickListener
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    private val items = ArrayList<Cinema>()
+
+    fun setItems(favoriteList: ArrayList<Cinema>) {
+        items.clear()
+        items.addAll(favoriteList)
+
+        notifyDataSetChanged()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
