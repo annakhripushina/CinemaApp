@@ -56,29 +56,36 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:gravity="right">
 
                 <CheckBox
                     android:id="@+id/checkBoxLike"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2"
                     android:text="Нравится"
-                    android:layout_marginStart="20dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
                     android:layout_marginBottom="10dp"
                     android:textSize="18sp"
-                    tools:ignore="NestedWeights" />
-
-                <Button
-                    android:id="@+id/buttonInvite"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="right"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginEnd="20dp"
                     android:layout_weight="1"
-                    android:text="@string/buttonInvite"
-                    tools:ignore="RtlHardcoded" />
+                    />
+
+                <ImageButton
+                    android:id="@+id/imageInvite"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="right"
+                    android:contentDescription="Пригласить"
+                    android:src="@drawable/ic_baseline_share_24" />
+
+                <ImageButton
+                    android:id="@+id/imageReminder"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:contentDescription="Посмотреть позже"
+                    android:src="@drawable/ic_baseline_access_time_24"
+                    android:layout_gravity="right"/>
             </LinearLayout>
 
             <EditText

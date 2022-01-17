@@ -32,6 +32,7 @@ class CinemaViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
                 adapterPosition
             )
         }
+
         itemView.setOnLongClickListener {
             listener.onLongCinemaClick(
                 item,

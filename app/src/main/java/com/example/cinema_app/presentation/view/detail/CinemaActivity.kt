@@ -1,5 +1,7 @@
 package com.example.cinema_app.presentation.view.detail
 
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
@@ -17,6 +19,7 @@ import com.example.cinema_app.R
 import com.example.cinema_app.data.entity.Cinema
 import com.example.cinema_app.presentation.viewmodel.CinemaViewModel
 import com.example.cinema_app.presentation.viewmodel.CinemaViewModelFactory
+import java.util.*
 
 
 class CinemaActivity : Fragment() {
@@ -28,7 +31,8 @@ class CinemaActivity : Fragment() {
     private lateinit var cinema: Cinema
     private lateinit var input: EditText
     private lateinit var checkBox: CheckBox
-    private lateinit var button: Button
+    private lateinit var buttonInvite: ImageView
+    private lateinit var buttonReminder: ImageView
     private lateinit var description: TextView
     private lateinit var imageView: ImageView
     private lateinit var titleToolbar: Toolbar
@@ -73,7 +77,7 @@ class CinemaActivity : Fragment() {
     }
 
     private fun setClickListeners(cinema: Cinema) {
-        button.setOnClickListener {
+        buttonInvite.setOnClickListener {
             val emailIntent = Intent(Intent.ACTION_SEND)
             emailIntent.putExtra(
                 Intent.EXTRA_TEXT,
@@ -81,6 +85,32 @@ class CinemaActivity : Fragment() {
             )
             emailIntent.type = "text/plain"
             startActivity(Intent.createChooser(emailIntent, "Отправить приглашение через: "))
+        }
+
+        buttonReminder.setOnClickListener{
+            val calendar = Calendar.getInstance()
+            val listenerDate = DatePickerDialog.OnDateSetListener { view, year,
+                                                                month, dayOfMonth ->
+                val listenerTime =
+                    TimePickerDialog.OnTimeSetListener { listeningView, hourOfDay, minute ->
+                        //Do something
+                    }
+
+                TimePickerDialog(
+                    requireContext(), listenerTime,
+                    calendar[Calendar.HOUR_OF_DAY],
+                    calendar[Calendar.MINUTE],
+                    true
+                ).show()
+            }
+            DatePickerDialog(
+                requireContext(),
+                listenerDate,
+                calendar[Calendar.YEAR],
+                calendar[Calendar.MONTH],
+                calendar[Calendar.DAY_OF_MONTH]
+            ).show()
+
         }
 
         checkBox.setOnCheckedChangeListener { _, isChecked ->
@@ -97,10 +127,12 @@ class CinemaActivity : Fragment() {
         })
     }
 
+
     private fun initViews(view: View) {
         input = view.findViewById(R.id.commentText)
         checkBox = view.findViewById(R.id.checkBoxLike)
-        button = view.findViewById(R.id.buttonInvite)
+        buttonInvite = view.findViewById(R.id.imageInvite)
+        buttonReminder = view.findViewById(R.id.imageReminder)
         titleToolbar = view.findViewById(R.id.toolbar)
         description = view.findViewById(R.id.textDetail)
         imageView = view.findViewById(R.id.imageDetail)
