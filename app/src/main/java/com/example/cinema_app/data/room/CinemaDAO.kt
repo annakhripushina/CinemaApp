@@ -50,4 +50,7 @@ interface CinemaDao {
 
     @Query("UPDATE cinema_table SET titleColor = :titleColor WHERE id = :id")
     fun updateTitleColor(titleColor: Int, id: Int)
+
+    @Query("UPDATE watch_table SET date_viewed = :dateViewed WHERE original_id = :id")
+    fun updateTitleColor(dateViewed: String, id: Int)
 }

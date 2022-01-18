@@ -11,6 +11,7 @@ import com.example.cinema_app.data.CinemaRepository
 import com.example.cinema_app.data.entity.Cinema
 import com.example.cinema_app.data.entity.FavouriteCinema
 import com.example.cinema_app.data.entity.LikedCinema
+import com.example.cinema_app.data.entity.WatchCinema
 import com.example.cinema_app.data.room.CinemaRoomDB
 import com.example.cinema_app.domain.CinemaListInteractor
 import com.example.cinema_app.utils.SingleLiveEvent
@@ -103,6 +104,11 @@ class CinemaViewModel(application: Application) : AndroidViewModel(application) 
             repository.insertCinema(it)
         }
     }
+
+    fun insertWatchCinema(cinemaItem: WatchCinema) =
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.insertWatchCinema(cinemaItem)
+        }
 
     fun deleteAll() = viewModelScope.launch(Dispatchers.IO) {
         repository.deleteAll()

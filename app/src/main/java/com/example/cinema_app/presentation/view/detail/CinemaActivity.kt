@@ -1,7 +1,5 @@
 package com.example.cinema_app.presentation.view.detail
 
-import android.app.DatePickerDialog
-import android.app.TimePickerDialog
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
@@ -14,15 +12,16 @@ import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import com.example.cinema_app.service.AlarmService
 import com.bumptech.glide.Glide
 import com.example.cinema_app.R
 import com.example.cinema_app.data.entity.Cinema
+import com.example.cinema_app.presentation.DateTimePickerUtil
 import com.example.cinema_app.presentation.viewmodel.CinemaViewModel
 import com.example.cinema_app.presentation.viewmodel.CinemaViewModelFactory
-import java.util.*
 
 
-class CinemaActivity : Fragment() {
+class CinemaActivity : Fragment(), DateTimePickerUtil {
     private val viewModel: CinemaViewModel by activityViewModels {
         CinemaViewModelFactory(
             requireActivity().application
@@ -36,6 +35,7 @@ class CinemaActivity : Fragment() {
     private lateinit var description: TextView
     private lateinit var imageView: ImageView
     private lateinit var titleToolbar: Toolbar
+    private lateinit var alarmService: AlarmService
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -50,6 +50,7 @@ class CinemaActivity : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initViews(view)
+        initAlarmService()
 
         cinema = viewModel.cinemaItem
         populateViews(cinema)
@@ -61,6 +62,10 @@ class CinemaActivity : Fragment() {
                 checkBox.isChecked = viewModel.hasLiked
             }
         })
+    }
+
+    private fun initAlarmService() {
+        alarmService = AlarmService(requireContext())
     }
 
     private fun populateViews(cinema: Cinema) {
@@ -88,7 +93,13 @@ class CinemaActivity : Fragment() {
         }
 
         buttonReminder.setOnClickListener{
-            val calendar = Calendar.getInstance()
+            clickScheduleMovieAlarm(
+                requireActivity().supportFragmentManager,
+                cinema,
+                viewModel,
+                alarmService
+            )
+            /*val calendar = Calendar.getInstance()
             val listenerDate = DatePickerDialog.OnDateSetListener { view, year,
                                                                 month, dayOfMonth ->
                 val listenerTime =
@@ -110,6 +121,7 @@ class CinemaActivity : Fragment() {
                 calendar[Calendar.MONTH],
                 calendar[Calendar.DAY_OF_MONTH]
             ).show()
+*/
 
         }
 

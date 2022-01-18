@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import com.example.cinema_app.data.entity.Cinema
 import com.example.cinema_app.data.entity.FavouriteCinema
 import com.example.cinema_app.data.entity.LikedCinema
+import com.example.cinema_app.data.entity.WatchCinema
 import com.example.cinema_app.data.room.CinemaDao
 
 class CinemaRepository(private val cinemaDao: CinemaDao) {
@@ -52,6 +53,12 @@ class CinemaRepository(private val cinemaDao: CinemaDao) {
     @WorkerThread
     suspend fun updateTitleColor(titleColor: Int, id: Int) {
         cinemaDao.updateTitleColor(titleColor, id)
+    }
+
+    @Suppress("RedundantSuspendModifier")
+    @WorkerThread
+    suspend fun insertWatchCinema(cinemaItem: WatchCinema) {
+        cinemaDao.insertWatchCinema(cinemaItem)
     }
 
 }

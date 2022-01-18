@@ -1,15 +1,29 @@
 package com.example.cinema_app.presentation.view
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModelProvider
 import com.example.cinema_app.R
+import com.example.cinema_app.data.entity.Cinema
 import com.example.cinema_app.presentation.view.cinemaList.CinemaListActivity
+import com.example.cinema_app.presentation.view.detail.CinemaActivity
 import com.example.cinema_app.presentation.view.favourite.FavouriteActivity
+import com.example.cinema_app.presentation.viewmodel.CinemaViewModel
+import com.example.cinema_app.presentation.viewmodel.CinemaViewModelFactory
+import com.example.cinema_app.receiver.ALARM_NOTIFICATION_SCHEDULE
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 
 class MainActivity : AppCompatActivity() {
+    private val cinemaViewModelFactory by lazy { CinemaViewModelFactory(application) }
+    private val cinemaViewModel by lazy {
+        ViewModelProvider(this, cinemaViewModelFactory).get(
+            CinemaViewModel::class.java
+        )
+    }
 
     @SuppressLint("UseCompatLoadingForDrawables")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,6 +59,23 @@ class MainActivity : AppCompatActivity() {
                 supportFragmentManager.popBackStack()
             }
             true
+        }
+
+        onNewIntent(intent)
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        val bundle = intent?.extras
+        if (bundle != null) {
+            if (bundle.containsKey(ALARM_NOTIFICATION_SCHEDULE)) {
+                val movie = bundle.getParcelable<Cinema>(ALARM_NOTIFICATION_SCHEDULE)
+                cinemaViewModel.onSetCinemaItem(movie!!)
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.containerActivity, CinemaActivity(), "cinemaActivity")
+                    .addToBackStack("cinemaActivity")
+                    .commit()
+            }
         }
     }
 
