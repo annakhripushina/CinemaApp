@@ -4,15 +4,44 @@ import android.graphics.Color
 import com.example.cinema_app.data.CinemaService
 import com.example.cinema_app.data.entity.Cinema
 import com.example.cinema_app.data.model.CinemaListModel
+import com.example.cinema_app.data.model.CinemaModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 class CinemaListInteractor(private val cinemaService: CinemaService) {
     private var items = ArrayList<Cinema>()
+    private lateinit var cinemaLatestItem: Cinema
 
     fun getCinema(page: Int, callback: GetCinemaCallback) {
         var totalPages = 1
+
+        cinemaService.getLatestCinema().enqueue(object : Callback<CinemaModel> {
+            override fun onResponse(
+                call: Call<CinemaModel>,
+                response: Response<CinemaModel>
+            ) {
+                if (response.isSuccessful) {
+                    cinemaLatestItem = response.body()?.let {
+                        Cinema(
+                            it.id,
+                            it.original_title,
+                            it.overview,
+                            "https://image.tmdb.org/t/p/w500/" + it.poster_path,
+                            Color.BLACK
+                        )
+                    }!!
+                    callback.onSuccessLatest(cinemaLatestItem)
+                } else {
+                    callback.onError("Error: ${response.code()}")
+                }
+            }
+
+            override fun onFailure(call: Call<CinemaModel>, t: Throwable) {
+                callback.onError("Network error probably...")
+            }
+
+        })
 
         cinemaService.getCinemaPage(page).enqueue(object : Callback<CinemaListModel> {
             override fun onResponse(
@@ -52,6 +81,7 @@ class CinemaListInteractor(private val cinemaService: CinemaService) {
 
     interface GetCinemaCallback {
         fun onSuccess(cinemaList: ArrayList<Cinema>, page: Int, totalPages: Int)
+        fun onSuccessLatest(cinemaItem: Cinema)
         fun onError(error: String)
     }
 

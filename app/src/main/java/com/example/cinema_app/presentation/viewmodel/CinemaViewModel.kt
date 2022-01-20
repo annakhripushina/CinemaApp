@@ -1,6 +1,7 @@
 package com.example.cinema_app.presentation.viewmodel
 
 import android.app.Application
+import android.content.Intent
 import android.widget.EditText
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -11,9 +12,11 @@ import com.example.cinema_app.data.CinemaRepository
 import com.example.cinema_app.data.entity.Cinema
 import com.example.cinema_app.data.entity.FavouriteCinema
 import com.example.cinema_app.data.entity.LikedCinema
-import com.example.cinema_app.data.entity.WatchCinema
+import com.example.cinema_app.data.entity.SheduleCinema
 import com.example.cinema_app.data.room.CinemaRoomDB
 import com.example.cinema_app.domain.CinemaListInteractor
+import com.example.cinema_app.presentation.view.MainActivity
+import com.example.cinema_app.service.NOTIFICATION_FCM
 import com.example.cinema_app.utils.SingleLiveEvent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -21,6 +24,7 @@ import kotlinx.coroutines.launch
 class CinemaViewModel(application: Application) : AndroidViewModel(application) {
     private val cinemaInteractor = App.instance.cinemaInteractor
     private lateinit var mCinemaItem: Cinema
+    private lateinit var mCinemaLatestItem: Cinema
     private var mComment: String = ""
     private var mHasLiked: Boolean = false
     private val mError: MutableLiveData<String> = SingleLiveEvent()
@@ -36,6 +40,9 @@ class CinemaViewModel(application: Application) : AndroidViewModel(application) 
 
     val cinemaItem: Cinema
         get() = mCinemaItem
+
+    val cinemaLatestItem: Cinema
+        get() = mCinemaLatestItem
 
     val hasLiked: Boolean
         get() = mHasLiked
@@ -65,6 +72,10 @@ class CinemaViewModel(application: Application) : AndroidViewModel(application) 
                 mTotalPages = totalPages
                 if (page == 1) deleteAll()
                 insertCinemaList(cinemaList)
+            }
+
+            override fun onSuccessLatest(cinemaItem: Cinema) {
+                mCinemaLatestItem = cinemaItem
             }
 
             override fun onError(error: String) {
@@ -105,9 +116,9 @@ class CinemaViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
-    fun insertWatchCinema(cinemaItem: WatchCinema) =
+    fun insertSheduleCinema(cinemaItem: SheduleCinema) =
         viewModelScope.launch(Dispatchers.IO) {
-            repository.insertWatchCinema(cinemaItem)
+            repository.insertSheduleCinema(cinemaItem)
         }
 
     fun deleteAll() = viewModelScope.launch(Dispatchers.IO) {

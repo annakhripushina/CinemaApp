@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import com.example.cinema_app.data.entity.Cinema
 import com.example.cinema_app.data.entity.FavouriteCinema
 import com.example.cinema_app.data.entity.LikedCinema
-import com.example.cinema_app.data.entity.WatchCinema
+import com.example.cinema_app.data.entity.SheduleCinema
 import com.example.cinema_app.data.room.CinemaDao
 
 class CinemaRepository(private val cinemaDao: CinemaDao) {
@@ -57,8 +57,8 @@ class CinemaRepository(private val cinemaDao: CinemaDao) {
 
     @Suppress("RedundantSuspendModifier")
     @WorkerThread
-    suspend fun insertWatchCinema(cinemaItem: WatchCinema) {
-        cinemaDao.insertWatchCinema(cinemaItem)
+    suspend fun insertSheduleCinema(cinemaItem: SheduleCinema) {
+        cinemaDao.insertSheduleCinema(cinemaItem)
     }
 
 }

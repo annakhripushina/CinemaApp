@@ -1,61 +1,66 @@
 package com.example.cinema_app.presentation
 
-import android.annotation.SuppressLint
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
+import android.content.Context
+import android.view.View
 import androidx.fragment.app.FragmentManager
-import com.example.cinema_app.service.AlarmService
 import com.example.cinema_app.data.entity.Cinema
-import com.example.cinema_app.data.entity.WatchCinema
+import com.example.cinema_app.data.entity.SheduleCinema
 import com.example.cinema_app.presentation.viewmodel.CinemaViewModel
-import com.google.android.material.datepicker.MaterialDatePicker
-import com.google.android.material.timepicker.MaterialTimePicker
-import com.google.android.material.timepicker.TimeFormat
-import java.time.Instant
+import com.example.cinema_app.service.AlarmService
+import com.google.android.material.snackbar.Snackbar
+import java.time.LocalDateTime
 import java.time.ZoneId
-import java.time.ZoneOffset
-import java.time.ZonedDateTime
+import java.util.*
 
 interface DateTimePickerUtil {
-    @SuppressLint("NewApi")
-    fun clickScheduleMovieAlarm(
+    fun clickButtonScheduleAlarm(
         fm: FragmentManager,
         cinema: Cinema,
         cinemaViewModel: CinemaViewModel,
-        alarmService: AlarmService
+        alarmService: AlarmService,
+        context: Context,
+        view: View?
     ) {
-        val builder = MaterialDatePicker.Builder.datePicker()
-        val picker = builder.build()
-        picker.show(fm, picker.toString())
+        val calendar = Calendar.getInstance()
+        val listenerDate = DatePickerDialog.OnDateSetListener { _, _, _, _ ->
+            val localDateTime = LocalDateTime.ofInstant(calendar.toInstant(), calendar.timeZone.toZoneId()).toLocalDate()
 
-        picker.addOnPositiveButtonClickListener {
-            val localDateTime = ZonedDateTime.ofInstant(
-                Instant.ofEpochMilli(picker.selection!!.toLong()),
-                ZoneOffset.UTC
-            ).toLocalDate()
-
-            val materialTimePicker = MaterialTimePicker
-                .Builder()
-                .setTimeFormat(TimeFormat.CLOCK_24H)
-                .build()
-
-            materialTimePicker.show(fm, materialTimePicker.toString())
-
-            materialTimePicker.addOnPositiveButtonClickListener {
-                val newHour = materialTimePicker.hour
-                val newMinute = materialTimePicker.minute
-                val scheduleDateTime =
-                    localDateTime.atTime(newHour, newMinute).atZone(ZoneId.systemDefault())
-                val requestCode = cinema.original_id
+            val listenerTime = TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
+                val scheduleDateTime = localDateTime.atTime(hourOfDay, minute).atZone(ZoneId.systemDefault())
                 val alarmTime = scheduleDateTime.toInstant().toEpochMilli()
 
-                cinemaViewModel.insertWatchCinema(WatchCinema(cinema.original_id, alarmTime.toString(), requestCode))
-                /*movieViewModel.updateScheduleTime(movie.uniqueId, scheduleDateTime.toString())
-                movieViewModel.saveScheduleInfo(movie.title, requestCode, alarmTime)*/
+                cinemaViewModel.insertSheduleCinema(
+                    SheduleCinema(
+                        cinema.original_id,
+                        alarmTime.toString(),
+                        cinema.original_id
+                    )
+                )
                 alarmService.setExactAlarm(
                     cinema,
                     alarmTime,
-                    requestCode
+                    cinema.original_id
                 )
+                val snackDeleteFavourite =
+                    Snackbar.make(view!!, "Напоминание сохранено", Snackbar.LENGTH_LONG)
+                snackDeleteFavourite.show()
             }
+
+            TimePickerDialog(
+                context, listenerTime,
+                calendar[Calendar.HOUR_OF_DAY],
+                calendar[Calendar.MINUTE],
+                true
+            ).show()
         }
+        DatePickerDialog(
+            context,
+            listenerDate,
+            calendar[Calendar.YEAR],
+            calendar[Calendar.MONTH],
+            calendar[Calendar.DAY_OF_MONTH]
+        ).show()
     }
 }
