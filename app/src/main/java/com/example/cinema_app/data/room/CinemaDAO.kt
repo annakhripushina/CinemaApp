@@ -24,14 +24,17 @@ interface CinemaDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertSheduleCinema(sheduleCinema: SheduleCinema?)
 
+    @Query("DELETE FROM cinema_table")
+    fun deleteAll()
+
     @Query("DELETE FROM liked_table WHERE original_id == :cinemaOriginalId")
     fun deleteLikedCinema(cinemaOriginalId: Int)
 
     @Query("DELETE FROM favourite_table WHERE original_id == :cinemaOriginalId")
     fun deleteFavouriteCinema(cinemaOriginalId: Int)
 
-    @Query("DELETE FROM cinema_table")
-    fun deleteAll()
+    @Query("DELETE FROM shedule_table WHERE original_id = :id")
+    fun deleteSheduleCinema(id: Int)
 
     @Query("SELECT * FROM cinema_table")
     fun getAll(): LiveData<List<Cinema>>

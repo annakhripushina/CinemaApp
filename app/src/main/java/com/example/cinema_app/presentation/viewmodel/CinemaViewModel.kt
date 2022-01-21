@@ -1,7 +1,6 @@
 package com.example.cinema_app.presentation.viewmodel
 
 import android.app.Application
-import android.content.Intent
 import android.widget.EditText
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -15,8 +14,6 @@ import com.example.cinema_app.data.entity.LikedCinema
 import com.example.cinema_app.data.entity.SheduleCinema
 import com.example.cinema_app.data.room.CinemaRoomDB
 import com.example.cinema_app.domain.CinemaListInteractor
-import com.example.cinema_app.presentation.view.MainActivity
-import com.example.cinema_app.service.NOTIFICATION_FCM
 import com.example.cinema_app.utils.SingleLiveEvent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -123,6 +120,10 @@ class CinemaViewModel(application: Application) : AndroidViewModel(application) 
 
     fun deleteAll() = viewModelScope.launch(Dispatchers.IO) {
         repository.deleteAll()
+    }
+
+    fun deleteSheduleCinema(cinemaOriginalId: Int) = viewModelScope.launch(Dispatchers.IO) {
+        repository.deleteSheduleCinema(cinemaOriginalId)
     }
 
     fun updateTitleColor(titleColor: Int, id: Int) = viewModelScope.launch(Dispatchers.IO) {

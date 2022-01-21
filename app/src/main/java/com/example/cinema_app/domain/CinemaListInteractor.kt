@@ -5,17 +5,19 @@ import com.example.cinema_app.data.CinemaService
 import com.example.cinema_app.data.entity.Cinema
 import com.example.cinema_app.data.model.CinemaListModel
 import com.example.cinema_app.data.model.CinemaModel
+import com.example.cinema_app.service.FirebaseRemoteConfigService
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.firebase.remoteconfig.ktx.get
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class CinemaListInteractor(private val cinemaService: CinemaService) {
+class CinemaListInteractor(private val cinemaService: CinemaService) : FirebaseRemoteConfigService {
     private var items = ArrayList<Cinema>()
     private lateinit var cinemaLatestItem: Cinema
+    private lateinit var remoteConfig: FirebaseRemoteConfig
 
-    fun getCinema(page: Int, callback: GetCinemaCallback) {
-        var totalPages = 1
-
+    fun getLatestCinema(callback: GetCinemaCallback) {
         cinemaService.getLatestCinema().enqueue(object : Callback<CinemaModel> {
             override fun onResponse(
                 call: Call<CinemaModel>,
@@ -32,18 +34,21 @@ class CinemaListInteractor(private val cinemaService: CinemaService) {
                         )
                     }!!
                     callback.onSuccessLatest(cinemaLatestItem)
-                } else {
-                    callback.onError("Error: ${response.code()}")
                 }
             }
 
             override fun onFailure(call: Call<CinemaModel>, t: Throwable) {
-                callback.onError("Network error probably...")
             }
-
         })
+    }
 
-        cinemaService.getCinemaPage(page).enqueue(object : Callback<CinemaListModel> {
+    fun getCinema(page: Int, callback: GetCinemaCallback) {
+        var totalPages = 1
+
+        remoteConfig = getRemoteConfig()
+        var cinemaTag = remoteConfig["Category"].asString()
+
+        cinemaService.getCinemaPage(cinemaTag, page).enqueue(object : Callback<CinemaListModel> {
             override fun onResponse(
                 call: Call<CinemaListModel>,
                 response: Response<CinemaListModel>
@@ -76,7 +81,6 @@ class CinemaListInteractor(private val cinemaService: CinemaService) {
                 callback.onError("Network error probably...")
             }
         })
-
     }
 
     interface GetCinemaCallback {
@@ -84,5 +88,7 @@ class CinemaListInteractor(private val cinemaService: CinemaService) {
         fun onSuccessLatest(cinemaItem: Cinema)
         fun onError(error: String)
     }
-
 }
+
+
+

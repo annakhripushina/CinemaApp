@@ -25,10 +25,13 @@ interface DateTimePickerUtil {
     ) {
         val calendar = Calendar.getInstance()
         val listenerDate = DatePickerDialog.OnDateSetListener { _, _, _, _ ->
-            val localDateTime = LocalDateTime.ofInstant(calendar.toInstant(), calendar.timeZone.toZoneId()).toLocalDate()
+            val localDateTime =
+                LocalDateTime.ofInstant(calendar.toInstant(), calendar.timeZone.toZoneId())
+                    .toLocalDate()
 
             val listenerTime = TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
-                val scheduleDateTime = localDateTime.atTime(hourOfDay, minute).atZone(ZoneId.systemDefault())
+                val scheduleDateTime =
+                    localDateTime.atTime(hourOfDay, minute).atZone(ZoneId.systemDefault())
                 val alarmTime = scheduleDateTime.toInstant().toEpochMilli()
 
                 cinemaViewModel.insertSheduleCinema(

@@ -30,5 +30,7 @@
     <string name="favoriteTitle">Избранное</string>
     <string name="buttonDetail">Детали</string>
     <string name="buttonWatch">Посмотреть позже</string>
+    <string name="buttonEdit">Изменить</string>
+    <string name="sheduleTitle">Смотреть позже</string>
 
 </resources>

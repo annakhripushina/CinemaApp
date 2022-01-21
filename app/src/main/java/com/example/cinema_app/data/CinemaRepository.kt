@@ -61,4 +61,10 @@ class CinemaRepository(private val cinemaDao: CinemaDao) {
         cinemaDao.insertSheduleCinema(cinemaItem)
     }
 
+    @Suppress("RedundantSuspendModifier")
+    @WorkerThread
+    suspend fun deleteSheduleCinema(cinemaOriginalId: Int) {
+        cinemaDao.deleteSheduleCinema(cinemaOriginalId)
+    }
+
 }
