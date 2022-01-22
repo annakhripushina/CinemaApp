@@ -71,7 +71,7 @@ class FirebaseMessagingService : FirebaseMessagingService() {
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
         val notificationManager = NotificationManagerCompat.from(this)
-        cinema?.let { notificationManager.notify(it.original_id, builder.build()) }
+        cinema?.let { notificationManager.notify(it.originalId, builder.build()) }
     }
 
     private fun getLatestCinema(): Cinema? {

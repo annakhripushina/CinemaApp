@@ -5,13 +5,15 @@ import androidx.lifecycle.LiveData
 import com.example.cinema_app.data.entity.Cinema
 import com.example.cinema_app.data.entity.FavouriteCinema
 import com.example.cinema_app.data.entity.LikedCinema
-import com.example.cinema_app.data.entity.SheduleCinema
+import com.example.cinema_app.data.entity.ScheduleCinema
 import com.example.cinema_app.data.room.CinemaDao
 
 class CinemaRepository(private val cinemaDao: CinemaDao) {
     val allCinema: LiveData<List<Cinema>> = cinemaDao.getAll()
     val allFavouriteCinema: LiveData<List<Cinema>> = cinemaDao.getFavouriteCinema()
     val allLikedCinema: LiveData<List<LikedCinema>> = cinemaDao.getLikedCinema()
+    val allScheduleCinema: LiveData<List<Cinema>> = cinemaDao.getScheduleCinema()
+    val allSchedule: LiveData<List<ScheduleCinema>> = cinemaDao.getSchedule()
 
     @Suppress("RedundantSuspendModifier")
     @WorkerThread
@@ -57,14 +59,20 @@ class CinemaRepository(private val cinemaDao: CinemaDao) {
 
     @Suppress("RedundantSuspendModifier")
     @WorkerThread
-    suspend fun insertSheduleCinema(cinemaItem: SheduleCinema) {
-        cinemaDao.insertSheduleCinema(cinemaItem)
+    suspend fun updateDateViewed(dateViewed: String, cinemaOriginalId: Int) {
+        cinemaDao.updateDateViewed(dateViewed, cinemaOriginalId)
     }
 
     @Suppress("RedundantSuspendModifier")
     @WorkerThread
-    suspend fun deleteSheduleCinema(cinemaOriginalId: Int) {
-        cinemaDao.deleteSheduleCinema(cinemaOriginalId)
+    suspend fun insertScheduleCinema(cinemaItem: ScheduleCinema) {
+        cinemaDao.insertScheduleCinema(cinemaItem)
+    }
+
+    @Suppress("RedundantSuspendModifier")
+    @WorkerThread
+    suspend fun deleteScheduleCinema(cinemaOriginalId: Int) {
+        cinemaDao.deleteScheduleCinema(cinemaOriginalId)
     }
 
 }

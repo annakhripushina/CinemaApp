@@ -1,4 +1,4 @@
-package com.example.cinema_app.presentation.view.shedule
+package com.example.cinema_app.presentation.view.Schedule
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
@@ -9,28 +9,30 @@ import com.example.cinema_app.R
 import com.example.cinema_app.data.entity.Cinema
 
 
-class SheduleAdapter(
-    private val listener: SheduleClickListener
+class ScheduleAdapter(
+    private val listener: ScheduleClickListener
+
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val items = ArrayList<Cinema>()
+    private var dateTimeAlarm: String = ""
 
     @SuppressLint("NotifyDataSetChanged")
-    fun setItems(favoriteList: ArrayList<Cinema>) {
+    fun setItems(ScheduleList: ArrayList<Cinema>) {
         items.clear()
-        items.addAll(favoriteList)
+        items.addAll(ScheduleList)
 
         notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        return SheduleViewHolder(inflater.inflate(R.layout.shedule_item, parent, false))
+        return ScheduleViewHolder(inflater.inflate(R.layout.schedule_item, parent, false))
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
-            is SheduleViewHolder -> {
+            is ScheduleViewHolder -> {
                 holder.bind(items[position], listener)
             }
         }
@@ -38,8 +40,9 @@ class SheduleAdapter(
 
     override fun getItemCount(): Int = items.size
 
-    interface SheduleClickListener {
-        fun onCinemaClick(cinemaItem: Cinema, itemView: View, position: Int)
+    interface ScheduleClickListener {
+        fun onEditClick(cinemaItem: Cinema, itemView: View, position: Int)
         fun onDeleteClick(cinemaItem: Cinema, position: Int)
+        //fun getDateViewed(cinemaItem: Cinema, itemView: View)
     }
 }

@@ -31,6 +31,6 @@
     <string name="buttonDetail">Детали</string>
     <string name="buttonWatch">Посмотреть позже</string>
     <string name="buttonEdit">Изменить</string>
-    <string name="sheduleTitle">Смотреть позже</string>
+    <string name="ScheduleTitle">Смотреть позже</string>
 
 </resources>

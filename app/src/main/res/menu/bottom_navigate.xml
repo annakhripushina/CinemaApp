@@ -9,7 +9,7 @@
         android:icon="@drawable/ic_baseline_stars_24"
         android:title="Избранное" />
     <item
-        android:id="@+id/nav_shedule"
+        android:id="@+id/nav_Schedule"
         android:icon="@drawable/ic_baseline_notifications_24"
         android:title="Смотреть позже" />
 </menu>

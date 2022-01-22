@@ -8,7 +8,7 @@ import androidx.room.Query
 import com.example.cinema_app.data.entity.Cinema
 import com.example.cinema_app.data.entity.FavouriteCinema
 import com.example.cinema_app.data.entity.LikedCinema
-import com.example.cinema_app.data.entity.SheduleCinema
+import com.example.cinema_app.data.entity.ScheduleCinema
 
 @Dao
 interface CinemaDao {
@@ -21,39 +21,40 @@ interface CinemaDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertLikedCinema(likedCinema: LikedCinema?)
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insertSheduleCinema(sheduleCinema: SheduleCinema?)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)//IGNORE)
+    fun insertScheduleCinema(ScheduleCinema: ScheduleCinema?)
 
-    @Query("DELETE FROM cinema_table")
+    @Query("DELETE FROM cinemaTable")
     fun deleteAll()
 
-    @Query("DELETE FROM liked_table WHERE original_id == :cinemaOriginalId")
+    @Query("DELETE FROM likedTable WHERE originalId == :cinemaOriginalId")
     fun deleteLikedCinema(cinemaOriginalId: Int)
 
-    @Query("DELETE FROM favourite_table WHERE original_id == :cinemaOriginalId")
+    @Query("DELETE FROM favouriteTable WHERE originalId == :cinemaOriginalId")
     fun deleteFavouriteCinema(cinemaOriginalId: Int)
 
-    @Query("DELETE FROM shedule_table WHERE original_id = :id")
-    fun deleteSheduleCinema(id: Int)
+    @Query("DELETE FROM scheduleTable WHERE originalId = :id")
+    fun deleteScheduleCinema(id: Int)
 
-    @Query("SELECT * FROM cinema_table")
+    @Query("SELECT * FROM cinemaTable")
     fun getAll(): LiveData<List<Cinema>>
 
-    @Query("SELECT c.original_id, c.title, c.description, c.image, c.titleColor, c.id FROM cinema_table c, favourite_table f WHERE c.original_id = f.original_id")
+    @Query("SELECT c.originalId, c.title, c.description, c.image, c.titleColor, c.dateViewed, c.id FROM cinemaTable c, favouriteTable f WHERE c.originalId = f.originalId")
     fun getFavouriteCinema(): LiveData<List<Cinema>>
 
-    @Query("SELECT * FROM liked_table")
+    @Query("SELECT * FROM likedTable")
     fun getLikedCinema(): LiveData<List<LikedCinema>>
 
-    @Query("SELECT c.original_id, c.title, c.description, c.image, c.titleColor, c.id FROM cinema_table c, shedule_table s WHERE c.original_id = s.original_id")
-    fun getSheduleCinema(): LiveData<List<Cinema>>
+    @Query("SELECT * FROM scheduleTable")
+    fun getSchedule(): LiveData<List<ScheduleCinema>>
 
-    /*   @Query("SELECT c.original_id, c.title FROM cinema_table c, watch_table w WHERE c.original_id = w.original_id")
-       fun getWatchCinema(original_id: Int): LiveData<List<Cinema>>*/
+    @Query("SELECT c.originalId, c.title, c.description, c.image, c.titleColor, c.dateViewed, c.id FROM cinemaTable c, scheduleTable s WHERE c.originalId = s.originalId")
+    fun getScheduleCinema(): LiveData<List<Cinema>>
 
-    @Query("UPDATE cinema_table SET titleColor = :titleColor WHERE id = :id")
+    @Query("UPDATE cinemaTable SET titleColor = :titleColor WHERE id = :id")
     fun updateTitleColor(titleColor: Int, id: Int)
 
-    @Query("UPDATE shedule_table SET date_viewed = :dateViewed WHERE original_id = :id")
-    fun updateDateViewedAlarm(dateViewed: String, id: Int)
+    @Query("UPDATE cinemaTable SET dateViewed = :dateViewed WHERE originalId = :originalId")
+    fun updateDateViewed(dateViewed: String, originalId: Int)
+
 }

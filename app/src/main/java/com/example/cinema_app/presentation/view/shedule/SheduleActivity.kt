@@ -1,7 +1,6 @@
-package com.example.cinema_app.presentation.view.shedule
+package com.example.cinema_app.presentation.view.Schedule
 
 import android.content.res.Configuration
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -17,47 +16,44 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.cinema_app.MyItemDecorator
 import com.example.cinema_app.R
 import com.example.cinema_app.data.entity.Cinema
-import com.example.cinema_app.presentation.view.detail.CinemaActivity
+import com.example.cinema_app.presentation.DateTimePickerUtil
 import com.example.cinema_app.presentation.viewmodel.CinemaViewModel
 import com.example.cinema_app.presentation.viewmodel.CinemaViewModelFactory
+import com.example.cinema_app.service.AlarmService
 import com.google.android.material.snackbar.Snackbar
 
 
-class SheduleActivity : Fragment() {
+class ScheduleActivity : Fragment(), DateTimePickerUtil {
     private val viewModel: CinemaViewModel by activityViewModels {
         CinemaViewModelFactory(
             requireActivity().application
         )
     }
     private lateinit var recyclerView: RecyclerView
+    private lateinit var alarmService: AlarmService
 
-    private val adapter = SheduleAdapter(object : SheduleAdapter.SheduleClickListener {
-        override fun onCinemaClick(cinemaItem: Cinema, itemView: View, position: Int) {
-            itemView.findViewById<TextView>(R.id.titleView)
-                .setTextColor(Color.MAGENTA)
-            viewModel.updateTitleColor(Color.MAGENTA, cinemaItem.id!!)
-            viewModel.onSetCinemaItem(cinemaItem)
-
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.containerActivity, CinemaActivity(), "cinemaActivity")
-                .addToBackStack("cinemaActivity")
-                .commit()
+    private val adapter = ScheduleAdapter(object : ScheduleAdapter.ScheduleClickListener {
+        override fun onEditClick(cinemaItem: Cinema, itemView: View, position: Int) {
+            clickButtonScheduleAlarm(
+                requireActivity().supportFragmentManager,
+                cinemaItem,
+                viewModel,
+                alarmService,
+                requireContext(),
+                view
+            )
         }
 
         override fun onDeleteClick(cinemaItem: Cinema, position: Int) {
-            viewModel.onRemoveFavouriteCinema(cinemaItem)
+            viewModel.deleteScheduleCinema(cinemaItem.originalId)
             view?.let { isEmptyList(it) }
 
-            val snackDeleteFavourite =
-                Snackbar.make(view!!, "Фильм удален из Избранного", Snackbar.LENGTH_LONG)
+            val snackDelete =
+                Snackbar.make(view!!, "Напоминание удалено", Snackbar.LENGTH_LONG)
 
-            snackDeleteFavourite.setAction("Отмена") {
-                viewModel.onAddFavouriteCinema(cinemaItem)
-                snackDeleteFavourite.dismiss()
-                view?.let { isEmptyList(it) }
-            }
-            snackDeleteFavourite.show()
+            snackDelete.show()
         }
+
     })
 
     override fun onCreateView(
@@ -66,7 +62,7 @@ class SheduleActivity : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(
-            R.layout.activity_shedule,
+            R.layout.activity_schedule,
             container,
             false
         )
@@ -74,8 +70,20 @@ class SheduleActivity : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initFavoriteRecycler(view)
-        viewModel.allFavouriteCinema.observe(viewLifecycleOwner, Observer { list ->
+        initScheduleRecycler(view)
+        initAlarmService()
+        viewModel.allSchedule.observe(viewLifecycleOwner, Observer { list ->
+            list?.let {
+                val arr = viewModel.allSchedule.value //as List<ScheduleCinema>
+                if (arr != null) {
+                    arr.forEach {
+                        viewModel.updateDateViewed(it.dateViewed, it.originalId)
+                    }
+                }
+            }
+        })
+
+        viewModel.allScheduleCinema.observe(viewLifecycleOwner, Observer { list ->
             list?.let {
                 adapter.setItems(list as ArrayList<Cinema>)
                 isEmptyList(view)
@@ -83,14 +91,19 @@ class SheduleActivity : Fragment() {
         })
     }
 
+    private fun initAlarmService() {
+        alarmService = AlarmService(requireContext())
+    }
+
+
     private fun isEmptyList(view: View) {
         if (adapter.itemCount == 0) {
             view.findViewById<TextView>(R.id.emptyList).visibility = VISIBLE
         } else view.findViewById<TextView>(R.id.emptyList).visibility = INVISIBLE
     }
 
-    private fun initFavoriteRecycler(view: View) {
-        recyclerView = view.findViewById(R.id.recyclerViewShedule)
+    private fun initScheduleRecycler(view: View) {
+        recyclerView = view.findViewById(R.id.recyclerViewSchedule)
         setGridByOrientation(resources.configuration.orientation)
         recyclerView.addItemDecoration(MyItemDecorator())
         recyclerView.adapter = adapter

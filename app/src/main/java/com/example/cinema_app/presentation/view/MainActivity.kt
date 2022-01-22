@@ -7,10 +7,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.cinema_app.R
 import com.example.cinema_app.data.entity.Cinema
+import com.example.cinema_app.presentation.view.Schedule.ScheduleActivity
 import com.example.cinema_app.presentation.view.cinemaList.CinemaListActivity
 import com.example.cinema_app.presentation.view.detail.CinemaActivity
 import com.example.cinema_app.presentation.view.favourite.FavouriteActivity
-import com.example.cinema_app.presentation.view.shedule.SheduleActivity
 import com.example.cinema_app.presentation.viewmodel.CinemaViewModel
 import com.example.cinema_app.presentation.viewmodel.CinemaViewModelFactory
 import com.example.cinema_app.receiver.ALARM_NOTIFICATION_SCHEDULE
@@ -52,9 +52,9 @@ class MainActivity : AppCompatActivity() {
                         .replace(R.id.containerActivity, FavouriteActivity(), "favouriteActivity")
                         .commit()
                 }
-                R.id.nav_shedule -> {
+                R.id.nav_Schedule -> {
                     supportFragmentManager.beginTransaction()
-                        .replace(R.id.containerActivity, SheduleActivity(), "SheduleActivity")
+                        .replace(R.id.containerActivity, ScheduleActivity(), "ScheduleActivity")
                         .commit()
                 }
             }
@@ -85,7 +85,7 @@ class MainActivity : AppCompatActivity() {
             } else if (bundle.containsKey(NOTIFICATION_FCM)) {
                 val cinema = bundle.getParcelable<Cinema>(NOTIFICATION_FCM)
                 cinemaViewModel.onSetCinemaItem(cinema!!)
-                cinemaViewModel.deleteSheduleCinema(cinema.original_id)
+                cinemaViewModel.deleteScheduleCinema(cinema.originalId)
                 supportFragmentManager.beginTransaction()
                     .replace(R.id.containerActivity, CinemaActivity(), "cinemaActivity")
                     .addToBackStack("cinemaActivity")

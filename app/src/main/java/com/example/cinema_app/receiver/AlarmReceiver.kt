@@ -51,7 +51,7 @@ class AlarmReceiver : BroadcastReceiver() {
             .setAutoCancel(true)
 
         val notificationManager = NotificationManagerCompat.from(context)
-        notificationManager.notify(cinema.original_id, builder.build())
+        notificationManager.notify(cinema.originalId, builder.build())
     }
 
 }

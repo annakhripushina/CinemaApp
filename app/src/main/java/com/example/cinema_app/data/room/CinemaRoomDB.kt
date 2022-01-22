@@ -7,10 +7,10 @@ import androidx.room.RoomDatabase
 import com.example.cinema_app.data.entity.Cinema
 import com.example.cinema_app.data.entity.FavouriteCinema
 import com.example.cinema_app.data.entity.LikedCinema
-import com.example.cinema_app.data.entity.SheduleCinema
+import com.example.cinema_app.data.entity.ScheduleCinema
 
 @Database(
-    entities = [Cinema::class, FavouriteCinema::class, LikedCinema::class, SheduleCinema::class],
+    entities = [Cinema::class, FavouriteCinema::class, LikedCinema::class, ScheduleCinema::class],
     version = 1
 )
 abstract class CinemaRoomDB : RoomDatabase() {

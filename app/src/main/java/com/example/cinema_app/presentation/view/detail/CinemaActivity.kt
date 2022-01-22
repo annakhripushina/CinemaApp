@@ -34,7 +34,7 @@ class CinemaActivity : Fragment(), DateTimePickerUtil {
     private lateinit var input: EditText
     private lateinit var checkBox: CheckBox
     private lateinit var buttonInvite: ImageView
-    private lateinit var buttonShedule: ImageView
+    private lateinit var buttonSchedule: ImageView
     private lateinit var description: TextView
     private lateinit var imageView: ImageView
     private lateinit var titleToolbar: Toolbar
@@ -95,7 +95,7 @@ class CinemaActivity : Fragment(), DateTimePickerUtil {
             startActivity(Intent.createChooser(emailIntent, "Отправить приглашение через: "))
         }
 
-        buttonShedule.setOnClickListener {
+        buttonSchedule.setOnClickListener {
             clickButtonScheduleAlarm(
                 requireActivity().supportFragmentManager,
                 cinema,
@@ -126,7 +126,7 @@ class CinemaActivity : Fragment(), DateTimePickerUtil {
         input = view.findViewById(R.id.commentText)
         checkBox = view.findViewById(R.id.checkBoxLike)
         buttonInvite = view.findViewById(R.id.imageInvite)
-        buttonShedule = view.findViewById(R.id.imageShedule)
+        buttonSchedule = view.findViewById(R.id.imageSchedule)
         titleToolbar = view.findViewById(R.id.toolbar)
         description = view.findViewById(R.id.textDetail)
         imageView = view.findViewById(R.id.imageDetail)

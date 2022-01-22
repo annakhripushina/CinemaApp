@@ -79,7 +79,7 @@
                     android:src="@drawable/ic_baseline_share_24" />
 
                 <ImageButton
-                    android:id="@+id/imageShedule"
+                    android:id="@+id/imageSchedule"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:contentDescription="Посмотреть позже"

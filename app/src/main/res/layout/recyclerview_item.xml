@@ -29,15 +29,17 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
+        android:layout_marginTop="16dp"
         android:breakStrategy="simple"
         android:fontFamily="sans-serif"
-        android:textAlignment="viewStart"
 
-        android:textSize="24sp"
+        android:textAlignment="viewStart"
+        android:textSize="18sp"
         android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.157"
         app:layout_constraintStart_toEndOf="@id/cardImageView"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         tools:text="@tools:sample/lorem" />
 
     <Button

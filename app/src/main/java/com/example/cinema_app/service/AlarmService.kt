@@ -21,10 +21,6 @@ class AlarmService(private val context: Context) {
         }, requestCode))
     }
 
-//    fun stopAlarms(requestCode: Int) {
-//        getPendingIntent(getIntent(), requestCode).cancel()
-//    }
-
     private fun setAlarm(time: Long, pendingIntent: PendingIntent) {
         alarmManager.let {
             alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, time, pendingIntent)

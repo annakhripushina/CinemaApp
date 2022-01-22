@@ -1,4 +1,4 @@
-package com.example.cinema_app.presentation.view.shedule
+package com.example.cinema_app.presentation.view.Schedule
 
 import android.annotation.SuppressLint
 import android.view.View
@@ -8,21 +8,20 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.cinema_app.R
 import com.example.cinema_app.data.entity.Cinema
-import com.example.cinema_app.data.entity.SheduleCinema
 
 
-class SheduleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+class ScheduleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val titleView: TextView = itemView.findViewById(R.id.titleView)
     private val imageView: ImageView = itemView.findViewById(R.id.imageView)
-    private val buttonEdit: TextView = itemView.findViewById(R.id.buttonEdit)
-    private val buttonDelete: TextView = itemView.findViewById(R.id.buttonDelete)
-    private val dateTimeAlarm: TextView = itemView.findViewById(R.id.dateTimeAlarm)
+    private val buttonEdit: ImageView = itemView.findViewById(R.id.imageEdit)
+    private val buttonDelete: ImageView = itemView.findViewById(R.id.imageDelete)
+    private val dateTimeView: TextView = itemView.findViewById(R.id.dateTimeAlarm)
 
     @SuppressLint("ResourceAsColor")
-    fun bind(item: Cinema, itemAlarm: SheduleCinema, listener: SheduleAdapter.SheduleClickListener) {
+    fun bind(item: Cinema, listener: ScheduleAdapter.ScheduleClickListener) {
         titleView.text = item.title
         titleView.setTextColor(item.titleColor)
-        dateTimeAlarm.text = itemAlarm.date_viewed
+        dateTimeView.text = item.dateViewed
 
         Glide.with(imageView.context)
             .load(item.image)
@@ -37,7 +36,7 @@ class SheduleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         }
 
         buttonEdit.setOnClickListener {
-            listener.onCinemaClick(
+            listener.onEditClick(
                 item,
                 itemView,
                 adapterPosition

@@ -15,7 +15,7 @@ import retrofit2.Response
 class CinemaListInteractor(private val cinemaService: CinemaService) : FirebaseRemoteConfigService {
     private var items = ArrayList<Cinema>()
     private lateinit var cinemaLatestItem: Cinema
-    private lateinit var remoteConfig: FirebaseRemoteConfig
+    private lateinit var FRConfig: FirebaseRemoteConfig
 
     fun getLatestCinema(callback: GetCinemaCallback) {
         cinemaService.getLatestCinema().enqueue(object : Callback<CinemaModel> {
@@ -30,7 +30,8 @@ class CinemaListInteractor(private val cinemaService: CinemaService) : FirebaseR
                             it.original_title,
                             it.overview,
                             "https://image.tmdb.org/t/p/w500/" + it.poster_path,
-                            Color.BLACK
+                            Color.BLACK,
+                            ""
                         )
                     }!!
                     callback.onSuccessLatest(cinemaLatestItem)
@@ -45,8 +46,8 @@ class CinemaListInteractor(private val cinemaService: CinemaService) : FirebaseR
     fun getCinema(page: Int, callback: GetCinemaCallback) {
         var totalPages = 1
 
-        remoteConfig = getRemoteConfig()
-        var cinemaTag = remoteConfig["Category"].asString()
+        FRConfig = getRemoteConfig()
+        var cinemaTag = FRConfig["Category"].asString()
 
         cinemaService.getCinemaPage(cinemaTag, page).enqueue(object : Callback<CinemaListModel> {
             override fun onResponse(
@@ -65,7 +66,8 @@ class CinemaListInteractor(private val cinemaService: CinemaService) : FirebaseR
                                         it.original_title,
                                         it.overview,
                                         "https://image.tmdb.org/t/p/w500/" + it.poster_path,
-                                        Color.BLACK
+                                        Color.BLACK,
+                                        ""
                                     )
                                 )
                             }

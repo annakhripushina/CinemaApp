@@ -6,12 +6,13 @@ import android.content.Context
 import android.view.View
 import androidx.fragment.app.FragmentManager
 import com.example.cinema_app.data.entity.Cinema
-import com.example.cinema_app.data.entity.SheduleCinema
+import com.example.cinema_app.data.entity.ScheduleCinema
 import com.example.cinema_app.presentation.viewmodel.CinemaViewModel
 import com.example.cinema_app.service.AlarmService
 import com.google.android.material.snackbar.Snackbar
-import java.time.LocalDateTime
 import java.time.ZoneId
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 interface DateTimePickerUtil {
@@ -24,27 +25,32 @@ interface DateTimePickerUtil {
         view: View?
     ) {
         val calendar = Calendar.getInstance()
-        val listenerDate = DatePickerDialog.OnDateSetListener { _, _, _, _ ->
-            val localDateTime =
-                LocalDateTime.ofInstant(calendar.toInstant(), calendar.timeZone.toZoneId())
+        val listenerDate = DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
+            calendar.set(Calendar.YEAR, year)
+            calendar.set(Calendar.MONTH, month)
+            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+            val selectedDate =
+                ZonedDateTime.ofInstant(calendar.toInstant(), calendar.timeZone.toZoneId())
                     .toLocalDate()
-
             val listenerTime = TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
                 val scheduleDateTime =
-                    localDateTime.atTime(hourOfDay, minute).atZone(ZoneId.systemDefault())
+                    selectedDate.atTime(hourOfDay, minute).atZone(ZoneId.systemDefault())
                 val alarmTime = scheduleDateTime.toInstant().toEpochMilli()
+                val formatter = DateTimeFormatter.ofPattern("d.M.u H:m")
 
-                cinemaViewModel.insertSheduleCinema(
-                    SheduleCinema(
-                        cinema.original_id,
+                cinemaViewModel.insertScheduleCinema(
+                    ScheduleCinema(
+                        cinema.originalId,
                         alarmTime.toString(),
-                        cinema.original_id
+                        scheduleDateTime.format(formatter).toString(),
+                        cinema.originalId
                     )
                 )
+
                 alarmService.setExactAlarm(
                     cinema,
                     alarmTime,
-                    cinema.original_id
+                    cinema.originalId
                 )
                 val snackDeleteFavourite =
                     Snackbar.make(view!!, "Напоминание сохранено", Snackbar.LENGTH_LONG)

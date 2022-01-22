@@ -11,7 +11,7 @@ import com.example.cinema_app.data.CinemaRepository
 import com.example.cinema_app.data.entity.Cinema
 import com.example.cinema_app.data.entity.FavouriteCinema
 import com.example.cinema_app.data.entity.LikedCinema
-import com.example.cinema_app.data.entity.SheduleCinema
+import com.example.cinema_app.data.entity.ScheduleCinema
 import com.example.cinema_app.data.room.CinemaRoomDB
 import com.example.cinema_app.domain.CinemaListInteractor
 import com.example.cinema_app.utils.SingleLiveEvent
@@ -21,25 +21,24 @@ import kotlinx.coroutines.launch
 class CinemaViewModel(application: Application) : AndroidViewModel(application) {
     private val cinemaInteractor = App.instance.cinemaInteractor
     private lateinit var mCinemaItem: Cinema
-    private lateinit var mCinemaLatestItem: Cinema
     private var mComment: String = ""
     private var mHasLiked: Boolean = false
     private val mError: MutableLiveData<String> = SingleLiveEvent()
     private var mPage: Int = 1
     private var mTotalPages: Int = 1
     private val repository: CinemaRepository
+    private var mDateViewed: String = ""
     var allCinema: LiveData<List<Cinema>>
     var allFavouriteCinema: LiveData<List<Cinema>>
+    var allScheduleCinema: LiveData<List<Cinema>>
     var allLikedCinema: LiveData<List<LikedCinema>>
+    var allSchedule: LiveData<List<ScheduleCinema>>
 
     val error: LiveData<String>
         get() = mError
 
     val cinemaItem: Cinema
         get() = mCinemaItem
-
-    val cinemaLatestItem: Cinema
-        get() = mCinemaLatestItem
 
     val hasLiked: Boolean
         get() = mHasLiked
@@ -53,6 +52,8 @@ class CinemaViewModel(application: Application) : AndroidViewModel(application) 
         allCinema = repository.allCinema
         allFavouriteCinema = repository.allFavouriteCinema
         allLikedCinema = repository.allLikedCinema
+        allScheduleCinema = repository.allScheduleCinema
+        allSchedule = repository.allSchedule
         onGetCinemaList()
     }
 
@@ -72,7 +73,6 @@ class CinemaViewModel(application: Application) : AndroidViewModel(application) 
             }
 
             override fun onSuccessLatest(cinemaItem: Cinema) {
-                mCinemaLatestItem = cinemaItem
             }
 
             override fun onError(error: String) {
@@ -87,20 +87,20 @@ class CinemaViewModel(application: Application) : AndroidViewModel(application) 
 
     fun onAddFavouriteCinema(cinemaItem: Cinema) =
         viewModelScope.launch(Dispatchers.IO) {
-            repository.insertFavouriteCinema(FavouriteCinema(cinemaItem.original_id))
+            repository.insertFavouriteCinema(FavouriteCinema(cinemaItem.originalId))
         }
 
     fun onRemoveFavouriteCinema(cinemaItem: Cinema) =
         viewModelScope.launch(Dispatchers.IO) {
-            repository.deleteFavouriteCinema(cinemaItem.original_id)
+            repository.deleteFavouriteCinema(cinemaItem.originalId)
         }
 
     fun onSetLikeClickListener(cinemaItem: Cinema, isChecked: Boolean) =
         viewModelScope.launch(Dispatchers.IO) {
             if (isChecked)
-                repository.insertLikedCinema(LikedCinema(cinemaItem.original_id))
+                repository.insertLikedCinema(LikedCinema(cinemaItem.originalId))
             else
-                repository.deleteLikedCinema(cinemaItem.original_id)
+                repository.deleteLikedCinema(cinemaItem.originalId)
         }
 
     fun onSetComment(input: EditText) {
@@ -113,25 +113,29 @@ class CinemaViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
-    fun insertSheduleCinema(cinemaItem: SheduleCinema) =
+    fun insertScheduleCinema(cinemaItem: ScheduleCinema) =
         viewModelScope.launch(Dispatchers.IO) {
-            repository.insertSheduleCinema(cinemaItem)
+            repository.insertScheduleCinema(cinemaItem)
         }
 
     fun deleteAll() = viewModelScope.launch(Dispatchers.IO) {
         repository.deleteAll()
     }
 
-    fun deleteSheduleCinema(cinemaOriginalId: Int) = viewModelScope.launch(Dispatchers.IO) {
-        repository.deleteSheduleCinema(cinemaOriginalId)
+    fun deleteScheduleCinema(cinemaOriginalId: Int) = viewModelScope.launch(Dispatchers.IO) {
+        repository.deleteScheduleCinema(cinemaOriginalId)
     }
 
     fun updateTitleColor(titleColor: Int, id: Int) = viewModelScope.launch(Dispatchers.IO) {
         repository.updateTitleColor(titleColor, id)
     }
 
+    fun updateDateViewed(dateViewed: String, id: Int) = viewModelScope.launch(Dispatchers.IO) {
+        repository.updateDateViewed(dateViewed, id)
+    }
+
     fun getLike(cinemaItem: Cinema) {
-        mHasLiked = allLikedCinema.value!!.contains(LikedCinema(cinemaItem.original_id))
+        mHasLiked = allLikedCinema.value!!.contains(LikedCinema(cinemaItem.originalId))
     }
 
 }

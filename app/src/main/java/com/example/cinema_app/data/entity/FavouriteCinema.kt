@@ -4,9 +4,9 @@ import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "favourite_table", indices = [Index(value = ["original_id"], unique = true)])
+@Entity(tableName = "favouriteTable", indices = [Index(value = ["originalId"], unique = true)])
 data class FavouriteCinema(
-    val original_id: Int
+    val originalId: Int
 ) {
     @PrimaryKey(autoGenerate = true)
     var id: Int? = null
