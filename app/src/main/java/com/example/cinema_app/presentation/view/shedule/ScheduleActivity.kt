@@ -1,4 +1,4 @@
-package com.example.cinema_app.presentation.view.Schedule
+package com.example.cinema_app.presentation.view.shedule
 
 import android.content.res.Configuration
 import android.os.Bundle
@@ -50,7 +50,6 @@ class ScheduleActivity : Fragment(), DateTimePickerUtil {
 
             val snackDelete =
                 Snackbar.make(view!!, "Напоминание удалено", Snackbar.LENGTH_LONG)
-
             snackDelete.show()
         }
 
@@ -74,12 +73,10 @@ class ScheduleActivity : Fragment(), DateTimePickerUtil {
         initAlarmService()
         viewModel.allSchedule.observe(viewLifecycleOwner, Observer { list ->
             list?.let {
-                val arr = viewModel.allSchedule.value //as List<ScheduleCinema>
-                if (arr != null) {
-                    arr.forEach {
+                viewModel.allSchedule.value
+                    ?.forEach {
                         viewModel.updateDateViewed(it.dateViewed, it.originalId)
                     }
-                }
             }
         })
 

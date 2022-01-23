@@ -15,7 +15,7 @@ import retrofit2.Response
 class CinemaListInteractor(private val cinemaService: CinemaService) : FirebaseRemoteConfigService {
     private var items = ArrayList<Cinema>()
     private lateinit var cinemaLatestItem: Cinema
-    private lateinit var FRConfig: FirebaseRemoteConfig
+    private lateinit var remoteConfigKey: FirebaseRemoteConfig
 
     fun getLatestCinema(callback: GetCinemaCallback) {
         cinemaService.getLatestCinema().enqueue(object : Callback<CinemaModel> {
@@ -46,8 +46,8 @@ class CinemaListInteractor(private val cinemaService: CinemaService) : FirebaseR
     fun getCinema(page: Int, callback: GetCinemaCallback) {
         var totalPages = 1
 
-        FRConfig = getRemoteConfig()
-        var cinemaTag = FRConfig["Category"].asString()
+        remoteConfigKey = getRemoteConfig()
+        val cinemaTag = remoteConfigKey["Category"].asString()
 
         cinemaService.getCinemaPage(cinemaTag, page).enqueue(object : Callback<CinemaListModel> {
             override fun onResponse(
@@ -72,7 +72,6 @@ class CinemaListInteractor(private val cinemaService: CinemaService) : FirebaseR
                                 )
                             }
                     }
-
                     callback.onSuccess(items, page, totalPages)
                 } else {
                     callback.onError("Error: ${response.code()}")

@@ -1,4 +1,4 @@
-package com.example.cinema_app.presentation.view.Schedule
+package com.example.cinema_app.presentation.view.shedule
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
@@ -15,7 +15,6 @@ class ScheduleAdapter(
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val items = ArrayList<Cinema>()
-    private var dateTimeAlarm: String = ""
 
     @SuppressLint("NotifyDataSetChanged")
     fun setItems(ScheduleList: ArrayList<Cinema>) {
@@ -43,6 +42,5 @@ class ScheduleAdapter(
     interface ScheduleClickListener {
         fun onEditClick(cinemaItem: Cinema, itemView: View, position: Int)
         fun onDeleteClick(cinemaItem: Cinema, position: Int)
-        //fun getDateViewed(cinemaItem: Cinema, itemView: View)
     }
 }

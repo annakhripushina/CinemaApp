@@ -19,7 +19,6 @@ class CinemaAdapter(
     fun setItems(cinemaList: ArrayList<Cinema>) {
         items.clear()
         items.addAll(cinemaList)
-
         notifyDataSetChanged()
     }
 

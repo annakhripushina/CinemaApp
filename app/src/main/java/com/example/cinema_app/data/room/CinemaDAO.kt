@@ -21,7 +21,7 @@ interface CinemaDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertLikedCinema(likedCinema: LikedCinema?)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)//IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertScheduleCinema(ScheduleCinema: ScheduleCinema?)
 
     @Query("DELETE FROM cinemaTable")

@@ -8,7 +8,7 @@ import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 
 interface FirebaseRemoteConfigService {
     fun getRemoteConfig(): FirebaseRemoteConfig {
-        var remoteConfig: FirebaseRemoteConfig = Firebase.remoteConfig
+        val remoteConfig: FirebaseRemoteConfig = Firebase.remoteConfig
         val configSettings = remoteConfigSettings {
             minimumFetchIntervalInSeconds = 3600
         }

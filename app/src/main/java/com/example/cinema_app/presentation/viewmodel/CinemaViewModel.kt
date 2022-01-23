@@ -27,11 +27,10 @@ class CinemaViewModel(application: Application) : AndroidViewModel(application) 
     private var mPage: Int = 1
     private var mTotalPages: Int = 1
     private val repository: CinemaRepository
-    private var mDateViewed: String = ""
     var allCinema: LiveData<List<Cinema>>
     var allFavouriteCinema: LiveData<List<Cinema>>
-    var allScheduleCinema: LiveData<List<Cinema>>
     var allLikedCinema: LiveData<List<LikedCinema>>
+    var allScheduleCinema: LiveData<List<Cinema>>
     var allSchedule: LiveData<List<ScheduleCinema>>
 
     val error: LiveData<String>

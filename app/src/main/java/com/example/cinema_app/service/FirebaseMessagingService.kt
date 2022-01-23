@@ -40,7 +40,7 @@ class FirebaseMessagingService : FirebaseMessagingService() {
     private fun showNotification(remoteMessage: RemoteMessage) {
         val notificationChannelId = "FCM_CHANNEL"
         val messageText = remoteMessage.data["text"]
-        var cinema = getLatestCinema()
+        val cinema = getLatestCinema()
         val mainActivityIntent = Intent(this, MainActivity::class.java)
 
         mainActivityIntent.putExtra(NOTIFICATION_FCM, cinema)

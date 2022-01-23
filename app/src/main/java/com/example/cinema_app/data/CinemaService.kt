@@ -9,12 +9,6 @@ import retrofit2.http.Query
 
 
 interface CinemaService {
-    /*@GET("movie/popular")
-    fun getCinemaPage(@Query("page") page: Int): Call<CinemaListModel>
-*/
-    @GET("movie/top_rated")
-    fun getTopCinemaPage(@Query("page") page: Int): Call<CinemaListModel>
-
     @GET("movie/{category}")
     fun getCinemaPage(
         @Path("category") category: String,

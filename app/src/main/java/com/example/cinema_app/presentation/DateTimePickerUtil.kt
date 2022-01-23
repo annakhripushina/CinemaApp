@@ -25,7 +25,7 @@ interface DateTimePickerUtil {
         view: View?
     ) {
         val calendar = Calendar.getInstance()
-        val listenerDate = DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
+        val listenerDate = DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
             calendar.set(Calendar.YEAR, year)
             calendar.set(Calendar.MONTH, month)
             calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
@@ -33,16 +33,16 @@ interface DateTimePickerUtil {
                 ZonedDateTime.ofInstant(calendar.toInstant(), calendar.timeZone.toZoneId())
                     .toLocalDate()
             val listenerTime = TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
-                val scheduleDateTime =
+                val scheduleDate =
                     selectedDate.atTime(hourOfDay, minute).atZone(ZoneId.systemDefault())
-                val alarmTime = scheduleDateTime.toInstant().toEpochMilli()
+                val alarmTime = scheduleDate.toInstant().toEpochMilli()
                 val formatter = DateTimeFormatter.ofPattern("d.M.u H:m")
 
                 cinemaViewModel.insertScheduleCinema(
                     ScheduleCinema(
                         cinema.originalId,
                         alarmTime.toString(),
-                        scheduleDateTime.format(formatter).toString(),
+                        scheduleDate.format(formatter).toString(),
                         cinema.originalId
                     )
                 )
@@ -52,6 +52,7 @@ interface DateTimePickerUtil {
                     alarmTime,
                     cinema.originalId
                 )
+
                 val snackDeleteFavourite =
                     Snackbar.make(view!!, "Напоминание сохранено", Snackbar.LENGTH_LONG)
                 snackDeleteFavourite.show()

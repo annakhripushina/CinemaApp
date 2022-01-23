@@ -1,4 +1,4 @@
-package com.example.cinema_app.presentation.view.Schedule
+package com.example.cinema_app.presentation.view.shedule
 
 import android.annotation.SuppressLint
 import android.view.View
@@ -15,13 +15,13 @@ class ScheduleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val imageView: ImageView = itemView.findViewById(R.id.imageView)
     private val buttonEdit: ImageView = itemView.findViewById(R.id.imageEdit)
     private val buttonDelete: ImageView = itemView.findViewById(R.id.imageDelete)
-    private val dateTimeView: TextView = itemView.findViewById(R.id.dateTimeAlarm)
+    private val dateView: TextView = itemView.findViewById(R.id.dateAlarm)
 
     @SuppressLint("ResourceAsColor")
     fun bind(item: Cinema, listener: ScheduleAdapter.ScheduleClickListener) {
         titleView.text = item.title
         titleView.setTextColor(item.titleColor)
-        dateTimeView.text = item.dateViewed
+        dateView.text = item.dateViewed
 
         Glide.with(imageView.context)
             .load(item.image)
