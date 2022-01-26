@@ -1,6 +1,8 @@
 package com.example.cinema_app.presentation.viewmodel
 
 import android.app.Application
+import android.graphics.Color
+import android.util.Log
 import android.widget.EditText
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -12,15 +14,21 @@ import com.example.cinema_app.data.entity.Cinema
 import com.example.cinema_app.data.entity.FavouriteCinema
 import com.example.cinema_app.data.entity.LikedCinema
 import com.example.cinema_app.data.entity.ScheduleCinema
+import com.example.cinema_app.data.model.CinemaModel
 import com.example.cinema_app.data.room.CinemaRoomDB
 import com.example.cinema_app.domain.CinemaListInteractor
 import com.example.cinema_app.utils.SingleLiveEvent
+import io.reactivex.rxjava3.core.SingleObserver
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.disposables.Disposable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.time.LocalTime
 
 class CinemaViewModel(application: Application) : AndroidViewModel(application) {
     private val cinemaInteractor = App.instance.cinemaInteractor
     private lateinit var mCinemaItem: Cinema
+    private var mAllCinema = ArrayList<Cinema>()
     private var mComment: String = ""
     private var mHasLiked: Boolean = false
     private val mError: MutableLiveData<String> = SingleLiveEvent()
@@ -57,27 +65,31 @@ class CinemaViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     fun onGetCinemaListPage() {
-        if ((mPage < mTotalPages) || (mTotalPages == 1)) {
-            onGetCinemaList(mPage + 1)
-        }
+        onGetCinemaList(mPage + 1)
     }
 
+    private val errorLiveData = MutableLiveData<String>()
     fun onGetCinemaList(page: Int = 1) {
-        cinemaInteractor.getCinema(page, object : CinemaListInteractor.GetCinemaCallback {
-            override fun onSuccess(cinemaList: ArrayList<Cinema>, page: Int, totalPages: Int) {
-                mPage = page
-                mTotalPages = totalPages
-                if (page == 1) deleteAll()
-                insertCinemaList(cinemaList)
-            }
+        cinemaInteractor.getCinema(page)
+            .subscribe(object : SingleObserver<List<Cinema>> {
+                override fun onSubscribe(d: Disposable) {}
 
-            override fun onSuccessLatest(cinemaItem: Cinema) {
-            }
+                override fun onSuccess(list: List<Cinema>) {
+                    if (list.isEmpty()) {
+                        Log.d("TAG", "getMovies. Got empty data")
+                    } else {
+                        viewModelScope.launch(Dispatchers.IO) {
+                            mPage = page
+                            if (page == 1) deleteAll()
+                            insertCinemaList(list as ArrayList<Cinema>)
+                        }
+                    }
+                }
 
-            override fun onError(error: String) {
-                mError.value = error
-            }
-        })
+                override fun onError(e: Throwable) {
+                    errorLiveData.postValue(e.message)
+                }
+            })
     }
 
     fun onSetCinemaItem(cinemaItem: Cinema) {

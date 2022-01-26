@@ -1,5 +1,7 @@
 package com.example.cinema_app.data.model
 
+import android.graphics.Color
+import com.example.cinema_app.data.entity.Cinema
 import com.google.gson.annotations.SerializedName
 
 data class CinemaModel(
@@ -17,5 +19,12 @@ data class CinemaModel(
     @SerializedName("video") val video: Boolean,
     @SerializedName("vote_average") val vote_average: Double,
     @SerializedName("vote_count") val vote_count: Int
-
+)
+internal fun CinemaModel.toDomainModel() = Cinema(
+    originalId = this.id,
+    title = this.original_title,
+    description = this.overview,
+    image = "https://image.tmdb.org/t/p/w500/" + this.poster_path,
+    titleColor = Color.BLACK,
+    dateViewed = ""
 )

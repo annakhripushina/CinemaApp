@@ -5,9 +5,14 @@ import com.example.cinema_app.data.CinemaService
 import com.example.cinema_app.data.entity.Cinema
 import com.example.cinema_app.data.model.CinemaListModel
 import com.example.cinema_app.data.model.CinemaModel
+import com.example.cinema_app.data.model.toDomainModel
 import com.example.cinema_app.service.FirebaseRemoteConfigService
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.ktx.get
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.annotations.NonNull
+import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.schedulers.Schedulers
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -43,13 +48,21 @@ class CinemaListInteractor(private val cinemaService: CinemaService) : FirebaseR
         })
     }
 
-    fun getCinema(page: Int, callback: GetCinemaCallback) {
+    fun getCinema(page: Int/*, callback: GetCinemaCallback*/): Single<List<Cinema>> {
         var totalPages = 1
 
         remoteConfigKey = getRemoteConfig()
         val cinemaTag = remoteConfigKey["Category"].asString()
+        items.clear()
+        return cinemaService.getCinemaPage(cinemaTag, page)
+                .subscribeOn(Schedulers.io())
+                .map {
+                    it.results.map{ it.toDomainModel()}
+                }
+                .observeOn(AndroidSchedulers.mainThread())
+        }
 
-        cinemaService.getCinemaPage(cinemaTag, page).enqueue(object : Callback<CinemaListModel> {
+        /*cinemaService.getCinemaPage(cinemaTag, page).enqueue(object : Callback<CinemaListModel> {
             override fun onResponse(
                 call: Call<CinemaListModel>,
                 response: Response<CinemaListModel>
@@ -81,8 +94,8 @@ class CinemaListInteractor(private val cinemaService: CinemaService) : FirebaseR
             override fun onFailure(call: Call<CinemaListModel>, t: Throwable) {
                 callback.onError("Network error probably...")
             }
-        })
-    }
+        })*/
+
 
     interface GetCinemaCallback {
         fun onSuccess(cinemaList: ArrayList<Cinema>, page: Int, totalPages: Int)

@@ -72,4 +72,9 @@ dependencies {
     // Work Manager
     implementation 'android.arch.work:work-runtime:1.0.1'
 
+    implementation 'io.reactivex.rxjava3:rxjava:3.0.0'
+    implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
+    //implementation 'com.squareup.retrofit2:adapter-rxjava2:latest.version'
+    implementation 'com.squareup.retrofit2:adapter-rxjava3:2.9.0'
+
 }

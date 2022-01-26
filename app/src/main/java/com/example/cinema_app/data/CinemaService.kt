@@ -2,6 +2,7 @@ package com.example.cinema_app.data
 
 import com.example.cinema_app.data.model.CinemaListModel
 import com.example.cinema_app.data.model.CinemaModel
+import io.reactivex.rxjava3.core.Single
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -13,7 +14,7 @@ interface CinemaService {
     fun getCinemaPage(
         @Path("category") category: String,
         @Query("page") page: Int
-    ): Call<CinemaListModel>
+    ): Single<CinemaListModel>
 
     @GET("movie/latest")
     fun getLatestCinema(): Call<CinemaModel>
