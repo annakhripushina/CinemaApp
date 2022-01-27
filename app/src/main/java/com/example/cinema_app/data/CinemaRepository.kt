@@ -7,13 +7,44 @@ import com.example.cinema_app.data.entity.FavouriteCinema
 import com.example.cinema_app.data.entity.LikedCinema
 import com.example.cinema_app.data.entity.ScheduleCinema
 import com.example.cinema_app.data.room.CinemaDao
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Flowable
+import io.reactivex.rxjava3.core.Maybe
+import io.reactivex.rxjava3.schedulers.Schedulers
 
 class CinemaRepository(private val cinemaDao: CinemaDao) {
-    val allCinema: LiveData<List<Cinema>> = cinemaDao.getAll()
-    val allFavouriteCinema: LiveData<List<Cinema>> = cinemaDao.getFavouriteCinema()
-    val allLikedCinema: LiveData<List<LikedCinema>> = cinemaDao.getLikedCinema()
-    val allScheduleCinema: LiveData<List<Cinema>> = cinemaDao.getScheduleCinema()
-    val allSchedule: LiveData<List<ScheduleCinema>> = cinemaDao.getSchedule()
+    //val allCinema: LiveData<List<Cinema>> = cinemaDao.getAll()
+    //val allLikedCinema: LiveData<List<LikedCinema>> = cinemaDao.getLikedCinema()
+
+    fun getAllCinema(): Flowable<List<Cinema>> {
+        return cinemaDao.getAll()
+            .observeOn(AndroidSchedulers.mainThread())
+    }
+
+    fun getAllLikedCinema(): Flowable<List<LikedCinema>> {
+        return cinemaDao.getLikedCinema()
+            .observeOn(AndroidSchedulers.mainThread())
+    }
+
+    fun getAllFavouriteCinema(): Flowable<List<Cinema>> {
+        return cinemaDao.getFavouriteCinema()
+            .observeOn(AndroidSchedulers.mainThread())
+    }
+
+    fun getAllScheduleCinema(): Flowable<List<Cinema>> {
+        return cinemaDao.getScheduleCinema()
+            .observeOn(AndroidSchedulers.mainThread())
+    }
+
+    fun getAllSchedule(): Flowable<List<ScheduleCinema>> {
+        return cinemaDao.getSchedule()
+            .observeOn(AndroidSchedulers.mainThread())
+    }
+
+    fun searchCinema(title: String): Flowable<List<Cinema>> {
+        return cinemaDao.searchCinema(title)
+            .observeOn(AndroidSchedulers.mainThread())
+    }
 
     @Suppress("RedundantSuspendModifier")
     @WorkerThread

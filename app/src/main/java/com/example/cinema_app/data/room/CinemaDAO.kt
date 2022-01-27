@@ -9,6 +9,8 @@ import com.example.cinema_app.data.entity.Cinema
 import com.example.cinema_app.data.entity.FavouriteCinema
 import com.example.cinema_app.data.entity.LikedCinema
 import com.example.cinema_app.data.entity.ScheduleCinema
+import io.reactivex.rxjava3.core.Flowable
+import io.reactivex.rxjava3.core.Maybe
 
 @Dao
 interface CinemaDao {
@@ -37,19 +39,22 @@ interface CinemaDao {
     fun deleteScheduleCinema(id: Int)
 
     @Query("SELECT * FROM cinemaTable")
-    fun getAll(): LiveData<List<Cinema>>
+    fun getAll(): Flowable<List<Cinema>>
 
     @Query("SELECT c.originalId, c.title, c.description, c.image, c.titleColor, c.dateViewed, c.id FROM cinemaTable c, favouriteTable f WHERE c.originalId = f.originalId")
-    fun getFavouriteCinema(): LiveData<List<Cinema>>
+    fun getFavouriteCinema(): Flowable<List<Cinema>>
 
     @Query("SELECT * FROM likedTable")
-    fun getLikedCinema(): LiveData<List<LikedCinema>>
+    fun getLikedCinema(): Flowable<List<LikedCinema>>
 
     @Query("SELECT * FROM scheduleTable")
-    fun getSchedule(): LiveData<List<ScheduleCinema>>
+    fun getSchedule(): Flowable<List<ScheduleCinema>>
 
     @Query("SELECT c.originalId, c.title, c.description, c.image, c.titleColor, c.dateViewed, c.id FROM cinemaTable c, scheduleTable s WHERE c.originalId = s.originalId")
-    fun getScheduleCinema(): LiveData<List<Cinema>>
+    fun getScheduleCinema(): Flowable<List<Cinema>>
+
+    @Query("SELECT * FROM cinemaTable WHERE title LIKE :title")
+    fun searchCinema(title: String): Flowable<List<Cinema>>
 
     @Query("UPDATE cinemaTable SET titleColor = :titleColor WHERE id = :id")
     fun updateTitleColor(titleColor: Int, id: Int)

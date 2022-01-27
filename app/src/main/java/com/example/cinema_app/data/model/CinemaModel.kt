@@ -20,6 +20,7 @@ data class CinemaModel(
     @SerializedName("vote_average") val vote_average: Double,
     @SerializedName("vote_count") val vote_count: Int
 )
+
 internal fun CinemaModel.toDomainModel() = Cinema(
     originalId = this.id,
     title = this.original_title,

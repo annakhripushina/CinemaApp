@@ -59,7 +59,7 @@ class CinemaActivity : Fragment(), DateTimePickerUtil {
         populateViews(cinema)
         setClickListeners(cinema)
 
-        viewModel.allLikedCinema.observe(viewLifecycleOwner, Observer { list ->
+        viewModel.onGetLikedCinema().observe(viewLifecycleOwner, Observer { list ->
             list?.let {
                 viewModel.getLike(cinema)
                 checkBox.isChecked = viewModel.hasLiked

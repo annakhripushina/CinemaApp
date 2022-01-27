@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 
 @Suppress("UNCHECKED_CAST")
 class CinemaViewModelFactory(private val application: Application) : ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return CinemaViewModel(application) as T
     }
 }

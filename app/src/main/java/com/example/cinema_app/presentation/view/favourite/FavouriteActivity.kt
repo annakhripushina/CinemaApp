@@ -75,9 +75,9 @@ class FavouriteActivity : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initFavoriteRecycler(view)
-        viewModel.allFavouriteCinema.observe(viewLifecycleOwner, Observer { list ->
+        viewModel.onGetFavouriteCinema().observe(viewLifecycleOwner, Observer { list ->
             list?.let {
-                adapter.setItems(list as ArrayList<Cinema>)
+                adapter.setItems(list)
                 isEmptyList(view)
             }
         })

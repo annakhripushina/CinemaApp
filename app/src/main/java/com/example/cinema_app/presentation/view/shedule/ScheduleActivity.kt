@@ -71,7 +71,7 @@ class ScheduleActivity : Fragment(), DateTimePickerUtil {
         super.onViewCreated(view, savedInstanceState)
         initScheduleRecycler(view)
         initAlarmService()
-        viewModel.allSchedule.observe(viewLifecycleOwner, Observer { list ->
+        viewModel.onGetSchedule().observe(viewLifecycleOwner, Observer { list ->
             list?.let {
                 viewModel.allSchedule.value
                     ?.forEach {
@@ -80,9 +80,9 @@ class ScheduleActivity : Fragment(), DateTimePickerUtil {
             }
         })
 
-        viewModel.allScheduleCinema.observe(viewLifecycleOwner, Observer { list ->
+        viewModel.onGetScheduleCinema().observe(viewLifecycleOwner, Observer { list ->
             list?.let {
-                adapter.setItems(list as ArrayList<Cinema>)
+                adapter.setItems(list)
                 isEmptyList(view)
             }
         })

@@ -17,7 +17,7 @@ class ScheduleAdapter(
     private val items = ArrayList<Cinema>()
 
     @SuppressLint("NotifyDataSetChanged")
-    fun setItems(ScheduleList: ArrayList<Cinema>) {
+    fun setItems(ScheduleList: List<Cinema>) {
         items.clear()
         items.addAll(ScheduleList)
 

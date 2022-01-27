@@ -11,10 +11,12 @@ import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.ProgressBar
+import android.widget.SearchView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -25,6 +27,8 @@ import com.example.cinema_app.presentation.view.detail.CinemaActivity
 import com.example.cinema_app.presentation.viewmodel.CinemaViewModel
 import com.example.cinema_app.presentation.viewmodel.CinemaViewModelFactory
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 class CinemaListActivity : Fragment() {
@@ -85,7 +89,7 @@ class CinemaListActivity : Fragment() {
         pullToRefresh(view)
         initRecycler(view)
 
-        viewModel.allCinema.observe(viewLifecycleOwner, Observer { list ->
+        viewModel.onGetAllCinema().observe(viewLifecycleOwner, Observer { list ->
             list?.let {
                 adapter.setItems(list as ArrayList<Cinema>)
                 progressBar.visibility = INVISIBLE
@@ -108,7 +112,7 @@ class CinemaListActivity : Fragment() {
         })
 
         onActivityResult()
-
+        searchCinema(view)
     }
 
     private fun initRecycler(view: View) {
@@ -155,5 +159,23 @@ class CinemaListActivity : Fragment() {
                 recyclerView.layoutManager = GridLayoutManager(view?.context, 1)
             }
         }
+    }
+
+    private fun searchCinema(view: View){
+        val searchView = view.findViewById<SearchView>(R.id.searchView)
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(query: String): Boolean {
+//                viewModel.onSearchCinema(query)
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String): Boolean {
+                viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
+                    viewModel.onSearchCinema(newText)
+                }
+                return false
+            }
+
+        })
     }
 }
