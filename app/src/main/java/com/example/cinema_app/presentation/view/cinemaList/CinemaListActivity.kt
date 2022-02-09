@@ -14,31 +14,31 @@ import android.widget.ProgressBar
 import android.widget.SearchView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.cinema_app.MyItemDecorator
 import com.example.cinema_app.R
+import com.example.cinema_app.dagger.CinemaApp
+import com.example.cinema_app.dagger.module.viewmodel.CinemaViewModelFactory
 import com.example.cinema_app.data.entity.Cinema
 import com.example.cinema_app.presentation.view.detail.CinemaActivity
-import com.example.cinema_app.presentation.viewmodel.CinemaViewModel
-import com.example.cinema_app.presentation.viewmodel.CinemaViewModelFactory
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 
 class CinemaListActivity : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var progressBar: ProgressBar
-    private val viewModel: CinemaViewModel by activityViewModels {
-        CinemaViewModelFactory(
-            requireActivity().application
-        )
-    }
+
+    @Inject
+    lateinit var viewModelFactory: CinemaViewModelFactory
+    lateinit var viewModel: CinemaListViewModel
     private var comment: String = ""
     private var hasLiked: Boolean = false
     private lateinit var swipeContainer: SwipeRefreshLayout
@@ -77,11 +77,16 @@ class CinemaListActivity : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? = inflater.inflate(
-        R.layout.activity_list,
-        container,
-        false
-    )
+    ): View? {
+        //DaggerViewModelComponent.builder().appComponent((activity?.application as CinemaApp).getAppComponent()).build().inject(this)
+        CinemaApp.appComponentViewModel.inject(this)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(CinemaListViewModel::class.java)
+        return inflater.inflate(
+            R.layout.activity_list,
+            container,
+            false
+        )
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -161,11 +166,10 @@ class CinemaListActivity : Fragment() {
         }
     }
 
-    private fun searchCinema(view: View){
+    private fun searchCinema(view: View) {
         val searchView = view.findViewById<SearchView>(R.id.searchView)
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
-//                viewModel.onSearchCinema(query)
                 return false
             }
 

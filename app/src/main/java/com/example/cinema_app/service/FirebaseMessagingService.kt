@@ -9,21 +9,35 @@ import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import com.example.cinema_app.App
 import com.example.cinema_app.R
+import com.example.cinema_app.dagger.CinemaApp
+import com.example.cinema_app.dagger.component.DaggerFirebaseComponent
+//import com.example.cinema_app.dagger.component.DaggerFirebaseComponent
 import com.example.cinema_app.data.entity.Cinema
+import com.example.cinema_app.domain.CinemaListInteractor
 import com.example.cinema_app.presentation.view.MainActivity
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import io.reactivex.rxjava3.core.SingleObserver
 import io.reactivex.rxjava3.disposables.Disposable
+import javax.inject.Inject
 
 const val NOTIFICATION_FCM = "ALARM_NOTIFICATION_SCHEDULE"
 
 class FirebaseMessagingService : FirebaseMessagingService() {
+    @Inject
+    lateinit var cinemaInteractor: CinemaListInteractor
 
     companion object {
         val TAG = FirebaseMessagingService::class.toString()
+    }
+
+    override fun onCreate() {
+        DaggerFirebaseComponent.builder()
+            .appComponent((application as CinemaApp).getAppComponent())
+            .build()
+            .inject(this)
+        super.onCreate()
     }
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
@@ -41,7 +55,6 @@ class FirebaseMessagingService : FirebaseMessagingService() {
     private fun showNotification(remoteMessage: RemoteMessage) {
         val notificationChannelId = "FCM_CHANNEL"
         val messageText = remoteMessage.data["text"]
-        val cinemaInteractor = App.instance.cinemaInteractor
 
         cinemaInteractor.getLatestCinema()
             .subscribe(object : SingleObserver<Cinema> {

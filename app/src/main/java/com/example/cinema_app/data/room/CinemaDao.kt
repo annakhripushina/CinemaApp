@@ -1,6 +1,5 @@
 package com.example.cinema_app.data.room
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -10,7 +9,6 @@ import com.example.cinema_app.data.entity.FavouriteCinema
 import com.example.cinema_app.data.entity.LikedCinema
 import com.example.cinema_app.data.entity.ScheduleCinema
 import io.reactivex.rxjava3.core.Flowable
-import io.reactivex.rxjava3.core.Maybe
 
 @Dao
 interface CinemaDao {

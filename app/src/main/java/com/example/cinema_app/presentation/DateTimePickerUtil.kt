@@ -7,7 +7,7 @@ import android.view.View
 import androidx.fragment.app.FragmentManager
 import com.example.cinema_app.data.entity.Cinema
 import com.example.cinema_app.data.entity.ScheduleCinema
-import com.example.cinema_app.presentation.viewmodel.CinemaViewModel
+import com.example.cinema_app.presentation.view.shedule.ScheduleViewModel
 import com.example.cinema_app.service.AlarmService
 import com.google.android.material.snackbar.Snackbar
 import java.time.ZoneId
@@ -19,7 +19,7 @@ interface DateTimePickerUtil {
     fun clickButtonScheduleAlarm(
         fm: FragmentManager,
         cinema: Cinema,
-        cinemaViewModel: CinemaViewModel,
+        cinemaViewModel: ScheduleViewModel,
         alarmService: AlarmService,
         context: Context,
         view: View?

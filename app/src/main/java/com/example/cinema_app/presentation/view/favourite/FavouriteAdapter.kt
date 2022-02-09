@@ -16,7 +16,7 @@ class FavouriteAdapter(
     private val items = ArrayList<Cinema>()
 
     @SuppressLint("NotifyDataSetChanged")
-    fun setItems(favoriteList:List<Cinema>) {
+    fun setItems(favoriteList: List<Cinema>) {
         items.clear()
         items.addAll(favoriteList)
 

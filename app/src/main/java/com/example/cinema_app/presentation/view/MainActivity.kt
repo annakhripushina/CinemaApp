@@ -6,29 +6,43 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.cinema_app.R
+import com.example.cinema_app.dagger.CinemaApp
+import com.example.cinema_app.dagger.module.viewmodel.CinemaViewModelFactory
 import com.example.cinema_app.data.entity.Cinema
 import com.example.cinema_app.presentation.view.cinemaList.CinemaListActivity
+import com.example.cinema_app.presentation.view.cinemaList.CinemaListViewModel
 import com.example.cinema_app.presentation.view.detail.CinemaActivity
 import com.example.cinema_app.presentation.view.favourite.FavouriteActivity
 import com.example.cinema_app.presentation.view.shedule.ScheduleActivity
-import com.example.cinema_app.presentation.viewmodel.CinemaViewModel
-import com.example.cinema_app.presentation.viewmodel.CinemaViewModelFactory
+import com.example.cinema_app.presentation.view.shedule.ScheduleViewModel
 import com.example.cinema_app.receiver.ALARM_NOTIFICATION_SCHEDULE
 import com.example.cinema_app.service.NOTIFICATION_FCM
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import javax.inject.Inject
 
 
 class MainActivity : AppCompatActivity() {
-    private val cinemaViewModelFactory by lazy { CinemaViewModelFactory(application) }
-    private val cinemaViewModel by lazy {
-        ViewModelProvider(this, cinemaViewModelFactory).get(
-            CinemaViewModel::class.java
-        )
-    }
+//    private val cinemaViewModelFactory by lazy { CinemaViewModelFactory(application) }
+//    private val cinemaViewModel by lazy {
+//        ViewModelProvider(this, cinemaViewModelFactory).get(
+//            CinemaViewModel::class.java
+//        )
+//    }
+
+    @Inject
+    lateinit var viewModelFactory: CinemaViewModelFactory
+    lateinit var viewModel: CinemaListViewModel
+    lateinit var scheduleViewModel: ScheduleViewModel
 
     @SuppressLint("UseCompatLoadingForDrawables")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        //CinemaApp.appComponent.inject(this)
+        //DaggerViewModelComponent.builder().appComponent((application as CinemaApp).getAppComponent()).build().inject(this)
+        CinemaApp.appComponentViewModel.inject(this)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(CinemaListViewModel::class.java)
+        scheduleViewModel =
+            ViewModelProvider(this, viewModelFactory).get(ScheduleViewModel::class.java)
 
         setContentView(R.layout.activity_main)
 
@@ -77,15 +91,15 @@ class MainActivity : AppCompatActivity() {
         if (bundle != null) {
             if (bundle.containsKey(ALARM_NOTIFICATION_SCHEDULE)) {
                 val cinema = bundle.getParcelable<Cinema>(ALARM_NOTIFICATION_SCHEDULE)
-                cinemaViewModel.onSetCinemaItem(cinema!!)
+                viewModel.onSetCinemaItem(cinema!!)
                 supportFragmentManager.beginTransaction()
                     .replace(R.id.containerActivity, CinemaActivity(), "cinemaActivity")
                     .addToBackStack("cinemaActivity")
                     .commit()
             } else if (bundle.containsKey(NOTIFICATION_FCM)) {
                 val cinema = bundle.getParcelable<Cinema>(NOTIFICATION_FCM)
-                cinemaViewModel.onSetCinemaItem(cinema!!)
-                cinemaViewModel.deleteScheduleCinema(cinema.originalId)
+                viewModel.onSetCinemaItem(cinema!!)
+                scheduleViewModel.deleteScheduleCinema(cinema.originalId)
                 supportFragmentManager.beginTransaction()
                     .replace(R.id.containerActivity, CinemaActivity(), "cinemaActivity")
                     .addToBackStack("cinemaActivity")

@@ -75,6 +75,13 @@ dependencies {
     implementation 'io.reactivex.rxjava3:rxjava:3.0.0'
     implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
     implementation 'com.squareup.retrofit2:adapter-rxjava3:2.9.0'
-    implementation "androidx.room:room-rxjava3:2.4.1"
+    implementation 'androidx.room:room-rxjava3:2.4.1'
+
+    implementation 'com.google.dagger:dagger:2.40.5'
+    implementation 'com.google.dagger:dagger-android:2.40.5'
+    implementation 'com.google.dagger:dagger-android-support:2.40.5'
+    kapt 'com.google.dagger:dagger-compiler:2.40.5'
+    kapt "com.google.dagger:dagger-android-processor:2.40.5"
+
 
 }

@@ -9,26 +9,25 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cinema_app.MyItemDecorator
 import com.example.cinema_app.R
+import com.example.cinema_app.dagger.CinemaApp
+import com.example.cinema_app.dagger.module.viewmodel.CinemaViewModelFactory
 import com.example.cinema_app.data.entity.Cinema
 import com.example.cinema_app.presentation.DateTimePickerUtil
-import com.example.cinema_app.presentation.viewmodel.CinemaViewModel
-import com.example.cinema_app.presentation.viewmodel.CinemaViewModelFactory
 import com.example.cinema_app.service.AlarmService
 import com.google.android.material.snackbar.Snackbar
+import javax.inject.Inject
 
 
 class ScheduleActivity : Fragment(), DateTimePickerUtil {
-    private val viewModel: CinemaViewModel by activityViewModels {
-        CinemaViewModelFactory(
-            requireActivity().application
-        )
-    }
+    @Inject
+    lateinit var viewModelFactory: CinemaViewModelFactory
+    lateinit var viewModel: ScheduleViewModel
     private lateinit var recyclerView: RecyclerView
     private lateinit var alarmService: AlarmService
 
@@ -60,6 +59,9 @@ class ScheduleActivity : Fragment(), DateTimePickerUtil {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        //DaggerViewModelComponent.builder().appComponent((activity?.application as CinemaApp).getAppComponent()).build().inject(this)
+        CinemaApp.appComponentViewModel.inject(this)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(ScheduleViewModel::class.java)
         return inflater.inflate(
             R.layout.activity_schedule,
             container,
@@ -91,7 +93,6 @@ class ScheduleActivity : Fragment(), DateTimePickerUtil {
     private fun initAlarmService() {
         alarmService = AlarmService(requireContext())
     }
-
 
     private fun isEmptyList(view: View) {
         if (adapter.itemCount == 0) {

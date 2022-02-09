@@ -10,25 +10,24 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cinema_app.MyItemDecorator
 import com.example.cinema_app.R
+import com.example.cinema_app.dagger.CinemaApp
+import com.example.cinema_app.dagger.module.viewmodel.CinemaViewModelFactory
 import com.example.cinema_app.data.entity.Cinema
 import com.example.cinema_app.presentation.view.detail.CinemaActivity
-import com.example.cinema_app.presentation.viewmodel.CinemaViewModel
-import com.example.cinema_app.presentation.viewmodel.CinemaViewModelFactory
 import com.google.android.material.snackbar.Snackbar
+import javax.inject.Inject
 
 
 class FavouriteActivity : Fragment() {
-    private val viewModel: CinemaViewModel by activityViewModels {
-        CinemaViewModelFactory(
-            requireActivity().application
-        )
-    }
+    @Inject
+    lateinit var viewModelFactory: CinemaViewModelFactory
+    lateinit var viewModel: FavouriteViewModel
     private lateinit var recyclerView: RecyclerView
 
     private val adapter = FavouriteAdapter(object : FavouriteAdapter.FavouriteClickListener {
@@ -65,6 +64,9 @@ class FavouriteActivity : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        //DaggerViewModelComponent.builder().appComponent((activity?.application as CinemaApp).getAppComponent()).build().inject(this)
+        CinemaApp.appComponentViewModel.inject(this)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(FavouriteViewModel::class.java)
         return inflater.inflate(
             R.layout.activity_favorite,
             container,

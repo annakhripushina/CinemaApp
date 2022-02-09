@@ -13,23 +13,25 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.cinema_app.R
+import com.example.cinema_app.dagger.CinemaApp
+import com.example.cinema_app.dagger.module.viewmodel.CinemaViewModelFactory
 import com.example.cinema_app.data.entity.Cinema
 import com.example.cinema_app.presentation.DateTimePickerUtil
-import com.example.cinema_app.presentation.viewmodel.CinemaViewModel
-import com.example.cinema_app.presentation.viewmodel.CinemaViewModelFactory
+import com.example.cinema_app.presentation.view.shedule.ScheduleViewModel
 import com.example.cinema_app.service.AlarmService
+import javax.inject.Inject
 
 
 class CinemaActivity : Fragment(), DateTimePickerUtil {
-    private val viewModel: CinemaViewModel by activityViewModels {
-        CinemaViewModelFactory(
-            requireActivity().application
-        )
-    }
+    @Inject
+    lateinit var viewModelFactory: CinemaViewModelFactory
+    lateinit var viewModel: CinemaDetailViewModel
+    lateinit var scheduleViewModel: ScheduleViewModel
+
     private lateinit var cinema: Cinema
     private lateinit var input: EditText
     private lateinit var checkBox: CheckBox
@@ -44,11 +46,18 @@ class CinemaActivity : Fragment(), DateTimePickerUtil {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? = inflater.inflate(
-        R.layout.activity_cinema,
-        container,
-        false
-    )
+    ): View? {
+        //DaggerViewModelComponent.builder().appComponent((activity?.application as CinemaApp).getAppComponent()).build().inject(this)
+        CinemaApp.appComponentViewModel.inject(this)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(CinemaDetailViewModel::class.java)
+        scheduleViewModel =
+            ViewModelProvider(this, viewModelFactory).get(ScheduleViewModel::class.java)
+        return inflater.inflate(
+            R.layout.activity_cinema,
+            container,
+            false
+        )
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -99,7 +108,7 @@ class CinemaActivity : Fragment(), DateTimePickerUtil {
             clickButtonScheduleAlarm(
                 requireActivity().supportFragmentManager,
                 cinema,
-                viewModel,
+                scheduleViewModel,
                 alarmService,
                 requireContext(),
                 view

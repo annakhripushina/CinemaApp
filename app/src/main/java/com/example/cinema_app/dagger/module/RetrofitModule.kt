@@ -1,37 +1,28 @@
-package com.example.cinema_app
+package com.example.cinema_app.dagger.module
 
 import android.app.Application
+import com.example.cinema_app.BuildConfig
 import com.example.cinema_app.data.CinemaService
 import com.example.cinema_app.domain.CinemaListInteractor
 import com.google.gson.Gson
+import dagger.Module
+import dagger.Provides
+import dagger.Reusable
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
-class App : Application() {
-
+@Module
+class RetrofitModule(val application: Application) {
     companion object {
         var BASE_URL = "https://api.themoviedb.org/3/"
-
-        lateinit var instance: App
-            private set
     }
 
-    lateinit var cinemaInteractor: CinemaListInteractor
-    lateinit var cinemaService: CinemaService
-
-
-    override fun onCreate() {
-        super.onCreate()
-        instance = this
-
-        initRetrofit()
-        initInteractor()
-    }
-
-    private fun initRetrofit() {
+    @Provides
+    @Reusable
+    internal fun provideOkHttpClient(): OkHttpClient {
         val okHttpClient = OkHttpClient.Builder()
             .addInterceptor { chain ->
                 return@addInterceptor chain.proceed(
@@ -52,22 +43,27 @@ class App : Application() {
                     }
                 })
             .build()
-
-        cinemaService = Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .client(okHttpClient)
-            .addConverterFactory(GsonConverterFactory.create(Gson()))
-            .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
-            .build()
-            .create(CinemaService::class.java)
-
+        return okHttpClient
     }
 
-    private fun initInteractor() {
-        cinemaInteractor = CinemaListInteractor(cinemaService)
-    }
+    @Provides
+    @Reusable
+    internal fun provideRetrofitInterface(okHttpClient: OkHttpClient): Retrofit = Retrofit.Builder()
+        .baseUrl(BASE_URL)
+        .client(okHttpClient)
+        .addConverterFactory(GsonConverterFactory.create(Gson()))
+        .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
+        .build()
+
+    @Provides
+    @Reusable
+    internal fun provideCinemaService(retrofit: Retrofit): CinemaService =
+        retrofit.create(CinemaService::class.java)
+
+
+    @Provides
+    @Reusable
+    internal fun provideCinemaListInteractor(cinemaService: CinemaService): CinemaListInteractor =
+        CinemaListInteractor(cinemaService)
 
 }
-
-
-
