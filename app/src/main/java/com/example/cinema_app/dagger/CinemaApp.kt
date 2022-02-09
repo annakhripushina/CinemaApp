@@ -26,12 +26,8 @@ class CinemaApp : Application() {
 
     }
 
-
     fun getAppComponent(): AppComponent {
         return appComponent
     }
-//    fun getAppComponentViewModel(): ViewModelComponent {
-//        return appComponentViewModel
-//    }
 
 }

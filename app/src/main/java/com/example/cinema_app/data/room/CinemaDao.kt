@@ -51,7 +51,7 @@ interface CinemaDao {
     @Query("SELECT c.originalId, c.title, c.description, c.image, c.titleColor, c.dateViewed, c.id FROM cinemaTable c, scheduleTable s WHERE c.originalId = s.originalId")
     fun getScheduleCinema(): Flowable<List<Cinema>>
 
-    @Query("SELECT * FROM cinemaTable WHERE title LIKE :title")
+    @Query("SELECT * FROM cinemaTable WHERE title LIKE '%' || :title || '%'")
     fun searchCinema(title: String): Flowable<List<Cinema>>
 
     @Query("UPDATE cinemaTable SET titleColor = :titleColor WHERE id = :id")

@@ -17,9 +17,6 @@ interface ViewModelComponent {
     fun inject(cinemaDetailFragment: CinemaActivity)
     fun inject(favouriteFragment: FavouriteActivity)
     fun inject(scheduleFragment: ScheduleActivity)
-
-    // fun provideCinemaService(): CinemaService
-
 }
 
 @Scope

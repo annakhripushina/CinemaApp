@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.cinema_app.MyItemDecorator
 import com.example.cinema_app.R
 import com.example.cinema_app.dagger.CinemaApp
+import com.example.cinema_app.dagger.component.DaggerViewModelComponent
 import com.example.cinema_app.dagger.module.viewmodel.CinemaViewModelFactory
 import com.example.cinema_app.data.entity.Cinema
 import com.example.cinema_app.presentation.view.detail.CinemaActivity
@@ -28,6 +29,7 @@ class FavouriteActivity : Fragment() {
     @Inject
     lateinit var viewModelFactory: CinemaViewModelFactory
     lateinit var viewModel: FavouriteViewModel
+
     private lateinit var recyclerView: RecyclerView
 
     private val adapter = FavouriteAdapter(object : FavouriteAdapter.FavouriteClickListener {
@@ -64,7 +66,6 @@ class FavouriteActivity : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        //DaggerViewModelComponent.builder().appComponent((activity?.application as CinemaApp).getAppComponent()).build().inject(this)
         CinemaApp.appComponentViewModel.inject(this)
         viewModel = ViewModelProvider(this, viewModelFactory).get(FavouriteViewModel::class.java)
         return inflater.inflate(

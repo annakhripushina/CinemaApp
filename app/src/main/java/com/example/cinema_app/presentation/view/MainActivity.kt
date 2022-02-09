@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.cinema_app.R
 import com.example.cinema_app.dagger.CinemaApp
+import com.example.cinema_app.dagger.component.DaggerViewModelComponent
 import com.example.cinema_app.dagger.module.viewmodel.CinemaViewModelFactory
 import com.example.cinema_app.data.entity.Cinema
 import com.example.cinema_app.presentation.view.cinemaList.CinemaListActivity
@@ -22,13 +23,6 @@ import javax.inject.Inject
 
 
 class MainActivity : AppCompatActivity() {
-//    private val cinemaViewModelFactory by lazy { CinemaViewModelFactory(application) }
-//    private val cinemaViewModel by lazy {
-//        ViewModelProvider(this, cinemaViewModelFactory).get(
-//            CinemaViewModel::class.java
-//        )
-//    }
-
     @Inject
     lateinit var viewModelFactory: CinemaViewModelFactory
     lateinit var viewModel: CinemaListViewModel
@@ -37,8 +31,6 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("UseCompatLoadingForDrawables")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //CinemaApp.appComponent.inject(this)
-        //DaggerViewModelComponent.builder().appComponent((application as CinemaApp).getAppComponent()).build().inject(this)
         CinemaApp.appComponentViewModel.inject(this)
         viewModel = ViewModelProvider(this, viewModelFactory).get(CinemaListViewModel::class.java)
         scheduleViewModel =

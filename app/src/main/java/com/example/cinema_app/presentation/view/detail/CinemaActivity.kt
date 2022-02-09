@@ -47,7 +47,6 @@ class CinemaActivity : Fragment(), DateTimePickerUtil {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        //DaggerViewModelComponent.builder().appComponent((activity?.application as CinemaApp).getAppComponent()).build().inject(this)
         CinemaApp.appComponentViewModel.inject(this)
         viewModel = ViewModelProvider(this, viewModelFactory).get(CinemaDetailViewModel::class.java)
         scheduleViewModel =

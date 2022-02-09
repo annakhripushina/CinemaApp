@@ -19,10 +19,12 @@ class CinemaListViewModel
 @Inject constructor(private val cinemaInteractor: CinemaListInteractor) : ViewModel() {
     private var mComment: String = ""
     private var mHasLiked: Boolean = false
+    private val mAllCinema: MutableLiveData<List<Cinema>> = SingleLiveEvent()
     private val mError: MutableLiveData<String> = SingleLiveEvent()
     private var mPage: Int = 1
 
     var allCinema = MutableLiveData<List<Cinema>>()
+        get() = mAllCinema
 
     val error: MutableLiveData<String>
         get() = mError
@@ -42,19 +44,20 @@ class CinemaListViewModel
 
     fun onGetAllCinema(): LiveData<List<Cinema>> {
         cinemaDao.getAll()
-            .subscribe({ value -> allCinema.postValue(value) },
+            .subscribe({ value -> mAllCinema.postValue(value) },
                 { error ->
-                    allCinema.postValue(listOf())
+                    mAllCinema.postValue(listOf())
                 })
         return allCinema
     }
 
     fun onSearchCinema(title: String): LiveData<List<Cinema>> {
         if (title.isNotEmpty()) {
+            //mAllCinema.postValue(listOf())
             cinemaDao.searchCinema(title)
-                .subscribe({ value -> allCinema.postValue(value) },
+                .subscribe({ value -> mAllCinema.postValue(value) },
                     { error ->
-                        allCinema.postValue(listOf())
+                        mAllCinema.postValue(listOf())
                     })
             return allCinema
         } else

@@ -8,15 +8,8 @@ import dagger.Component
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = [RoomDbModule::class/*, CinemaViewModelModule::class*/, RetrofitModule::class])
+@Component(modules = [RoomDbModule::class, RetrofitModule::class])
 interface AppComponent {
-    //    fun inject(mainActivity: MainActivity)
-//    fun inject(cinemaListFragment: CinemaListActivity)
-//    fun inject(cinemaDetailFragment: CinemaActivity)
-//    fun inject(favouriteFragment: FavouriteActivity)
-//    fun inject(scheduleFragment: ScheduleActivity)
     fun getCinemaDAO(): CinemaDao
-
     fun provideCinemaService(): CinemaService
-
 }

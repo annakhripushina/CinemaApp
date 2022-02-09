@@ -20,8 +20,8 @@ class RetrofitModule(val application: Application) {
         var BASE_URL = "https://api.themoviedb.org/3/"
     }
 
-    @Provides
     @Reusable
+    @Provides
     internal fun provideOkHttpClient(): OkHttpClient {
         val okHttpClient = OkHttpClient.Builder()
             .addInterceptor { chain ->
@@ -46,8 +46,8 @@ class RetrofitModule(val application: Application) {
         return okHttpClient
     }
 
-    @Provides
     @Reusable
+    @Provides
     internal fun provideRetrofitInterface(okHttpClient: OkHttpClient): Retrofit = Retrofit.Builder()
         .baseUrl(BASE_URL)
         .client(okHttpClient)
@@ -55,14 +55,14 @@ class RetrofitModule(val application: Application) {
         .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
         .build()
 
-    @Provides
     @Reusable
+    @Provides
     internal fun provideCinemaService(retrofit: Retrofit): CinemaService =
         retrofit.create(CinemaService::class.java)
 
 
-    @Provides
     @Reusable
+    @Provides
     internal fun provideCinemaListInteractor(cinemaService: CinemaService): CinemaListInteractor =
         CinemaListInteractor(cinemaService)
 

@@ -23,22 +23,28 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.cinema_app.MyItemDecorator
 import com.example.cinema_app.R
 import com.example.cinema_app.dagger.CinemaApp
+import com.example.cinema_app.dagger.component.DaggerViewModelComponent
 import com.example.cinema_app.dagger.module.viewmodel.CinemaViewModelFactory
 import com.example.cinema_app.data.entity.Cinema
 import com.example.cinema_app.presentation.view.detail.CinemaActivity
 import com.google.android.material.snackbar.Snackbar
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.ObservableOnSubscribe
+import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 
 class CinemaListActivity : Fragment() {
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var progressBar: ProgressBar
-
     @Inject
     lateinit var viewModelFactory: CinemaViewModelFactory
     lateinit var viewModel: CinemaListViewModel
+
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var progressBar: ProgressBar
     private var comment: String = ""
     private var hasLiked: Boolean = false
     private lateinit var swipeContainer: SwipeRefreshLayout
@@ -78,7 +84,6 @@ class CinemaListActivity : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        //DaggerViewModelComponent.builder().appComponent((activity?.application as CinemaApp).getAppComponent()).build().inject(this)
         CinemaApp.appComponentViewModel.inject(this)
         viewModel = ViewModelProvider(this, viewModelFactory).get(CinemaListViewModel::class.java)
         return inflater.inflate(
@@ -168,18 +173,72 @@ class CinemaListActivity : Fragment() {
 
     private fun searchCinema(view: View) {
         val searchView = view.findViewById<SearchView>(R.id.searchView)
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+        /*searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
-                return false
-            }
-
-            override fun onQueryTextChange(newText: String): Boolean {
                 viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
-                    viewModel.onSearchCinema(newText)
+                    viewModel.onSearchCinema(query)
                 }
                 return false
             }
 
-        })
+            override fun onQueryTextChange(newText: String): Boolean {
+
+                return false
+            }
+
+        })*/
+
+//        Observable.create(ObservableOnSubscribe<String> { subscriber ->
+//            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+//                override fun onQueryTextChange(newText: String?): Boolean {
+//                    subscriber.onNext(newText!!)
+//                    return false
+//                }
+//
+//                override fun onQueryTextSubmit(query: String?): Boolean {
+//                    subscriber.onNext(query!!)
+//                    return false
+//                }
+//            })
+//        })
+//            //.map { text -> text.toLowerCase().trim() }
+//            .debounce(250, TimeUnit.MILLISECONDS)
+//            .distinct()
+//            .filter { text -> text.isNotBlank() }
+//            .subscribe { text ->
+//                viewModel.onSearchCinema(text)
+//            }
+
+        Observable.create<String> { emitter ->
+            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    return false
+                }
+
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    if (!emitter.isDisposed){
+                        emitter.onNext(newText)
+                    }
+                    return false
+                }
+
+            }
+            )}
+            .debounce(1000, TimeUnit.MILLISECONDS)
+            .distinctUntilChanged()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                {
+                    viewModel.onSearchCinema(it)
+                },
+                {
+
+                },
+                {
+
+                }
+            )
+
     }
 }
