@@ -60,7 +60,6 @@ class RetrofitModule(val application: Application) {
     internal fun provideCinemaService(retrofit: Retrofit): CinemaService =
         retrofit.create(CinemaService::class.java)
 
-
     @Reusable
     @Provides
     internal fun provideCinemaListInteractor(cinemaService: CinemaService): CinemaListInteractor =

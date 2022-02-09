@@ -7,7 +7,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.cinema_app.R
 import com.example.cinema_app.dagger.CinemaApp
-import com.example.cinema_app.dagger.component.DaggerViewModelComponent
 import com.example.cinema_app.dagger.module.viewmodel.CinemaViewModelFactory
 import com.example.cinema_app.data.entity.Cinema
 import com.example.cinema_app.presentation.view.cinemaList.CinemaListActivity
@@ -60,7 +59,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.nav_Schedule -> {
                     supportFragmentManager.beginTransaction()
-                        .replace(R.id.containerActivity, ScheduleActivity(), "ScheduleActivity")
+                        .replace(R.id.containerActivity, ScheduleActivity(), "scheduleActivity")
                         .commit()
                 }
             }
@@ -84,6 +83,7 @@ class MainActivity : AppCompatActivity() {
             if (bundle.containsKey(ALARM_NOTIFICATION_SCHEDULE)) {
                 val cinema = bundle.getParcelable<Cinema>(ALARM_NOTIFICATION_SCHEDULE)
                 viewModel.onSetCinemaItem(cinema!!)
+                scheduleViewModel.deleteScheduleCinema(cinema.originalId)
                 supportFragmentManager.beginTransaction()
                     .replace(R.id.containerActivity, CinemaActivity(), "cinemaActivity")
                     .addToBackStack("cinemaActivity")
@@ -91,7 +91,6 @@ class MainActivity : AppCompatActivity() {
             } else if (bundle.containsKey(NOTIFICATION_FCM)) {
                 val cinema = bundle.getParcelable<Cinema>(NOTIFICATION_FCM)
                 viewModel.onSetCinemaItem(cinema!!)
-                scheduleViewModel.deleteScheduleCinema(cinema.originalId)
                 supportFragmentManager.beginTransaction()
                     .replace(R.id.containerActivity, CinemaActivity(), "cinemaActivity")
                     .addToBackStack("cinemaActivity")

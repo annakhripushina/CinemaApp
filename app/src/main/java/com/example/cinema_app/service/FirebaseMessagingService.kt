@@ -22,7 +22,7 @@ import io.reactivex.rxjava3.core.SingleObserver
 import io.reactivex.rxjava3.disposables.Disposable
 import javax.inject.Inject
 
-const val NOTIFICATION_FCM = "ALARM_NOTIFICATION_SCHEDULE"
+const val NOTIFICATION_FCM = "NOTIFICATION_FCM"
 
 class FirebaseMessagingService : FirebaseMessagingService() {
     @Inject

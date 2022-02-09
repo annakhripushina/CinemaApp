@@ -42,4 +42,5 @@ class CinemaAdapter(
         fun onCinemaClick(cinemaItem: Cinema, itemView: View, position: Int)
         fun onLongCinemaClick(cinemaItem: Cinema, itemView: View, position: Int)
     }
+
 }

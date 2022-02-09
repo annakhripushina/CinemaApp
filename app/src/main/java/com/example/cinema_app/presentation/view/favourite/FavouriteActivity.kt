@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.cinema_app.MyItemDecorator
 import com.example.cinema_app.R
 import com.example.cinema_app.dagger.CinemaApp
-import com.example.cinema_app.dagger.component.DaggerViewModelComponent
 import com.example.cinema_app.dagger.module.viewmodel.CinemaViewModelFactory
 import com.example.cinema_app.data.entity.Cinema
 import com.example.cinema_app.presentation.view.detail.CinemaActivity

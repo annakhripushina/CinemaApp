@@ -16,14 +16,12 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.cinema_app.MyItemDecorator
 import com.example.cinema_app.R
 import com.example.cinema_app.dagger.CinemaApp
-import com.example.cinema_app.dagger.component.DaggerViewModelComponent
 import com.example.cinema_app.dagger.module.viewmodel.CinemaViewModelFactory
 import com.example.cinema_app.data.entity.Cinema
 import com.example.cinema_app.presentation.view.detail.CinemaActivity
@@ -32,9 +30,6 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.ObservableOnSubscribe
 import io.reactivex.rxjava3.schedulers.Schedulers
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 
@@ -173,72 +168,30 @@ class CinemaListActivity : Fragment() {
 
     private fun searchCinema(view: View) {
         val searchView = view.findViewById<SearchView>(R.id.searchView)
-        /*searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String): Boolean {
-                viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
-                    viewModel.onSearchCinema(query)
-                }
-                return false
-            }
 
-            override fun onQueryTextChange(newText: String): Boolean {
-
-                return false
-            }
-
-        })*/
-
-//        Observable.create(ObservableOnSubscribe<String> { subscriber ->
-//            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-//                override fun onQueryTextChange(newText: String?): Boolean {
-//                    subscriber.onNext(newText!!)
-//                    return false
-//                }
-//
-//                override fun onQueryTextSubmit(query: String?): Boolean {
-//                    subscriber.onNext(query!!)
-//                    return false
-//                }
-//            })
-//        })
-//            //.map { text -> text.toLowerCase().trim() }
-//            .debounce(250, TimeUnit.MILLISECONDS)
-//            .distinct()
-//            .filter { text -> text.isNotBlank() }
-//            .subscribe { text ->
-//                viewModel.onSearchCinema(text)
-//            }
-
-        Observable.create<String> { emitter ->
+        Observable.create(ObservableOnSubscribe<String> { subscriber ->
             searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-                override fun onQueryTextSubmit(query: String?): Boolean {
-                    return false
-                }
-
                 override fun onQueryTextChange(newText: String?): Boolean {
-                    if (!emitter.isDisposed){
-                        emitter.onNext(newText)
-                    }
+                    subscriber.onNext(newText!!)
                     return false
                 }
 
-            }
-            )}
-            .debounce(1000, TimeUnit.MILLISECONDS)
-            .distinctUntilChanged()
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    subscriber.onNext(query!!)
+                    return false
+                }
+            })
+        })
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                {
-                    viewModel.onSearchCinema(it)
-                },
-                {
-
-                },
-                {
-
-                }
-            )
-
+            .subscribe { text ->
+                viewModel.onSearchCinema(text).observe(viewLifecycleOwner, Observer { list ->
+                    list?.let {
+                        adapter.setItems(list as ArrayList<Cinema>)
+                    }
+                })
+            }
     }
+
+
 }
