@@ -15,7 +15,7 @@ import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
 @Module
-class RetrofitModule(val application: Application) {
+class RetrofitModule {
     companion object {
         var BASE_URL = "https://api.themoviedb.org/3/"
     }

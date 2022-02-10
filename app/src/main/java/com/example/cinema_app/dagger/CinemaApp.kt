@@ -18,7 +18,7 @@ class CinemaApp : Application() {
         super.onCreate()
         appComponent = DaggerAppComponent.builder()
             .roomDbModule(RoomDbModule(this))
-            .retrofitModule(RetrofitModule(this))
+            .retrofitModule(RetrofitModule())
             .build()
         appComponentViewModel = DaggerViewModelComponent.builder()
             .appComponent(appComponent)
