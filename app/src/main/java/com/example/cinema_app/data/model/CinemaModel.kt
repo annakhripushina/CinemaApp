@@ -6,26 +6,26 @@ import com.google.gson.annotations.SerializedName
 
 data class CinemaModel(
     @SerializedName("adult") val adult: Boolean,
-    @SerializedName("backdrop_path") val backdrop_path: String,
-    @SerializedName("genre_ids") val genre_ids: List<Int>,
+    @SerializedName("backdrop_path") val backdropPath: String,
+    @SerializedName("genre_ids") val genreIds: List<Int>,
     @SerializedName("id") val id: Int,
-    @SerializedName("original_language") val original_language: String,
-    @SerializedName("original_title") val original_title: String,
+    @SerializedName("original_language") val originalLanguage: String,
+    @SerializedName("original_title") val originalTitle: String,
     @SerializedName("overview") val overview: String,
     @SerializedName("popularity") val popularity: Double,
-    @SerializedName("poster_path") val poster_path: String,
-    @SerializedName("release_date") val release_date: String,
+    @SerializedName("poster_path") val posterPath: String,
+    @SerializedName("release_date") val releaseDate: String,
     @SerializedName("title") val title: String,
     @SerializedName("video") val video: Boolean,
-    @SerializedName("vote_average") val vote_average: Double,
-    @SerializedName("vote_count") val vote_count: Int
+    @SerializedName("vote_average") val voteAverage: Double,
+    @SerializedName("vote_count") val voteCount: Int
 )
 
 internal fun CinemaModel.toDomainModel() = Cinema(
     originalId = this.id,
-    title = this.original_title,
+    title = this.originalTitle,
     description = this.overview,
-    image = "https://image.tmdb.org/t/p/w500/" + this.poster_path,
+    image = "https://image.tmdb.org/t/p/w500/" + this.posterPath,
     titleColor = Color.BLACK,
     dateViewed = ""
 )
