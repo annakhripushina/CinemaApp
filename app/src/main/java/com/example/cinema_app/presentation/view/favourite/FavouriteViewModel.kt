@@ -7,22 +7,20 @@ import androidx.lifecycle.viewModelScope
 import com.example.cinema_app.data.entity.Cinema
 import com.example.cinema_app.data.entity.FavouriteCinema
 import com.example.cinema_app.data.room.CinemaDao
-import com.example.cinema_app.domain.CinemaListInteractor
+import com.example.cinema_app.domain.ICinemaListInteractor
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class FavouriteViewModel
-@Inject constructor(private val cinemaInteractor: CinemaListInteractor) : ViewModel() {
-    private lateinit var mCinemaItem: Cinema
-
+@Inject constructor(private val cinemaInteractor: ICinemaListInteractor, private val cinemaDao: CinemaDao) : ViewModel() {
     var allFavouriteCinema = MutableLiveData<List<Cinema>>()
 
-    val cinemaItem: Cinema?
+    val cinemaItem: Cinema
         get() = cinemaInteractor.cinemaItem
 
-    @Inject
-    lateinit var cinemaDao: CinemaDao
+//    @Inject
+//    lateinit var cinemaDao: CinemaDao
 
     fun onSetCinemaItem(cinemaItem: Cinema) {
         cinemaInteractor.onSetCinemaItem(cinemaItem)

@@ -19,7 +19,7 @@ interface DateTimePickerUtil {
     fun clickButtonScheduleAlarm(
         fm: FragmentManager,
         cinema: Cinema,
-        cinemaViewModel: ScheduleViewModel,
+        scheduleViewModel: ScheduleViewModel,
         alarmService: AlarmService,
         context: Context,
         view: View?
@@ -38,7 +38,7 @@ interface DateTimePickerUtil {
                 val alarmTime = scheduleDate.toInstant().toEpochMilli()
                 val formatter = DateTimeFormatter.ofPattern("d.M.u H:m")
 
-                cinemaViewModel.insertScheduleCinema(
+                scheduleViewModel.insertScheduleCinema(
                     ScheduleCinema(
                         cinema.originalId,
                         alarmTime.toString(),

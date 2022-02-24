@@ -8,13 +8,13 @@ import androidx.lifecycle.viewModelScope
 import com.example.cinema_app.data.entity.Cinema
 import com.example.cinema_app.data.entity.LikedCinema
 import com.example.cinema_app.data.room.CinemaDao
-import com.example.cinema_app.domain.CinemaListInteractor
+import com.example.cinema_app.domain.ICinemaListInteractor
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class CinemaDetailViewModel
-@Inject constructor(private val cinemaInteractor: CinemaListInteractor) : ViewModel() {
+@Inject constructor(private val cinemaInteractor: ICinemaListInteractor, private val cinemaDao: CinemaDao) : ViewModel() {
     private var mComment: String = ""
     private var mHasLiked: Boolean = false
 
@@ -26,8 +26,8 @@ class CinemaDetailViewModel
     val hasLiked: Boolean
         get() = mHasLiked
 
-    @Inject
-    lateinit var cinemaDao: CinemaDao
+//    @Inject
+//    lateinit var cinemaDao: CinemaDao
 
     fun onGetLikedCinema(): LiveData<List<LikedCinema>> {
         cinemaDao.getLikedCinema()
@@ -52,6 +52,7 @@ class CinemaDetailViewModel
 
     fun getLike(cinemaItem: Cinema) {
         mHasLiked = allLikedCinema.value!!.contains(LikedCinema(cinemaItem.originalId))
+        cinemaInteractor.onSetHasLiked(mHasLiked)
     }
 
 }

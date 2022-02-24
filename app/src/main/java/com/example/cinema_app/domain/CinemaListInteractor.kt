@@ -14,16 +14,23 @@ import javax.inject.Inject
 
 @Reusable
 class CinemaListInteractor @Inject constructor(private val cinemaService: CinemaService) :
-    FirebaseRemoteConfigService {
+    FirebaseRemoteConfigService, ICinemaListInteractor {
     private var items = ArrayList<Cinema>()
     private lateinit var remoteConfigKey: FirebaseRemoteConfig
-    lateinit var cinemaItem: Cinema
 
-    fun onSetCinemaItem(cinema: Cinema) {
+    override lateinit var cinemaItem: Cinema
+
+    override var hasLiked: Boolean = false
+
+    override fun onSetCinemaItem(cinema: Cinema) {
         cinemaItem = cinema
     }
 
-    fun getLatestCinema(): Single<Cinema> {
+    override fun onSetHasLiked(like: Boolean) {
+        hasLiked = like
+    }
+
+    override fun getLatestCinema(): Single<Cinema> {
         return cinemaService.getLatestCinema()
             .subscribeOn(Schedulers.io())
             .map { it.toDomainModel() }
@@ -31,7 +38,7 @@ class CinemaListInteractor @Inject constructor(private val cinemaService: Cinema
 
     }
 
-    fun getCinema(page: Int): Single<List<Cinema>> {
+    override fun getCinema(page: Int): Single<List<Cinema>> {
         remoteConfigKey = getRemoteConfig()
         val cinemaTag = remoteConfigKey["Category"].asString()
         items.clear()

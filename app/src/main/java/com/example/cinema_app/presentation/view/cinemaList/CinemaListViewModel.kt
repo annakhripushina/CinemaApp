@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.cinema_app.data.entity.Cinema
 import com.example.cinema_app.data.entity.FavouriteCinema
 import com.example.cinema_app.data.room.CinemaDao
-import com.example.cinema_app.domain.CinemaListInteractor
+import com.example.cinema_app.domain.ICinemaListInteractor
 import com.example.cinema_app.utils.SingleLiveEvent
 import io.reactivex.rxjava3.core.SingleObserver
 import io.reactivex.rxjava3.disposables.Disposable
@@ -16,7 +16,10 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class CinemaListViewModel
-@Inject constructor(private val cinemaInteractor: CinemaListInteractor) : ViewModel() {
+@Inject constructor(
+    private val cinemaInteractor: ICinemaListInteractor,
+    private val cinemaDao: CinemaDao
+) : ViewModel() {
     private var mComment: String = ""
     private var mHasLiked: Boolean = false
     private val mAllCinema: MutableLiveData<List<Cinema>> = SingleLiveEvent()
@@ -38,13 +41,13 @@ class CinemaListViewModel
 
     val comment: String
         get() = mComment
+//???а если так?
+//    @Inject
+//    lateinit var cinemaDao: CinemaDao
 
-    @Inject
-    lateinit var cinemaDao: CinemaDao
-
-    init {
-        onGetCinemaList()
-    }
+//    init {
+//        onGetCinemaList()
+//    }
 
     fun onGetAllCinema(): LiveData<List<Cinema>> {
         cinemaDao.getAll()
@@ -82,6 +85,10 @@ class CinemaListViewModel
 
     fun onSetCinemaItem(cinemaItem: Cinema) {
         cinemaInteractor.onSetCinemaItem(cinemaItem)
+    }
+
+    fun onGetHasLiked(){
+        mHasLiked = cinemaInteractor.hasLiked
     }
 
     fun onAddFavouriteCinema(cinemaItem: Cinema) =

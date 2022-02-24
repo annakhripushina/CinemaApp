@@ -1,9 +1,9 @@
 package com.example.cinema_app.dagger.module
 
-import android.app.Application
 import com.example.cinema_app.BuildConfig
 import com.example.cinema_app.data.CinemaService
 import com.example.cinema_app.domain.CinemaListInteractor
+import com.example.cinema_app.domain.ICinemaListInteractor
 import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
@@ -62,7 +62,12 @@ class RetrofitModule {
 
     @Reusable
     @Provides
-    internal fun provideCinemaListInteractor(cinemaService: CinemaService): CinemaListInteractor =
+    internal fun provideCinemaListInteractor(cinemaService: CinemaService): ICinemaListInteractor =
         CinemaListInteractor(cinemaService)
+
+//    @Reusable
+//    @Provides
+//    internal fun provideCinemaListViewModel(cinemaListInteractor: ICinemaListInteractor): CinemaListViewModel =
+//        CinemaListViewModel(cinemaListInteractor)
 
 }

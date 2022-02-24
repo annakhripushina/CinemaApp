@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -49,6 +50,7 @@ class CinemaActivity : Fragment(), DateTimePickerUtil {
     ): View? {
         CinemaApp.appComponentViewModel.inject(this)
         viewModel = ViewModelProvider(this, viewModelFactory).get(CinemaDetailViewModel::class.java)
+
         scheduleViewModel =
             ViewModelProvider(this, viewModelFactory).get(ScheduleViewModel::class.java)
         return inflater.inflate(

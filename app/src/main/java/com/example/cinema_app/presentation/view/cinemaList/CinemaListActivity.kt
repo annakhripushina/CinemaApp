@@ -81,6 +81,7 @@ class CinemaListActivity : Fragment() {
     ): View? {
         CinemaApp.appComponentViewModel.inject(this)
         viewModel = ViewModelProvider(this, viewModelFactory).get(CinemaListViewModel::class.java)
+        viewModel.onGetCinemaList()
         return inflater.inflate(
             R.layout.activity_list,
             container,
@@ -139,6 +140,7 @@ class CinemaListActivity : Fragment() {
     }
 
     private fun onActivityResult() {
+        viewModel.onGetHasLiked()
         hasLiked = viewModel.hasLiked
         comment = viewModel.comment
         Log.d(
