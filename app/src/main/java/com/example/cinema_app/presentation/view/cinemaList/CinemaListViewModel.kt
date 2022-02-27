@@ -87,7 +87,7 @@ class CinemaListViewModel
         cinemaInteractor.onSetCinemaItem(cinemaItem)
     }
 
-    fun onGetHasLiked(){
+    fun onGetHasLiked() {
         mHasLiked = cinemaInteractor.hasLiked
     }
 

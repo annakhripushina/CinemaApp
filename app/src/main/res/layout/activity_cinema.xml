@@ -61,15 +61,13 @@
                 android:layout_marginBottom="10dp"
                 android:gravity="right">
 
-                <CheckBox
+                <ImageView
                     android:id="@+id/checkBoxLike"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Нравится"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp"
-                    android:textSize="18sp"
-                    android:layout_weight="1" />
+                    android:layout_width="45dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="right"
+                    android:src="@drawable/ic_baseline_favorite_border_24"
+                    android:scaleType="fitCenter" />
 
                 <ImageButton
                     android:id="@+id/imageInvite"
@@ -87,6 +85,8 @@
                     android:contentDescription="Посмотреть позже"
                     android:src="@drawable/ic_baseline_access_time_24"
                     android:layout_gravity="right" />
+
+
             </LinearLayout>
 
             <EditText

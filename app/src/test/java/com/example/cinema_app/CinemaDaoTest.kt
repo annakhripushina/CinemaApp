@@ -2,7 +2,6 @@ package com.example.cinema_app
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.LiveDataReactiveStreams
-import com.example.cinema_app.data.entity.Cinema
 import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
@@ -15,14 +14,7 @@ class CinemaDaoTest : RoomDB() {
     @JvmField
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
-    private val originalId = 524434
-    private val title = "Eternals"
-    private val description =
-        "The Eternals are a team of ancient aliens who have been living on Earth in secret for thousands of years."
-    private val image = "https://image.tmdb.org/t/p/w500//bcCBq9N1EMo3daNIjWJ8kYvrQm6.jpg"
-    private var titleColor = -16777216
-    private val dateViewed = ""
-    private val cinema = Cinema(originalId, title, description, image, titleColor, dateViewed)
+    private val cinema = CinemaItem.cinema
 
     @Test
     fun insertTest() {

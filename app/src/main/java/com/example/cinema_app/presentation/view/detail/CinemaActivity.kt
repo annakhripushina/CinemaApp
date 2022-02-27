@@ -4,11 +4,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
@@ -35,7 +33,7 @@ class CinemaActivity : Fragment(), DateTimePickerUtil {
 
     private lateinit var cinema: Cinema
     private lateinit var input: EditText
-    private lateinit var checkBox: CheckBox
+    private lateinit var checkBox: ImageView//CheckBox
     private lateinit var buttonInvite: ImageView
     private lateinit var buttonSchedule: ImageView
     private lateinit var description: TextView
@@ -72,7 +70,9 @@ class CinemaActivity : Fragment(), DateTimePickerUtil {
         viewModel.onGetLikedCinema().observe(viewLifecycleOwner, Observer { list ->
             list?.let {
                 viewModel.getLike(cinema)
-                checkBox.isChecked = viewModel.hasLiked
+                if (viewModel.hasLiked == true)
+                    checkBox.setImageResource(R.drawable.ic_baseline_favorite_24)
+                else checkBox.setImageResource(R.drawable.ic_baseline_favorite_border_24)
             }
         })
     }
@@ -117,8 +117,8 @@ class CinemaActivity : Fragment(), DateTimePickerUtil {
 
         }
 
-        checkBox.setOnCheckedChangeListener { _, isChecked ->
-            viewModel.onSetLikeClickListener(cinema, isChecked)
+        checkBox.setOnClickListener {
+            viewModel.onSetLikeClickListener(cinema, !viewModel.hasLiked)
         }
 
         input.addTextChangedListener(object : TextWatcher {

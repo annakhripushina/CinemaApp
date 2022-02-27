@@ -14,7 +14,10 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class CinemaDetailViewModel
-@Inject constructor(private val cinemaInteractor: ICinemaListInteractor, private val cinemaDao: CinemaDao) : ViewModel() {
+@Inject constructor(
+    private val cinemaInteractor: ICinemaListInteractor,
+    private val cinemaDao: CinemaDao
+) : ViewModel() {
     private var mComment: String = ""
     private var mHasLiked: Boolean = false
 

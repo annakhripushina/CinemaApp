@@ -13,7 +13,10 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class FavouriteViewModel
-@Inject constructor(private val cinemaInteractor: ICinemaListInteractor, private val cinemaDao: CinemaDao) : ViewModel() {
+@Inject constructor(
+    private val cinemaInteractor: ICinemaListInteractor,
+    private val cinemaDao: CinemaDao
+) : ViewModel() {
     var allFavouriteCinema = MutableLiveData<List<Cinema>>()
 
     val cinemaItem: Cinema
