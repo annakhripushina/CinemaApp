@@ -50,7 +50,7 @@ class FirebaseMessagingService : FirebaseMessagingService() {
     }
 
     private fun sendRegistrationToServer(token: String) {
-        if (BuildConfig.USE_LOG){
+        if (BuildConfig.USE_LOG) {
             Log.d(TAG, "Refreshed token: $token")
         }
     }

@@ -23,13 +23,13 @@ class CinemaListViewModelTest {
     @JvmField
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
-    val originalId = 524434
-    val title = "Eternals"
-    val description =
+    private val originalId = 524434
+    private val title = "Eternals"
+    private val description =
         "The Eternals are a team of ancient aliens who have been living on Earth in secret for thousands of years."
-    val image = "https://image.tmdb.org/t/p/w500//bcCBq9N1EMo3daNIjWJ8kYvrQm6.jpg"
-    var titleColor = -16777216
-    val dateViewed = ""
+    private val image = "https://image.tmdb.org/t/p/w500//bcCBq9N1EMo3daNIjWJ8kYvrQm6.jpg"
+    private var titleColor = -16777216
+    private val dateViewed = ""
 
     private val cinema = Cinema(originalId, title, description, image, titleColor, dateViewed)
     private var results = Single.just(listOf(cinema))
@@ -37,7 +37,7 @@ class CinemaListViewModelTest {
     private lateinit var cinemaDAO: CinemaDao
     private lateinit var viewModel: CinemaListViewModel
 
-    inline fun <reified T> mock(): T = mock(T::class.java)
+    private inline fun <reified T> mock(): T = mock(T::class.java)
 
     @Before
     fun init() {

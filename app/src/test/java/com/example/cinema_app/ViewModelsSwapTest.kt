@@ -37,9 +37,9 @@ class ViewModelsSwapTest : RoomDB() {
     private lateinit var cinemaDetailViewModel: CinemaDetailViewModel
     private lateinit var favouriteViewModel: FavouriteViewModel
     private lateinit var cinemaActivity: CinemaActivity
-    lateinit var instrumentationContext: Context
+    private lateinit var instrumentationContext: Context
 
-    inline fun <reified T> mock(): T = Mockito.mock(T::class.java)
+    private inline fun <reified T> mock(): T = Mockito.mock(T::class.java)
 
     @Before
     fun init() {

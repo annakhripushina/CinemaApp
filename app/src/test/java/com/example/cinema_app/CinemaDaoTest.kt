@@ -38,7 +38,7 @@ class CinemaDaoTest : RoomDB() {
         cinema.id = 1
         cinemaDao.insertCinema(cinema)
         cinemaDao.updateTitleColor(0, cinema.id!!)
-        var cinemaDB = LiveDataReactiveStreams.fromPublisher(cinemaDao.searchCinema(cinema.title))
+        val cinemaDB = LiveDataReactiveStreams.fromPublisher(cinemaDao.searchCinema(cinema.title))
             .getValueBlocking()
         assertEquals(1, cinemaDB?.size)
         assertEquals(0, cinemaDB?.get(0)?.titleColor)
