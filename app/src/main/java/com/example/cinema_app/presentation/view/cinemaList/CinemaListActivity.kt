@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.cinema_app.BuildConfig
+import com.example.cinema_app.CinemaListGetter
 import com.example.cinema_app.MyItemDecorator
 import com.example.cinema_app.R
 import com.example.cinema_app.dagger.CinemaApp
@@ -44,6 +45,7 @@ class CinemaListActivity : Fragment() {
     private var comment: String = ""
     private var hasLiked: Boolean = false
     private lateinit var swipeContainer: SwipeRefreshLayout
+    private var cinemaListGetter = CinemaListGetter()
 
     private val adapter = CinemaAdapter(object : CinemaAdapter.CinemaClickListener {
         override fun onCinemaClick(cinemaItem: Cinema, itemView: View, position: Int) {
@@ -134,7 +136,7 @@ class CinemaListActivity : Fragment() {
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 if (!recyclerView.canScrollVertically(1) && newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    viewModel.onGetCinemaListPage()
+                    cinemaListGetter.onGetCinemaListPage(viewModel, view)
                 }
             }
         })

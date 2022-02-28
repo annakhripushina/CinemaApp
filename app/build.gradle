@@ -15,6 +15,10 @@ android {
             keyAlias 'keyProduction'
             keyPassword 'keyProduction'
         }
+        dev {
+        }
+        release {
+        }
     }
     compileSdk 31
 
@@ -28,6 +32,7 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField "boolean", "USE_LOG", "true"
         manifestPlaceholders = [crashlyticsCollectionEnabled:"true"]
+        signingConfig signingConfigs.debug
     }
 
     buildTypes {
