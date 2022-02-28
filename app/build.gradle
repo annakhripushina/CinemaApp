@@ -64,18 +64,14 @@ android {
         }
     }
 
-    def MODE = "MODE"
-
     flavorDimensions += "version"
     productFlavors{
         free{
-            //buildConfigField "boolean", MODE, '\"free"'
             dimension = "version"
             applicationIdSuffix = ".free"
             versionNameSuffix = "-free"
         }
         paid{
-            //buildConfigField "boolean", MODE, '\"paid"'
             dimension = "version"
             applicationIdSuffix = ".paid"
             versionNameSuffix = "-paid"
