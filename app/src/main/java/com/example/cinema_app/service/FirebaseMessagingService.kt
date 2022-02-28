@@ -9,6 +9,7 @@ import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import com.example.cinema_app.BuildConfig
 import com.example.cinema_app.R
 import com.example.cinema_app.dagger.CinemaApp
 import com.example.cinema_app.dagger.component.DaggerFirebaseComponent
@@ -49,7 +50,9 @@ class FirebaseMessagingService : FirebaseMessagingService() {
     }
 
     private fun sendRegistrationToServer(token: String) {
-        Log.d(TAG, "Refreshed token: $token")
+        if (BuildConfig.USE_LOG){
+            Log.d(TAG, "Refreshed token: $token")
+        }
     }
 
     private fun showNotification(remoteMessage: RemoteMessage) {

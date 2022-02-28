@@ -19,6 +19,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.example.cinema_app.BuildConfig
 import com.example.cinema_app.MyItemDecorator
 import com.example.cinema_app.R
 import com.example.cinema_app.dagger.CinemaApp
@@ -143,10 +144,12 @@ class CinemaListActivity : Fragment() {
         viewModel.onGetHasLiked()
         hasLiked = viewModel.hasLiked
         comment = viewModel.comment
-        Log.d(
-            "TAG_REQUEST",
-            "like: $hasLiked comment: $comment"
-        )
+        if (BuildConfig.USE_LOG) {
+            Log.d(
+                "TAG_REQUEST",
+                "like: $hasLiked comment: $comment"
+            )
+        }
     }
 
     private fun pullToRefresh(view: View) {
