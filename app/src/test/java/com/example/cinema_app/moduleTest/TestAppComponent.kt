@@ -16,5 +16,4 @@ interface TestAppComponent : AppComponent {
 //    override fun provideCinemaService(): CinemaService
 //    override fun provideCinemaListInteractor(): ICinemaListInteractor
       fun into(retrofitTest: RetrofitTest)
-      fun into(roomTest: RoomTest)
 }

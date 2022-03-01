@@ -12,13 +12,16 @@ import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Single
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotNull
+import okhttp3.MediaType
+import okhttp3.RequestBody
+import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mockito
 import org.robolectric.RobolectricTestRunner
+import retrofit2.HttpException
+import java.util.function.Consumer
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -27,17 +30,8 @@ class RetrofitTest {
     @Inject
     lateinit var cinemaService: CinemaService
 
-//    private val cinemaModel: ArrayList<CinemaModel> = ArrayList()
-
     @Before
     fun setUp(){
-//        cinemaModel.add(
-//            CinemaModel(
-//                true, "", listOf(1), 1, "", "",
-//                "", 1.1, "", "", "", false, 1.1, 1
-//            )
-//        )
-
         val component = DaggerTestAppComponent.builder()
             .retrofitModule(RetrofitModule())
             .roomDbModule(RoomDbModule(Application()))
@@ -48,12 +42,6 @@ class RetrofitTest {
     @Test
     fun getCinemaPageTest(){
         assertNotNull(cinemaService)
-        //Mockito.`when`(cinemaService.getCinemaPage("popular", 1)).thenReturn(Single.just(CinemaListModel(1,1,1, cinemaModel)))
-//        every { cinemaService.getCinemaPage("popular", 1) } returns Single.just(CinemaListModel(1,1,1, cinemaModel))
-//        val result = cinemaService.getCinemaPage("popular", 1)
-//        result.test()
-//            .assertValue(CinemaListModel(1,1,1, cinemaModel))
-
         val result = cinemaService.getCinemaPage("popular", 1).blockingGet().results.size
         assertEquals(20, result)
     }
@@ -61,7 +49,8 @@ class RetrofitTest {
     @Test
     fun getLatestCinemaTest(){
         assertNotNull(cinemaService)
-        val result = cinemaService.getLatestCinema()//.blockingGet()
+        val result = cinemaService.getLatestCinema()
         assertNotNull(result)
     }
+
 }

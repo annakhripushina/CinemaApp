@@ -65,6 +65,7 @@ class ViewModelsSwapTest : RoomDB() {
 
     }
 
+    //Интеграционные тесты
     @Test
     fun onSetCinemaItemCinemaListViewModelTest() {
         cinemaListViewModel.onSetCinemaItem(cinema)
