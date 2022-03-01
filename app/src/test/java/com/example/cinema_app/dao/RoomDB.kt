@@ -1,4 +1,4 @@
-package com.example.cinema_app
+package com.example.cinema_app.dao
 
 import android.content.Context
 import androidx.room.Room

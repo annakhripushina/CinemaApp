@@ -1,4 +1,4 @@
-package com.example.cinema_app.moduleTest
+package com.example.cinema_app.retrofit.dagger
 
 import com.example.cinema_app.dagger.module.RetrofitModule
 import com.example.cinema_app.data.CinemaService

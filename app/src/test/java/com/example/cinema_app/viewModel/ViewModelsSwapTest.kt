@@ -1,8 +1,10 @@
-package com.example.cinema_app
+package com.example.cinema_app.viewModel
 
 import android.content.Context
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.platform.app.InstrumentationRegistry
+import com.example.cinema_app.CinemaItem
+import com.example.cinema_app.dao.RoomDB
 import com.example.cinema_app.data.CinemaService
 import com.example.cinema_app.data.model.CinemaModel
 import com.example.cinema_app.domain.CinemaListInteractor

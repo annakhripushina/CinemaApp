@@ -1,11 +1,9 @@
-package com.example.cinema_app.moduleTest
+package com.example.cinema_app.retrofit.dagger
 
 import com.example.cinema_app.dagger.component.AppComponent
 import com.example.cinema_app.dagger.module.RetrofitModule
 import com.example.cinema_app.dagger.module.RoomDbModule
-import com.example.cinema_app.data.CinemaService
-import com.example.cinema_app.data.room.CinemaDao
-import com.example.cinema_app.domain.ICinemaListInteractor
+import com.example.cinema_app.retrofit.RetrofitTest
 import dagger.Component
 import javax.inject.Singleton
 

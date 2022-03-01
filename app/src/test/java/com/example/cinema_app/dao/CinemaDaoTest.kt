@@ -1,7 +1,9 @@
-package com.example.cinema_app
+package com.example.cinema_app.dao
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.LiveDataReactiveStreams
+import com.example.cinema_app.CinemaItem
+import com.example.cinema_app.getValueBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
