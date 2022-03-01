@@ -9,22 +9,22 @@ import dagger.Provides
 import javax.inject.Singleton
 
 @Module
-class RoomDbModule(val application: Application) {
+open class RoomDbModule(val application: Application) {
     @Singleton
     @Provides
-    fun getCinemaDAO(cinemaRoomDB: CinemaRoomDB): CinemaDao {
+    open fun getCinemaDAO(cinemaRoomDB: CinemaRoomDB): CinemaDao {
         return cinemaRoomDB.getCinemaDao()
     }
 
     @Singleton
     @Provides
-    fun getRoomDbInstance(): CinemaRoomDB {
+    open fun getRoomDbInstance(): CinemaRoomDB {
         return CinemaRoomDB.getDatabase(provideAppContext())
     }
 
     @Singleton
     @Provides
-    fun provideAppContext(): Context {
+    open fun provideAppContext(): Context {
         return application.applicationContext
     }
 
