@@ -35,7 +35,7 @@ class RoomTest {
     fun setUp(){
         val component = DaggerTestAppComponent.builder()
             .retrofitModule(RetrofitModule())
-            .roomDbModule(RoomDbModule(Application())) //<-- Application?
+            .roomDbModule(RoomDbModule(getApplicationContext())) //<-- Application?
             .build()
         component.into(this)
         //instrumentationContext = InstrumentationRegistry.getInstrumentation().context
@@ -47,10 +47,11 @@ class RoomTest {
         Assert.assertNotNull(cinemaService)
         val result = cinemaService.getCinemaPage("popular", 1).blockingGet().results.map{ it.toDomainModel()}
 
-        Assert.assertEquals(20, result)
+        Assert.assertEquals(20, result.size)
 
         Assert.assertNotNull(cinemaDao)
         cinemaDao.deleteAll()
+
         for (it in result){
             cinemaDao.insertCinema(it)
         }
