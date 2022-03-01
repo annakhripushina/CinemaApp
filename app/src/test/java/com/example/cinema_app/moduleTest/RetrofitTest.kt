@@ -12,6 +12,7 @@ import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Single
+import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Before
 import org.junit.Test
@@ -50,9 +51,12 @@ class RetrofitTest {
     fun testt(){
         assertNotNull(cinemaService)
         //Mockito.`when`(cinemaService.getCinemaPage("popular", 1)).thenReturn(Single.just(CinemaListModel(1,1,1, cinemaModel)))
-        every { cinemaService.getCinemaPage("popular", 1) } returns Single.just(CinemaListModel(1,1,1, cinemaModel))
-        val result = cinemaService.getCinemaPage("popular", 1)
-        result.test()
-            .assertValue(CinemaListModel(1,1,1, cinemaModel))
+//        every { cinemaService.getCinemaPage("popular", 1) } returns Single.just(CinemaListModel(1,1,1, cinemaModel))
+//        val result = cinemaService.getCinemaPage("popular", 1)
+//        result.test()
+//            .assertValue(CinemaListModel(1,1,1, cinemaModel))
+
+        val result = cinemaService.getCinemaPage("popular", 1).blockingGet().results.size
+        assertEquals(20, result)
     }
 }
