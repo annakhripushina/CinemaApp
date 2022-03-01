@@ -27,16 +27,16 @@ class RetrofitTest {
     @Inject
     lateinit var cinemaService: CinemaService
 
-    private val cinemaModel: ArrayList<CinemaModel> = ArrayList()
+//    private val cinemaModel: ArrayList<CinemaModel> = ArrayList()
 
     @Before
     fun setUp(){
-        cinemaModel.add(
-            CinemaModel(
-                true, "", listOf(1), 1, "", "",
-                "", 1.1, "", "", "", false, 1.1, 1
-            )
-        )
+//        cinemaModel.add(
+//            CinemaModel(
+//                true, "", listOf(1), 1, "", "",
+//                "", 1.1, "", "", "", false, 1.1, 1
+//            )
+//        )
 
         val component = DaggerTestAppComponent.builder()
             .retrofitModule(RetrofitModule())
