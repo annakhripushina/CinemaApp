@@ -22,8 +22,6 @@ import org.robolectric.RobolectricTestRunner
 import javax.inject.Inject
 import javax.inject.Named
 
-//Попытки протестировать Retrofit
-
 @RunWith(RobolectricTestRunner::class)
 class RetrofitTest {
     @Inject
@@ -48,7 +46,7 @@ class RetrofitTest {
     }
 
     @Test
-    fun testt(){
+    fun getCinemaPageTest(){
         assertNotNull(cinemaService)
         //Mockito.`when`(cinemaService.getCinemaPage("popular", 1)).thenReturn(Single.just(CinemaListModel(1,1,1, cinemaModel)))
 //        every { cinemaService.getCinemaPage("popular", 1) } returns Single.just(CinemaListModel(1,1,1, cinemaModel))
@@ -58,5 +56,12 @@ class RetrofitTest {
 
         val result = cinemaService.getCinemaPage("popular", 1).blockingGet().results.size
         assertEquals(20, result)
+    }
+
+    @Test
+    fun getCinemaPage(){
+        assertNotNull(cinemaService)
+        val result = cinemaService.getLatestCinema()//.blockingGet()
+        assertNotNull(result)
     }
 }
