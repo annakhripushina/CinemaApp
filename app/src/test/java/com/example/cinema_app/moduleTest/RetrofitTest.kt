@@ -39,6 +39,7 @@ class RetrofitTest {
         component.into(this)
     }
 
+    //Интеграционные тесты
     @Test
     fun getCinemaPageTest(){
         assertNotNull(cinemaService)
