@@ -15,14 +15,14 @@ import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
 @Module
-class RetrofitModule {
+open class RetrofitModule {
     companion object {
         var BASE_URL = "https://api.themoviedb.org/3/"
     }
 
     @Reusable
     @Provides
-    internal fun provideOkHttpClient(): OkHttpClient {
+    open fun provideOkHttpClient(): OkHttpClient {
         val okHttpClient = OkHttpClient.Builder()
             .addInterceptor { chain ->
                 return@addInterceptor chain.proceed(
@@ -48,7 +48,7 @@ class RetrofitModule {
 
     @Reusable
     @Provides
-    internal fun provideRetrofitInterface(okHttpClient: OkHttpClient): Retrofit = Retrofit.Builder()
+    open fun provideRetrofitInterface(okHttpClient: OkHttpClient): Retrofit = Retrofit.Builder()
         .baseUrl(BASE_URL)
         .client(okHttpClient)
         .addConverterFactory(GsonConverterFactory.create(Gson()))
@@ -57,12 +57,12 @@ class RetrofitModule {
 
     @Reusable
     @Provides
-    internal fun provideCinemaService(retrofit: Retrofit): CinemaService =
+    open fun provideCinemaService(retrofit: Retrofit): CinemaService =
         retrofit.create(CinemaService::class.java)
 
     @Reusable
     @Provides
-    internal fun provideCinemaListInteractor(cinemaService: CinemaService): ICinemaListInteractor =
+    open fun provideCinemaListInteractor(cinemaService: CinemaService): ICinemaListInteractor =
         CinemaListInteractor(cinemaService)
 
 //    @Reusable

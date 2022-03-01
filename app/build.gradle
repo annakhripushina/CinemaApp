@@ -128,6 +128,7 @@ dependencies {
     implementation 'com.google.dagger:dagger-android-support:2.41'
     kapt 'com.google.dagger:dagger-compiler:2.41'
     kapt 'com.google.dagger:dagger-android-processor:2.41'
+    kaptTest 'com.google.dagger:dagger-compiler:2.41'
 
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.mockito:mockito-core:4.3.1'
@@ -148,6 +149,11 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.3.0'
     testImplementation 'com.squareup.okhttp3:mockwebserver:4.9.0'
+    testImplementation 'io.mockk:mockk:1.11.0'
+
+    androidTestImplementation('com.squareup.okhttp3:mockwebserver:4.9.0') {
+        exclude group: "com.squareup.okhttp3"
+    }
 
 
     implementation "android.arch.lifecycle:extensions:1.1.1"
