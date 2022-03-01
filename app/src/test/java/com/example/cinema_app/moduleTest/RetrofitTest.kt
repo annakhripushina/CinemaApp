@@ -59,7 +59,7 @@ class RetrofitTest {
     }
 
     @Test
-    fun getCinemaPage(){
+    fun getLatestCinemaTest(){
         assertNotNull(cinemaService)
         val result = cinemaService.getLatestCinema()//.blockingGet()
         assertNotNull(result)
