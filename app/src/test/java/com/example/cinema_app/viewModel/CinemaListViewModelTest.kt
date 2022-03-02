@@ -87,10 +87,4 @@ class CinemaListViewModelTest {
         assertEquals(CinemaItem.originalId, searchCinema?.get(0)?.originalId)
     }
 
-    @Test
-    fun updateTitleColorTest() {
-        viewModel.updateTitleColor(0, cinema.id!!)
-        verify(cinemaDAO).updateTitleColor(0, cinema.id!!)
-    }
-
 }

@@ -11,5 +11,6 @@ class TestRetrofitModule : RetrofitModule() {
     override fun provideOkHttpClient(): OkHttpClient = mockk()
     override fun provideRetrofitInterface(okHttpClient: OkHttpClient): Retrofit = mockk()
     override fun provideCinemaService(retrofit: Retrofit): CinemaService = mockk()
-    override fun provideCinemaListInteractor(cinemaService: CinemaService): ICinemaListInteractor = mockk()
+    override fun provideCinemaListInteractor(cinemaService: CinemaService): ICinemaListInteractor =
+        mockk()
 }

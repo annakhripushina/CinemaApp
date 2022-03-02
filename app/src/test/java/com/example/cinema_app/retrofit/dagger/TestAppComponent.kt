@@ -10,8 +10,8 @@ import javax.inject.Singleton
 @Singleton
 @Component(modules = [RoomDbModule::class, RetrofitModule::class])
 interface TestAppComponent : AppComponent {
-//    override fun getCinemaDAO(): CinemaDao
+    //    override fun getCinemaDAO(): CinemaDao
 //    override fun provideCinemaService(): CinemaService
 //    override fun provideCinemaListInteractor(): ICinemaListInteractor
-      fun into(retrofitTest: RetrofitTest)
+    fun into(retrofitTest: RetrofitTest)
 }

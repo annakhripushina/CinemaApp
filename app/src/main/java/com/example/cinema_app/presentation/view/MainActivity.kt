@@ -32,6 +32,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         CinemaApp.appComponentViewModel.inject(this)
         viewModel = ViewModelProvider(this, viewModelFactory).get(CinemaListViewModel::class.java)
+        viewModel.onGetCinemaList()
         scheduleViewModel =
             ViewModelProvider(this, viewModelFactory).get(ScheduleViewModel::class.java)
 

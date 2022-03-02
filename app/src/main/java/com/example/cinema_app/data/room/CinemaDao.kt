@@ -12,7 +12,7 @@ import io.reactivex.rxjava3.core.Flowable
 
 @Dao
 interface CinemaDao {
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertCinema(cinema: Cinema?)
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)

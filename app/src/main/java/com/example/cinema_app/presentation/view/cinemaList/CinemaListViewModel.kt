@@ -1,5 +1,6 @@
 package com.example.cinema_app.presentation.view.cinemaList
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -41,9 +42,6 @@ class CinemaListViewModel
 
     val comment: String
         get() = mComment
-//???а если так?
-//    @Inject
-//    lateinit var cinemaDao: CinemaDao
 
 //    init {
 //        onGetCinemaList()
@@ -70,8 +68,10 @@ class CinemaListViewModel
 
                 override fun onSuccess(list: List<Cinema>) {
                     viewModelScope.launch(Dispatchers.IO) {
-                        if (page == 1) deleteAll()
+                        if (page == 1) cinemaDao.deleteAll()
+
                         list?.forEach {
+                            Log.d("LIST ", it.title)
                             cinemaDao.insertCinema(it)
                         }
                     }
@@ -100,10 +100,6 @@ class CinemaListViewModel
         viewModelScope.launch(Dispatchers.IO) {
             cinemaDao.deleteFavouriteCinema(cinemaItem.originalId)
         }
-
-    fun deleteAll() = viewModelScope.launch(Dispatchers.IO) {
-        cinemaDao.deleteAll()
-    }
 
     fun updateTitleColor(titleColor: Int, id: Int) = viewModelScope.launch(Dispatchers.IO) {
         cinemaDao.updateTitleColor(titleColor, id)

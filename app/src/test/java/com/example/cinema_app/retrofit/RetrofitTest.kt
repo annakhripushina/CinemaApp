@@ -4,7 +4,9 @@ import android.app.Application
 import com.example.cinema_app.dagger.module.RetrofitModule
 import com.example.cinema_app.dagger.module.RoomDbModule
 import com.example.cinema_app.data.CinemaService
-import org.junit.Assert.*
+import com.example.cinema_app.retrofit.dagger.DaggerTestAppComponent
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -17,7 +19,7 @@ class RetrofitTest {
     lateinit var cinemaService: CinemaService
 
     @Before
-    fun setUp(){
+    fun setUp() {
         val component = DaggerTestAppComponent.builder()
             .retrofitModule(RetrofitModule())
             .roomDbModule(RoomDbModule(Application()))
@@ -27,14 +29,14 @@ class RetrofitTest {
 
     //Интеграционные тесты
     @Test
-    fun getCinemaPageTest(){
+    fun getCinemaPageTest() {
         assertNotNull(cinemaService)
         val result = cinemaService.getCinemaPage("popular", 1).blockingGet().results.size
         assertEquals(20, result)
     }
 
     @Test
-    fun getLatestCinemaTest(){
+    fun getLatestCinemaTest() {
         assertNotNull(cinemaService)
         val result = cinemaService.getLatestCinema()
         assertNotNull(result)

@@ -33,7 +33,7 @@ class CinemaActivity : Fragment(), DateTimePickerUtil {
 
     private lateinit var cinema: Cinema
     private lateinit var input: EditText
-    private lateinit var checkBox: ImageView//CheckBox
+    private lateinit var checkBox: ImageView
     private lateinit var buttonInvite: ImageView
     private lateinit var buttonSchedule: ImageView
     private lateinit var description: TextView
