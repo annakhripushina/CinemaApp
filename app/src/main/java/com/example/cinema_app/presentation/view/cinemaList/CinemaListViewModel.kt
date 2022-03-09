@@ -1,6 +1,5 @@
 package com.example.cinema_app.presentation.view.cinemaList
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -71,7 +70,6 @@ class CinemaListViewModel
                         if (page == 1) cinemaDao.deleteAll()
 
                         list?.forEach {
-                            Log.d("LIST ", it.title)
                             cinemaDao.insertCinema(it)
                         }
                     }

@@ -4,7 +4,6 @@ import android.content.res.Configuration.ORIENTATION_LANDSCAPE
 import android.content.res.Configuration.ORIENTATION_PORTRAIT
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.INVISIBLE
@@ -19,7 +18,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.example.cinema_app.BuildConfig
 import com.example.cinema_app.CinemaListGetter
 import com.example.cinema_app.MyItemDecorator
 import com.example.cinema_app.R
@@ -27,6 +25,7 @@ import com.example.cinema_app.dagger.CinemaApp
 import com.example.cinema_app.dagger.module.viewmodel.CinemaViewModelFactory
 import com.example.cinema_app.data.entity.Cinema
 import com.example.cinema_app.presentation.view.detail.CinemaActivity
+import com.example.cinema_app.utils.InternalLog
 import com.google.android.material.snackbar.Snackbar
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
@@ -46,6 +45,7 @@ class CinemaListActivity : Fragment() {
     private var hasLiked: Boolean = false
     private lateinit var swipeContainer: SwipeRefreshLayout
     private var cinemaListGetter = CinemaListGetter()
+    private val logger = InternalLog()
 
     private val adapter = CinemaAdapter(object : CinemaAdapter.CinemaClickListener {
         override fun onCinemaClick(cinemaItem: Cinema, itemView: View, position: Int) {
@@ -84,7 +84,6 @@ class CinemaListActivity : Fragment() {
     ): View? {
         CinemaApp.appComponentViewModel.inject(this)
         viewModel = ViewModelProvider(this, viewModelFactory).get(CinemaListViewModel::class.java)
-//      viewModel.onGetCinemaList()
         return inflater.inflate(
             R.layout.activity_list,
             container,
@@ -146,12 +145,7 @@ class CinemaListActivity : Fragment() {
         viewModel.onGetHasLiked()
         hasLiked = viewModel.hasLiked
         comment = viewModel.comment
-        if (BuildConfig.USE_LOG) {
-            Log.d(
-                "TAG_REQUEST",
-                "like: $hasLiked comment: $comment"
-            )
-        }
+        logger.d("TAG_REQUEST", "like: $hasLiked comment: $comment")
     }
 
     private fun pullToRefresh(view: View) {
