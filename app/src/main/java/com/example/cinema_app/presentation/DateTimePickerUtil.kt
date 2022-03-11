@@ -5,6 +5,7 @@ import android.app.TimePickerDialog
 import android.content.Context
 import android.view.View
 import androidx.fragment.app.FragmentManager
+import com.example.cinema_app.R
 import com.example.cinema_app.data.entity.Cinema
 import com.example.cinema_app.data.entity.ScheduleCinema
 import com.example.cinema_app.presentation.view.shedule.ScheduleViewModel
@@ -36,7 +37,8 @@ interface DateTimePickerUtil {
                 val scheduleDate =
                     selectedDate.atTime(hourOfDay, minute).atZone(ZoneId.systemDefault())
                 val alarmTime = scheduleDate.toInstant().toEpochMilli()
-                val formatter = DateTimeFormatter.ofPattern("d.M.u H:m")
+                val formatter =
+                    DateTimeFormatter.ofPattern(context.getString(R.string.dateTimeFormat))
 
                 scheduleViewModel.insertScheduleCinema(
                     ScheduleCinema(
@@ -53,9 +55,15 @@ interface DateTimePickerUtil {
                     cinema.originalId
                 )
 
-                val snackDeleteFavourite =
-                    Snackbar.make(view!!, "Напоминание сохранено", Snackbar.LENGTH_LONG)
-                snackDeleteFavourite.show()
+                val snackSheduleSave =
+                    view?.let {
+                        Snackbar.make(
+                            it,
+                            context.getString(R.string.scheduleSaveSnackbar),
+                            Snackbar.LENGTH_LONG
+                        )
+                    }
+                snackSheduleSave?.show()
             }
 
             TimePickerDialog(

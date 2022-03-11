@@ -65,9 +65,4 @@ open class RetrofitModule {
     open fun provideCinemaListInteractor(cinemaService: CinemaService): ICinemaListInteractor =
         CinemaListInteractor(cinemaService)
 
-//    @Reusable
-//    @Provides
-//    internal fun provideCinemaListViewModel(cinemaListInteractor: ICinemaListInteractor): CinemaListViewModel =
-//        CinemaListViewModel(cinemaListInteractor)
-
 }

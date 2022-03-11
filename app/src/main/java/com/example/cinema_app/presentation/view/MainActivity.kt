@@ -83,15 +83,15 @@ class MainActivity : AppCompatActivity() {
         if (bundle != null) {
             if (bundle.containsKey(ALARM_NOTIFICATION_SCHEDULE)) {
                 val cinema = bundle.getParcelable<Cinema>(ALARM_NOTIFICATION_SCHEDULE)
-                viewModel.onSetCinemaItem(cinema!!)
-                scheduleViewModel.deleteScheduleCinema(cinema.originalId)
+                cinema?.let { viewModel.onSetCinemaItem(it) }
+                cinema?.let { scheduleViewModel.deleteScheduleCinema(it.originalId) }
                 supportFragmentManager.beginTransaction()
                     .replace(R.id.containerActivity, CinemaActivity(), "cinemaActivity")
                     .addToBackStack("cinemaActivity")
                     .commit()
             } else if (bundle.containsKey(NOTIFICATION_FCM)) {
                 val cinema = bundle.getParcelable<Cinema>(NOTIFICATION_FCM)
-                viewModel.onSetCinemaItem(cinema!!)
+                cinema?.let { viewModel.onSetCinemaItem(it) }
                 supportFragmentManager.beginTransaction()
                     .replace(R.id.containerActivity, CinemaActivity(), "cinemaActivity")
                     .addToBackStack("cinemaActivity")

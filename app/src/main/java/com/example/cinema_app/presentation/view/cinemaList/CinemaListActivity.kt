@@ -27,10 +27,8 @@ import com.example.cinema_app.data.entity.Cinema
 import com.example.cinema_app.presentation.view.detail.CinemaActivity
 import com.example.cinema_app.utils.InternalLog
 import com.google.android.material.snackbar.Snackbar
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.ObservableOnSubscribe
-import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
 
 
@@ -45,13 +43,12 @@ class CinemaListActivity : Fragment() {
     private var hasLiked: Boolean = false
     private lateinit var swipeContainer: SwipeRefreshLayout
     private var cinemaListGetter = CinemaListGetter()
-    private val logger = InternalLog()
 
     private val adapter = CinemaAdapter(object : CinemaAdapter.CinemaClickListener {
         override fun onCinemaClick(cinemaItem: Cinema, itemView: View, position: Int) {
             itemView.findViewById<TextView>(R.id.titleView)
                 .setTextColor(Color.MAGENTA)
-            viewModel.updateTitleColor(Color.MAGENTA, cinemaItem.id!!)
+            cinemaItem.id?.let { viewModel.updateTitleColor(Color.MAGENTA, it) }
             viewModel.onSetCinemaItem(cinemaItem)
 
             parentFragmentManager.beginTransaction()
@@ -65,10 +62,10 @@ class CinemaListActivity : Fragment() {
 
             val snackAddFavourite = Snackbar.make(
                 itemView,
-                "Фильм добавлен в список избранного",
+                getString(R.string.favouriteAddSnackbar),
                 Snackbar.LENGTH_LONG
             )
-            snackAddFavourite.setAction("Отмена") {
+            snackAddFavourite.setAction(getString(R.string.cancelText)) {
                 viewModel.onRemoveFavouriteCinema(cinemaItem)
                 snackAddFavourite.dismiss()
             }
@@ -110,7 +107,7 @@ class CinemaListActivity : Fragment() {
                 error,
                 Snackbar.LENGTH_LONG
             )
-            snackUpdateList.setAction("Обновить") {
+            snackUpdateList.setAction(getString(R.string.updateText)) {
                 viewModel.onGetCinemaListPage()
                 snackUpdateList.dismiss()
             }
@@ -145,7 +142,7 @@ class CinemaListActivity : Fragment() {
         viewModel.onGetHasLiked()
         hasLiked = viewModel.hasLiked
         comment = viewModel.comment
-        logger.d("TAG_REQUEST", "like: $hasLiked comment: $comment")
+        InternalLog.d("TAG_REQUEST", "like: $hasLiked comment: $comment")
     }
 
     private fun pullToRefresh(view: View) {
@@ -172,25 +169,26 @@ class CinemaListActivity : Fragment() {
 
         Observable.create(ObservableOnSubscribe<String> { subscriber ->
             searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-                override fun onQueryTextChange(newText: String?): Boolean {
-                    subscriber.onNext(newText!!)
+                override fun onQueryTextChange(newText: String): Boolean {
+                    subscriber.onNext(newText)
                     return false
                 }
 
-                override fun onQueryTextSubmit(query: String?): Boolean {
-                    subscriber.onNext(query!!)
+                override fun onQueryTextSubmit(query: String): Boolean {
+                    subscriber.onNext(query)
                     return false
                 }
             })
         })
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
+            //.subscribeOn(Schedulers.io())
+            //.observeOn(AndroidSchedulers.mainThread())
             .subscribe { text ->
-                viewModel.onSearchCinema(text).observe(viewLifecycleOwner, Observer { list ->
-                    list?.let {
-                        adapter.setItems(list as ArrayList<Cinema>)
-                    }
-                })
+                viewModel.onSearchCinema(text)
+                    .observe(viewLifecycleOwner, Observer { list ->
+                        list?.let {
+                            adapter.setItems(list as ArrayList<Cinema>)
+                        }
+                    })
             }
     }
 

@@ -30,7 +30,7 @@ class CinemaListViewModel
     var allCinema = MutableLiveData<List<Cinema>>()
         get() = mAllCinema
 
-    val searchedCinema: LiveData<List<Cinema>>
+    var searchedCinema = MutableLiveData<List<Cinema>>()
         get() = mSearchedCinema
 
     val error: MutableLiveData<String>
@@ -41,10 +41,6 @@ class CinemaListViewModel
 
     val comment: String
         get() = mComment
-
-//    init {
-//        onGetCinemaList()
-//    }
 
     fun onGetAllCinema(): LiveData<List<Cinema>> {
         cinemaDao.getAll()
@@ -103,13 +99,27 @@ class CinemaListViewModel
         cinemaDao.updateTitleColor(titleColor, id)
     }
 
+    //    fun onSearchCinema(title: String): LiveData<List<Cinema>> {
+//        if (title.isNotEmpty()) {
+//            cinemaDao.searchCinema(title)
+//                .subscribe(
+//                    { value -> mSearchedCinema.postValue(value) },
+//                    { error -> mSearchedCinema.postValue(listOf()) })
+//            return searchedCinema
+//        } else {
+//            return onGetAllCinema()
+//        }
+//    }
     fun onSearchCinema(title: String): LiveData<List<Cinema>> {
         if (title.isNotEmpty()) {
-            cinemaDao.searchCinema(title)
-                .subscribe(
-                    { value -> mSearchedCinema.postValue(value) },
-                    { error -> mSearchedCinema.postValue(listOf()) })
+            viewModelScope.launch {
+                cinemaDao.searchCinema(title)
+                    .subscribe(
+                        { value -> mSearchedCinema.postValue(value) },
+                        { error -> mSearchedCinema.postValue(listOf()) })
+            }
             return searchedCinema
+
         } else {
             return onGetAllCinema()
         }

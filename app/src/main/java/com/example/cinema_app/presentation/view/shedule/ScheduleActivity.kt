@@ -49,8 +49,14 @@ class ScheduleActivity : Fragment(), DateTimePickerUtil {
             view?.let { isEmptyList(it) }
 
             val snackDelete =
-                Snackbar.make(view!!, "Напоминание удалено", Snackbar.LENGTH_LONG)
-            snackDelete.show()
+                view?.let {
+                    Snackbar.make(
+                        it,
+                        getString(R.string.scheduleDeleteSnackbar),
+                        Snackbar.LENGTH_LONG
+                    )
+                }
+            snackDelete?.show()
         }
 
     })

@@ -99,10 +99,10 @@ class CinemaActivity : Fragment(), DateTimePickerUtil {
             val emailIntent = Intent(Intent.ACTION_SEND)
             emailIntent.putExtra(
                 Intent.EXTRA_TEXT,
-                "Привет! Приглашаю тебя посмотреть фильм \"${titleToolbar.title}\"."
+                getString(R.string.inviteMessage) + titleToolbar.title + "."
             )
             emailIntent.type = "text/plain"
-            startActivity(Intent.createChooser(emailIntent, "Отправить приглашение через: "))
+            startActivity(Intent.createChooser(emailIntent, getString(R.string.chooserTitle)))
         }
 
         buttonSchedule.setOnClickListener {

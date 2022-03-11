@@ -54,7 +54,7 @@ class CinemaDetailViewModel
     }
 
     fun getLike(cinemaItem: Cinema) {
-        mHasLiked = allLikedCinema.value!!.contains(LikedCinema(cinemaItem.originalId))
+        mHasLiked = allLikedCinema.value?.contains(LikedCinema(cinemaItem.originalId)) ?: false
         cinemaInteractor.onSetHasLiked(mHasLiked)
     }
 

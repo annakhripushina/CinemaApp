@@ -35,7 +35,7 @@ class FavouriteActivity : Fragment() {
         override fun onCinemaClick(cinemaItem: Cinema, itemView: View, position: Int) {
             itemView.findViewById<TextView>(R.id.titleView)
                 .setTextColor(Color.MAGENTA)
-            viewModel.updateTitleColor(Color.MAGENTA, cinemaItem.id!!)
+            cinemaItem.id?.let { viewModel.updateTitleColor(Color.MAGENTA, it) }
             viewModel.onSetCinemaItem(cinemaItem)
 
             parentFragmentManager.beginTransaction()
@@ -49,14 +49,20 @@ class FavouriteActivity : Fragment() {
             view?.let { isEmptyList(it) }
 
             val snackDeleteFavourite =
-                Snackbar.make(view!!, "Фильм удален из Избранного", Snackbar.LENGTH_LONG)
+                view?.let {
+                    Snackbar.make(
+                        it,
+                        getString(R.string.favouriteDeleteSnackbar),
+                        Snackbar.LENGTH_LONG
+                    )
+                }
 
-            snackDeleteFavourite.setAction("Отмена") {
+            snackDeleteFavourite?.setAction(getText(R.string.cancelText)) {
                 viewModel.onAddFavouriteCinema(cinemaItem)
                 snackDeleteFavourite.dismiss()
                 view?.let { isEmptyList(it) }
             }
-            snackDeleteFavourite.show()
+            snackDeleteFavourite?.show()
         }
     })
 

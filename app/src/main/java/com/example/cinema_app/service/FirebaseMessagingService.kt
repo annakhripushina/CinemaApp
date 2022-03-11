@@ -6,7 +6,6 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Intent
 import android.media.RingtoneManager
-import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.example.cinema_app.R
@@ -28,10 +27,9 @@ class FirebaseMessagingService : FirebaseMessagingService() {
     @Inject
     lateinit var cinemaInteractor: CinemaListInteractor
 
-    private val logger = InternalLog()
-
     companion object {
         val TAG = FirebaseMessagingService::class.toString()
+        const val NOTIFICATION_CHANNEL_ID = "FCM_CHANNEL"
     }
 
     override fun onCreate() {
@@ -51,12 +49,12 @@ class FirebaseMessagingService : FirebaseMessagingService() {
     }
 
     private fun sendRegistrationToServer(token: String) {
-        logger.d(TAG, "Refreshed token: $token")
+        InternalLog.d(TAG, "Refreshed token: $token")
     }
 
     private fun showNotification(remoteMessage: RemoteMessage) {
-        val notificationChannelId = "FCM_CHANNEL"
-        val messageText = remoteMessage.data["text"]
+        val notificationChannelId = NOTIFICATION_CHANNEL_ID
+        val messageText = remoteMessage.data[getString(R.string.messageTextFCM)]
 
         cinemaInteractor.getLatestCinema()
             .subscribe(object : SingleObserver<Cinema> {
@@ -73,16 +71,15 @@ class FirebaseMessagingService : FirebaseMessagingService() {
                         PendingIntent.FLAG_UPDATE_CURRENT
                     )
 
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        val name = "Latest movie"
-                        val description = "Get the most newly created movie."
-                        val importance = NotificationManager.IMPORTANCE_DEFAULT
-                        val channel = NotificationChannel(notificationChannelId, name, importance)
-                        channel.description = description
-                        val notificationManager =
-                            applicationContext.getSystemService(NotificationManager::class.java)
-                        notificationManager.createNotificationChannel(channel)
-                    }
+                    val name = getString(R.string.channelNameFCM)
+                    val description = getString(R.string.channelDescriptionFCM)
+                    val importance = NotificationManager.IMPORTANCE_DEFAULT
+                    val channel = NotificationChannel(notificationChannelId, name, importance)
+                    channel.description = description
+                    val notificationManager =
+                        applicationContext.getSystemService(NotificationManager::class.java)
+                    notificationManager.createNotificationChannel(channel)
+
                     val builder =
                         NotificationCompat.Builder(applicationContext, notificationChannelId)
                             .setVibrate(longArrayOf(1000, 1000, 1000, 1000, 1000))
@@ -93,8 +90,9 @@ class FirebaseMessagingService : FirebaseMessagingService() {
                             .setPriority(NotificationCompat.PRIORITY_LOW)
                             .setContentIntent(pendingIntent)
                             .setAutoCancel(true)
-                    val notificationManager = NotificationManagerCompat.from(applicationContext)
-                    cinema?.let { notificationManager.notify(it.originalId, builder.build()) }
+                    val notificationManagerCompat =
+                        NotificationManagerCompat.from(applicationContext)
+                    cinema?.let { notificationManagerCompat.notify(it.originalId, builder.build()) }
                 }
 
                 override fun onError(e: Throwable) {}

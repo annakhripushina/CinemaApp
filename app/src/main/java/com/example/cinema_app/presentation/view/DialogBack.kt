@@ -11,8 +11,8 @@ class DialogBack : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return AlertDialog.Builder(requireContext())
             .setView(R.layout.dialog_back)
-            .setNegativeButton("Нет") { _, _ -> }
-            .setPositiveButton("Да") { _, _ -> (activity as MainActivity).finish() }
+            .setNegativeButton(getString(R.string.negativeButton)) { _, _ -> }
+            .setPositiveButton(getString(R.string.positiveButton)) { _, _ -> (activity as MainActivity).finish() }
             .create()
     }
 
