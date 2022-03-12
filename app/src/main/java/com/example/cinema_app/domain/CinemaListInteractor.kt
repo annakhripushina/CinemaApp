@@ -1,6 +1,6 @@
 package com.example.cinema_app.domain
 
-import com.example.cinema_app.data.CinemaService
+import com.example.cinema_app.data.ICinemaRepository
 import com.example.cinema_app.data.entity.Cinema
 import com.example.cinema_app.data.model.toDomainModel
 import com.example.cinema_app.service.FirebaseRemoteConfigService
@@ -13,7 +13,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
 
 @Reusable
-class CinemaListInteractor @Inject constructor(private val cinemaService: CinemaService) :
+class CinemaListInteractor @Inject constructor(private val cinemaRepository: ICinemaRepository) :
     FirebaseRemoteConfigService, ICinemaListInteractor {
     private var items = ArrayList<Cinema>()
     private lateinit var remoteConfigKey: FirebaseRemoteConfig
@@ -31,7 +31,7 @@ class CinemaListInteractor @Inject constructor(private val cinemaService: Cinema
     }
 
     override fun getLatestCinema(): Single<Cinema> {
-        return cinemaService.getLatestCinema()
+        return cinemaRepository.getLatestCinema()
             .subscribeOn(Schedulers.io())
             .map { it.toDomainModel() }
             .observeOn(AndroidSchedulers.mainThread())
@@ -42,7 +42,7 @@ class CinemaListInteractor @Inject constructor(private val cinemaService: Cinema
         remoteConfigKey = getRemoteConfig()
         val cinemaTag = remoteConfigKey["Category"].asString()
         items.clear()
-        return cinemaService.getCinemaPage(cinemaTag, page)
+        return cinemaRepository.getCinemaPage(cinemaTag, page)
             .subscribeOn(Schedulers.io())
             .map {
                 it.results.map { it.toDomainModel() }

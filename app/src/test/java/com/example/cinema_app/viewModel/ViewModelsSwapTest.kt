@@ -5,7 +5,8 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.platform.app.InstrumentationRegistry
 import com.example.cinema_app.CinemaItem
 import com.example.cinema_app.dao.RoomDB
-import com.example.cinema_app.data.CinemaService
+import com.example.cinema_app.data.ICinemaRepository
+import com.example.cinema_app.data.entity.LikedCinema
 import com.example.cinema_app.data.model.CinemaModel
 import com.example.cinema_app.domain.CinemaListInteractor
 import com.example.cinema_app.domain.ICinemaListInteractor
@@ -14,6 +15,7 @@ import com.example.cinema_app.presentation.view.detail.CinemaActivity
 import com.example.cinema_app.presentation.view.detail.CinemaDetailViewModel
 import com.example.cinema_app.presentation.view.favourite.FavouriteViewModel
 import com.example.cinema_app.service.FirebaseRemoteConfigService
+import io.reactivex.rxjava3.core.Flowable
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
@@ -21,6 +23,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mockito
+import org.mockito.Mockito.`when`
 import org.robolectric.RobolectricTestRunner
 
 @RunWith(RobolectricTestRunner::class)
@@ -33,7 +36,7 @@ class ViewModelsSwapTest : RoomDB() {
     private val cinemaModel: ArrayList<CinemaModel> = ArrayList()
 
     private lateinit var cinemaInteractor: ICinemaListInteractor
-    private lateinit var cinemaService: CinemaService
+    private lateinit var cinemaRepository: ICinemaRepository
     private lateinit var firebaseRemoteConfigService: FirebaseRemoteConfigService
     private lateinit var cinemaListViewModel: CinemaListViewModel
     private lateinit var cinemaDetailViewModel: CinemaDetailViewModel
@@ -54,13 +57,21 @@ class ViewModelsSwapTest : RoomDB() {
         )
 
         instrumentationContext = InstrumentationRegistry.getInstrumentation().context
-        cinemaService = mock()
-        firebaseRemoteConfigService = mock()
-        cinemaInteractor = CinemaListInteractor(cinemaService)
+        cinemaRepository = mock()
+        `when`(cinemaRepository.getAllLikedCinema()).thenReturn(
+            Flowable.just(
+                listOf(
+                    LikedCinema(cinema.originalId)
+                )
+            )
+        )
 
-        cinemaListViewModel = CinemaListViewModel(cinemaInteractor, cinemaDao)
-        cinemaDetailViewModel = CinemaDetailViewModel(cinemaInteractor, cinemaDao)
-        favouriteViewModel = FavouriteViewModel(cinemaInteractor, cinemaDao)
+        firebaseRemoteConfigService = mock()
+        cinemaInteractor = CinemaListInteractor(cinemaRepository)
+
+        cinemaListViewModel = CinemaListViewModel(cinemaInteractor, cinemaRepository)
+        cinemaDetailViewModel = CinemaDetailViewModel(cinemaInteractor, cinemaRepository)
+        favouriteViewModel = FavouriteViewModel(cinemaInteractor, cinemaRepository)
 
         cinemaActivity = CinemaActivity()
         cinemaActivity.viewModel = cinemaDetailViewModel

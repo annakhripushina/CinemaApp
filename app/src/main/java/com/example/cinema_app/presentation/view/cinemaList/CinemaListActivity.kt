@@ -27,8 +27,10 @@ import com.example.cinema_app.data.entity.Cinema
 import com.example.cinema_app.presentation.view.detail.CinemaActivity
 import com.example.cinema_app.utils.InternalLog
 import com.google.android.material.snackbar.Snackbar
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.ObservableOnSubscribe
+import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
 
 
@@ -180,8 +182,8 @@ class CinemaListActivity : Fragment() {
                 }
             })
         })
-            //.subscribeOn(Schedulers.io())
-            //.observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
             .subscribe { text ->
                 viewModel.onSearchCinema(text)
                     .observe(viewLifecycleOwner, Observer { list ->

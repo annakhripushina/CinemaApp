@@ -4,9 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.cinema_app.data.ICinemaRepository
 import com.example.cinema_app.data.entity.Cinema
 import com.example.cinema_app.data.entity.FavouriteCinema
-import com.example.cinema_app.data.room.CinemaDao
 import com.example.cinema_app.domain.ICinemaListInteractor
 import com.example.cinema_app.utils.SingleLiveEvent
 import io.reactivex.rxjava3.core.SingleObserver
@@ -18,7 +18,7 @@ import javax.inject.Inject
 class CinemaListViewModel
 @Inject constructor(
     private val cinemaInteractor: ICinemaListInteractor,
-    private val cinemaDao: CinemaDao
+    private val cinemaRepository: ICinemaRepository
 ) : ViewModel() {
     private var mComment: String = ""
     private var mHasLiked: Boolean = false
@@ -43,7 +43,7 @@ class CinemaListViewModel
         get() = mComment
 
     fun onGetAllCinema(): LiveData<List<Cinema>> {
-        cinemaDao.getAll()
+        cinemaRepository.getAll()
             .subscribe({ value -> mAllCinema.postValue(value) },
                 { error ->
                     mAllCinema.postValue(listOf())
@@ -63,10 +63,10 @@ class CinemaListViewModel
 
                 override fun onSuccess(list: List<Cinema>) {
                     viewModelScope.launch(Dispatchers.IO) {
-                        if (page == 1) cinemaDao.deleteAll()
+                        if (page == 1) cinemaRepository.deleteAll()
 
                         list?.forEach {
-                            cinemaDao.insertCinema(it)
+                            cinemaRepository.insertCinema(it)
                         }
                     }
                 }
@@ -87,39 +87,25 @@ class CinemaListViewModel
 
     fun onAddFavouriteCinema(cinemaItem: Cinema) =
         viewModelScope.launch(Dispatchers.IO) {
-            cinemaDao.insertFavouriteCinema(FavouriteCinema(cinemaItem.originalId))
+            cinemaRepository.insertFavouriteCinema(FavouriteCinema(cinemaItem.originalId))
         }
 
     fun onRemoveFavouriteCinema(cinemaItem: Cinema) =
         viewModelScope.launch(Dispatchers.IO) {
-            cinemaDao.deleteFavouriteCinema(cinemaItem.originalId)
+            cinemaRepository.deleteFavouriteCinema(cinemaItem.originalId)
         }
 
     fun updateTitleColor(titleColor: Int, id: Int) = viewModelScope.launch(Dispatchers.IO) {
-        cinemaDao.updateTitleColor(titleColor, id)
+        cinemaRepository.updateTitleColor(titleColor, id)
     }
 
-    //    fun onSearchCinema(title: String): LiveData<List<Cinema>> {
-//        if (title.isNotEmpty()) {
-//            cinemaDao.searchCinema(title)
-//                .subscribe(
-//                    { value -> mSearchedCinema.postValue(value) },
-//                    { error -> mSearchedCinema.postValue(listOf()) })
-//            return searchedCinema
-//        } else {
-//            return onGetAllCinema()
-//        }
-//    }
     fun onSearchCinema(title: String): LiveData<List<Cinema>> {
         if (title.isNotEmpty()) {
-            viewModelScope.launch {
-                cinemaDao.searchCinema(title)
-                    .subscribe(
-                        { value -> mSearchedCinema.postValue(value) },
-                        { error -> mSearchedCinema.postValue(listOf()) })
-            }
+            cinemaRepository.searchCinema(title)
+                .subscribe(
+                    { value -> mSearchedCinema.postValue(value) },
+                    { error -> mSearchedCinema.postValue(listOf()) })
             return searchedCinema
-
         } else {
             return onGetAllCinema()
         }

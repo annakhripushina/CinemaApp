@@ -1,6 +1,7 @@
 package com.example.cinema_app.dagger.module
 
 import com.example.cinema_app.BuildConfig
+import com.example.cinema_app.data.CinemaRepository
 import com.example.cinema_app.data.CinemaService
 import com.example.cinema_app.domain.CinemaListInteractor
 import com.example.cinema_app.domain.ICinemaListInteractor
@@ -62,7 +63,6 @@ open class RetrofitModule {
 
     @Reusable
     @Provides
-    open fun provideCinemaListInteractor(cinemaService: CinemaService): ICinemaListInteractor =
-        CinemaListInteractor(cinemaService)
-
+    open fun provideCinemaListInteractor(cinemaRepository: CinemaRepository): ICinemaListInteractor =
+        CinemaListInteractor(cinemaRepository)
 }

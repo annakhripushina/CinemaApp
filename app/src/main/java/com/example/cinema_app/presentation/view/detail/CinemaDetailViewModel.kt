@@ -5,9 +5,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.cinema_app.data.ICinemaRepository
 import com.example.cinema_app.data.entity.Cinema
 import com.example.cinema_app.data.entity.LikedCinema
-import com.example.cinema_app.data.room.CinemaDao
 import com.example.cinema_app.domain.ICinemaListInteractor
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -16,7 +16,7 @@ import javax.inject.Inject
 class CinemaDetailViewModel
 @Inject constructor(
     private val cinemaInteractor: ICinemaListInteractor,
-    private val cinemaDao: CinemaDao
+    private val cinemaRepository: ICinemaRepository
 ) : ViewModel() {
     private var mComment: String = ""
     private var mHasLiked: Boolean = false
@@ -29,11 +29,8 @@ class CinemaDetailViewModel
     val hasLiked: Boolean
         get() = mHasLiked
 
-//    @Inject
-//    lateinit var cinemaDao: CinemaDao
-
     fun onGetLikedCinema(): LiveData<List<LikedCinema>> {
-        cinemaDao.getLikedCinema()
+        cinemaRepository.getLikedCinema()
             .subscribe({ value -> allLikedCinema.postValue(value) },
                 { error ->
                     allLikedCinema.postValue(listOf())
@@ -44,9 +41,9 @@ class CinemaDetailViewModel
     fun onSetLikeClickListener(cinemaItem: Cinema, isChecked: Boolean) =
         viewModelScope.launch(Dispatchers.IO) {
             if (isChecked)
-                cinemaDao.insertLikedCinema(LikedCinema(cinemaItem.originalId))
+                cinemaRepository.insertLikedCinema(LikedCinema(cinemaItem.originalId))
             else
-                cinemaDao.deleteLikedCinema(cinemaItem.originalId)
+                cinemaRepository.deleteLikedCinema(cinemaItem.originalId)
         }
 
     fun onSetComment(input: EditText) {

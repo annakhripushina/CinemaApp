@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.cinema_app">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -15,14 +14,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Cinema_app">
-        <activity
-            android:name=".presentation.view.favourite.FavouriteActivity"
-            android:exported="false"
-            tools:ignore="Instantiatable" />
-        <activity
-            android:name=".presentation.view.detail.CinemaActivity"
-            android:exported="false"
-            tools:ignore="Instantiatable" />
+
         <activity
             android:name=".presentation.view.MainActivity"
             android:exported="true">

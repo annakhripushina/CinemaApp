@@ -1,8 +1,10 @@
 package com.example.cinema_app
 
+import android.content.Context
 import android.view.View
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
@@ -31,6 +33,7 @@ class CinemaListActivityTest {
     @Test
     fun addFavouriteCinemaTest() {
         val action = RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(10)
+        val context = ApplicationProvider.getApplicationContext<Context>()
 
         Espresso.onView(withId(R.id.recyclerView)).perform(action)
         Espresso.onView(listMatcher().atPosition(10))
@@ -38,7 +41,7 @@ class CinemaListActivityTest {
         var title = getText(Espresso.onView(listMatcher().atPositionTarget(10, R.id.titleView)))
 
         Espresso.onView(listMatcher().atPosition(10)).perform(ViewActions.longClick())
-        Espresso.onView(withText("Фильм добавлен в список избранного"))
+        Espresso.onView(withText(context.getString(R.string.favouriteAddSnackbar)))
             .check(matches(isDisplayed()))
 
         Espresso.onView(withId(R.id.nav_favourite)).perform(ViewActions.click())

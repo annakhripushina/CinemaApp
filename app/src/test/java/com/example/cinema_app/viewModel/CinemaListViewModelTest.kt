@@ -2,8 +2,8 @@ package com.example.cinema_app.viewModel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.cinema_app.CinemaItem
+import com.example.cinema_app.data.ICinemaRepository
 import com.example.cinema_app.data.entity.Cinema
-import com.example.cinema_app.data.room.CinemaDao
 import com.example.cinema_app.domain.ICinemaListInteractor
 import com.example.cinema_app.presentation.view.cinemaList.CinemaListViewModel
 import io.reactivex.rxjava3.core.Flowable
@@ -35,7 +35,7 @@ class CinemaListViewModelTest {
     private val cinema = Cinema(originalId, title, description, image, titleColor, dateViewed)
     private var results = Single.just(listOf(cinema))
     private lateinit var cinemaInteractor: ICinemaListInteractor
-    private lateinit var cinemaDAO: CinemaDao
+    private lateinit var cinemaRepository: ICinemaRepository
     private lateinit var viewModel: CinemaListViewModel
 
     private inline fun <reified T> mock(): T = mock(T::class.java)
@@ -43,30 +43,37 @@ class CinemaListViewModelTest {
     @Before
     fun init() {
         cinemaInteractor = mock()
-        cinemaDAO = mock()
+        cinemaRepository = mock()
         cinema.id = 1
 
-        `when`(cinemaDAO.getAll()).thenReturn(Flowable.just(listOf(cinema)))
-        `when`(cinemaDAO.searchCinema(CinemaItem.title)).thenReturn(Flowable.just(listOf(cinema)))
+        `when`(cinemaRepository.getAllCinema()).thenReturn(Flowable.just(listOf(cinema)))
+        `when`(cinemaRepository.searchCinema(CinemaItem.title)).thenReturn(
+            Flowable.just(
+                listOf(
+                    cinema
+                )
+            )
+        )
         `when`(cinemaInteractor.getCinema(anyInt())).thenReturn(results)
         `when`(cinemaInteractor.cinemaItem).thenReturn(cinema)
 
-        viewModel = CinemaListViewModel(cinemaInteractor, cinemaDAO)
+        viewModel = CinemaListViewModel(cinemaInteractor, cinemaRepository)
 
     }
 
     @Test
     fun onGetCinemaTest() {
         assertNotNull(viewModel.onGetAllCinema())
-        assertAll("Cinema",
-            { assertEquals(CinemaItem.originalId, viewModel.allCinema.value!![0].originalId) },
-            { assertEquals(CinemaItem.title, viewModel.allCinema.value!![0].title) },
-            { assertEquals(CinemaItem.description, viewModel.allCinema.value!![0].description) },
-            { assertEquals(CinemaItem.image, viewModel.allCinema.value!![0].image) },
-            { assertEquals(CinemaItem.titleColor, viewModel.allCinema.value!![0].titleColor) },
-            { assertEquals(CinemaItem.dateViewed, viewModel.allCinema.value!![0].dateViewed) }
-        )
-
+        viewModel.allCinema.value?.let {
+            assertAll("Cinema",
+                { assertEquals(CinemaItem.originalId, it[0].originalId) },
+                { assertEquals(CinemaItem.title, it[0].title) },
+                { assertEquals(CinemaItem.description, it[0].description) },
+                { assertEquals(CinemaItem.image, it[0].image) },
+                { assertEquals(CinemaItem.titleColor, it[0].titleColor) },
+                { assertEquals(CinemaItem.dateViewed, it[0].dateViewed) }
+            )
+        }
     }
 
     @Test

@@ -39,7 +39,7 @@ class CinemaDaoTest : RoomDB() {
     fun updateTest() {
         cinema.id = 1
         cinemaDao.insertCinema(cinema)
-        cinemaDao.updateTitleColor(0, cinema.id!!)
+        cinema.id?.let { cinemaDao.updateTitleColor(0, it) }
         val cinemaDB = LiveDataReactiveStreams.fromPublisher(cinemaDao.searchCinema(cinema.title))
             .getValueBlocking()
         assertEquals(1, cinemaDB?.size)

@@ -4,22 +4,21 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.cinema_app.data.ICinemaRepository
 import com.example.cinema_app.data.entity.Cinema
 import com.example.cinema_app.data.entity.ScheduleCinema
-import com.example.cinema_app.data.room.CinemaDao
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class ScheduleViewModel @Inject constructor() : ViewModel() {
+class ScheduleViewModel @Inject constructor(
+    private val cinemaRepository: ICinemaRepository
+) : ViewModel() {
     var allScheduleCinema = MutableLiveData<List<Cinema>>()
     var allSchedule = MutableLiveData<List<ScheduleCinema>>()
 
-    @Inject
-    lateinit var cinemaDao: CinemaDao
-
     fun onGetSchedule(): LiveData<List<ScheduleCinema>> {
-        cinemaDao.getSchedule()
+        cinemaRepository.getSchedule()
             .subscribe({ value -> allSchedule.postValue(value) },
                 { error ->
                     allSchedule.postValue(listOf())
@@ -28,7 +27,7 @@ class ScheduleViewModel @Inject constructor() : ViewModel() {
     }
 
     fun onGetScheduleCinema(): LiveData<List<Cinema>> {
-        cinemaDao.getScheduleCinema()
+        cinemaRepository.getScheduleCinema()
             .subscribe({ value -> allScheduleCinema.postValue(value) },
                 { error ->
                     allScheduleCinema.postValue(listOf())
@@ -38,15 +37,15 @@ class ScheduleViewModel @Inject constructor() : ViewModel() {
 
     fun insertScheduleCinema(cinemaItem: ScheduleCinema) =
         viewModelScope.launch(Dispatchers.IO) {
-            cinemaDao.insertScheduleCinema(cinemaItem)
+            cinemaRepository.insertScheduleCinema(cinemaItem)
         }
 
     fun deleteScheduleCinema(cinemaOriginalId: Int) = viewModelScope.launch(Dispatchers.IO) {
-        cinemaDao.deleteScheduleCinema(cinemaOriginalId)
+        cinemaRepository.deleteScheduleCinema(cinemaOriginalId)
     }
 
     fun updateDateViewed(dateViewed: String, id: Int) = viewModelScope.launch(Dispatchers.IO) {
-        cinemaDao.updateDateViewed(dateViewed, id)
+        cinemaRepository.updateDateViewed(dateViewed, id)
     }
 
 }
