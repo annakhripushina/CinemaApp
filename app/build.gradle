@@ -1,19 +1,38 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+    id 'kotlin-parcelize'
+    id 'kotlin-kapt'
+    id 'com.google.gms.google-services'
+    id 'com.google.firebase.crashlytics'
 }
 
 android {
+    signingConfigs {
+        production {
+            storeFile file('C:\\WorkFolder\\AndroidStudioProjects\\CinemaApp\\key\\keyProduction.jks')
+            storePassword 'keyProduction'
+            keyAlias 'keyProduction'
+            keyPassword 'keyProduction'
+        }
+        dev {
+        }
+        release {
+        }
+    }
     compileSdk 31
 
     defaultConfig {
         applicationId "com.example.cinema_app"
-        minSdk 21
-        targetSdk 31
+        minSdk 26
+        targetSdk 30
         versionCode 1
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField "boolean", "USE_LOG", "true"
+        manifestPlaceholders = [crashlyticsCollectionEnabled: "true"]
+        signingConfig signingConfigs.debug
     }
 
     buildTypes {
@@ -21,6 +40,16 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+
+        dev {
+            buildConfigField "boolean", "USE_LOG", "false"
+            manifestPlaceholders = [crashlyticsCollectionEnabled: "false"]
+        }
+
+        production {
+            signingConfig signingConfigs.production
+        }
+
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -29,15 +58,107 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+        }
+    }
+
+    flavorDimensions += "version"
+    productFlavors {
+        free {
+            dimension = "version"
+            applicationIdSuffix = ".free"
+            versionNameSuffix = "-free"
+        }
+        paid {
+            dimension = "version"
+            applicationIdSuffix = ".paid"
+            versionNameSuffix = "-paid"
+        }
+
+    }
+
+    lint {
+        disable("ExtraTranslation")
+    }
+
 }
 
 dependencies {
+    implementation 'androidx.core:core-ktx:1.7.0'
+    implementation 'androidx.appcompat:appcompat:1.4.1'
+    implementation 'com.google.android.material:material:1.5.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
+    implementation 'androidx.fragment:fragment-ktx:1.4.1'
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
 
-    implementation 'androidx.core:core-ktx:1.6.0'
-    implementation 'androidx.appcompat:appcompat:1.3.1'
-    implementation 'com.google.android.material:material:1.4.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.1'
-    testImplementation 'junit:junit:4.+'
+    implementation 'androidx.recyclerview:recyclerview:1.2.1'
+    implementation 'androidx.fragment:fragment-ktx:1.4.1'
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation 'com.squareup.okhttp3:okhttp-urlconnection:5.0.0-alpha.4'
+    implementation 'com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.4'
+    implementation 'com.github.bumptech.glide:glide:4.13.0'
+
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0-native-mt'
+    implementation 'androidx.room:room-runtime:2.4.1'
+    implementation 'androidx.test.ext:junit-ktx:1.1.3'
+
+    kapt 'androidx.room:room-compiler:2.4.1'
+    implementation 'androidx.room:room-ktx:2.4.1'
+
+    implementation platform('com.google.firebase:firebase-bom:29.0.3')
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+    implementation 'com.google.firebase:firebase-crashlytics-ktx'
+    implementation 'com.google.firebase:firebase-messaging-ktx:23.0.0'
+    implementation 'com.google.firebase:firebase-config-ktx:21.0.1'
+
+    implementation 'android.arch.work:work-runtime:1.0.1'
+
+    implementation 'io.reactivex.rxjava3:rxjava:3.1.3'
+    implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
+    implementation 'com.squareup.retrofit2:adapter-rxjava3:2.9.0'
+    implementation 'androidx.room:room-rxjava3:2.4.1'
+
+    implementation 'com.google.dagger:dagger:2.41'
+    implementation 'com.google.dagger:dagger-android:2.41'
+    implementation 'com.google.dagger:dagger-android-support:2.41'
+    kapt 'com.google.dagger:dagger-compiler:2.41'
+    kapt 'com.google.dagger:dagger-android-processor:2.41'
+    kaptTest 'com.google.dagger:dagger-compiler:2.41'
+
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.mockito:mockito-core:4.3.1'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+    testImplementation 'org.robolectric:robolectric:4.6'
+    testImplementation 'androidx.arch.core:core-testing:2.1.0'
+    testImplementation 'androidx.test:core:1.4.0'
+    testImplementation 'org.junit.platform:junit-platform-commons:1.8.1'
+    androidTestImplementation 'org.testng:testng:6.9.6'
+
+    androidTestImplementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.6.10"
+    androidTestImplementation 'androidx.test:core:1.4.0'
+    androidTestImplementation 'androidx.test:core-ktx:1.4.0'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    androidTestImplementation 'androidx.test.ext:junit-ktx:1.1.3'
+    androidTestImplementation 'androidx.test:runner:1.4.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.3.0'
+    testImplementation 'com.squareup.okhttp3:mockwebserver:4.9.0'
+    testImplementation 'io.mockk:mockk:1.11.0'
+
+    androidTestImplementation('com.squareup.okhttp3:mockwebserver:4.9.0') {
+        exclude group: "com.squareup.okhttp3"
+    }
+
+
+    implementation "android.arch.lifecycle:extensions:1.1.1"
+    annotationProcessor "android.arch.lifecycle:compiler:1.1.1"
+    implementation "android.arch.lifecycle:reactivestreams:1.1.1"
+
+
 }
