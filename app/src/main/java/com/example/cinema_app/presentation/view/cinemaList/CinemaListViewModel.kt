@@ -44,7 +44,8 @@ class CinemaListViewModel
 
     fun onGetAllCinema(): LiveData<List<Cinema>> {
         cinemaRepository.getAll()
-            .subscribe({ value -> mAllCinema.postValue(value) },
+            .subscribe(
+                { value -> mAllCinema.postValue(value) },
                 { error ->
                     mAllCinema.postValue(listOf())
                 })

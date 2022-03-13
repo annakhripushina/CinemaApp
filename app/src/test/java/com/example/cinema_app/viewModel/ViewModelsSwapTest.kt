@@ -58,7 +58,7 @@ class ViewModelsSwapTest : RoomDB() {
 
         instrumentationContext = InstrumentationRegistry.getInstrumentation().context
         cinemaRepository = mock()
-        `when`(cinemaRepository.getAllLikedCinema()).thenReturn(
+        `when`(cinemaRepository.getLikedCinema()).thenReturn(
             Flowable.just(
                 listOf(
                     LikedCinema(cinema.originalId)

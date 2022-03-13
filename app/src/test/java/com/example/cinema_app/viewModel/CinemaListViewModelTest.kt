@@ -46,7 +46,7 @@ class CinemaListViewModelTest {
         cinemaRepository = mock()
         cinema.id = 1
 
-        `when`(cinemaRepository.getAllCinema()).thenReturn(Flowable.just(listOf(cinema)))
+        `when`(cinemaRepository.getAll()).thenReturn(Flowable.just(listOf(cinema)))
         `when`(cinemaRepository.searchCinema(CinemaItem.title)).thenReturn(
             Flowable.just(
                 listOf(
