@@ -7,7 +7,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.cinema_app.data.ICinemaRepository
 import com.example.cinema_app.data.entity.Cinema
 import com.example.cinema_app.data.entity.ScheduleCinema
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -36,15 +35,15 @@ class ScheduleViewModel @Inject constructor(
     }
 
     fun insertScheduleCinema(cinemaItem: ScheduleCinema) =
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             cinemaRepository.insertScheduleCinema(cinemaItem)
         }
 
-    fun deleteScheduleCinema(cinemaOriginalId: Int) = viewModelScope.launch(Dispatchers.IO) {
+    fun deleteScheduleCinema(cinemaOriginalId: Int) = viewModelScope.launch {
         cinemaRepository.deleteScheduleCinema(cinemaOriginalId)
     }
 
-    fun updateDateViewed(dateViewed: String, id: Int) = viewModelScope.launch(Dispatchers.IO) {
+    fun updateDateViewed(dateViewed: String, id: Int) = viewModelScope.launch {
         cinemaRepository.updateDateViewed(dateViewed, id)
     }
 

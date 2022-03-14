@@ -47,43 +47,43 @@ class CinemaRepository @Inject constructor(
             .observeOn(AndroidSchedulers.mainThread())
     }
 
-    override fun insertCinema(cinemaItem: Cinema) {
+    override suspend fun insertCinema(cinemaItem: Cinema) {
         cinemaDao.insertCinema(cinemaItem)
     }
 
-    override fun insertFavouriteCinema(cinemaItem: FavouriteCinema) {
+    override suspend fun insertFavouriteCinema(cinemaItem: FavouriteCinema) {
         cinemaDao.insertFavouriteCinema(cinemaItem)
     }
 
-    override fun insertLikedCinema(cinemaItem: LikedCinema) {
+    override suspend fun insertLikedCinema(cinemaItem: LikedCinema) {
         cinemaDao.insertLikedCinema(cinemaItem)
     }
 
-    override fun deleteAll() {
+    override suspend fun deleteAll() {
         cinemaDao.deleteAll()
     }
 
-    override fun deleteFavouriteCinema(cinemaOriginalId: Int) {
+    override suspend fun deleteFavouriteCinema(cinemaOriginalId: Int) {
         cinemaDao.deleteFavouriteCinema(cinemaOriginalId)
     }
 
-    override fun deleteLikedCinema(cinemaOriginalId: Int) {
+    override suspend fun deleteLikedCinema(cinemaOriginalId: Int) {
         cinemaDao.deleteLikedCinema(cinemaOriginalId)
     }
 
-    override fun updateTitleColor(titleColor: Int, id: Int) {
+    override suspend fun updateTitleColor(titleColor: Int, id: Int) {
         cinemaDao.updateTitleColor(titleColor, id)
     }
 
-    override fun updateDateViewed(dateViewed: String, cinemaOriginalId: Int) {
+    override suspend fun updateDateViewed(dateViewed: String, cinemaOriginalId: Int) {
         cinemaDao.updateDateViewed(dateViewed, cinemaOriginalId)
     }
 
-    override fun insertScheduleCinema(cinemaItem: ScheduleCinema) {
+    override suspend fun insertScheduleCinema(cinemaItem: ScheduleCinema) {
         cinemaDao.insertScheduleCinema(cinemaItem)
     }
 
-    override fun deleteScheduleCinema(cinemaOriginalId: Int) {
+    override suspend fun deleteScheduleCinema(cinemaOriginalId: Int) {
         cinemaDao.deleteScheduleCinema(cinemaOriginalId)
     }
 

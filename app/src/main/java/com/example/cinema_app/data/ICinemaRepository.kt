@@ -22,25 +22,25 @@ interface ICinemaRepository {
 
     fun searchCinema(title: String): Flowable<List<Cinema>>
 
-    fun insertCinema(cinemaItem: Cinema)
+    suspend fun insertCinema(cinemaItem: Cinema)
 
-    fun insertFavouriteCinema(cinemaItem: FavouriteCinema)
+    suspend fun insertFavouriteCinema(cinemaItem: FavouriteCinema)
 
-    fun insertLikedCinema(cinemaItem: LikedCinema)
+    suspend fun insertLikedCinema(cinemaItem: LikedCinema)
 
-    fun deleteAll()
+    suspend fun deleteAll()
 
-    fun deleteFavouriteCinema(cinemaOriginalId: Int)
+    suspend fun deleteFavouriteCinema(cinemaOriginalId: Int)
 
-    fun deleteLikedCinema(cinemaOriginalId: Int)
+    suspend fun deleteLikedCinema(cinemaOriginalId: Int)
 
-    fun updateTitleColor(titleColor: Int, id: Int)
+    suspend fun updateTitleColor(titleColor: Int, id: Int)
 
-    fun updateDateViewed(dateViewed: String, cinemaOriginalId: Int)
+    suspend fun updateDateViewed(dateViewed: String, cinemaOriginalId: Int)
 
-    fun insertScheduleCinema(cinemaItem: ScheduleCinema)
+    suspend fun insertScheduleCinema(cinemaItem: ScheduleCinema)
 
-    fun deleteScheduleCinema(cinemaOriginalId: Int)
+    suspend fun deleteScheduleCinema(cinemaOriginalId: Int)
 
     fun getLatestCinema(): Single<CinemaModel>
 

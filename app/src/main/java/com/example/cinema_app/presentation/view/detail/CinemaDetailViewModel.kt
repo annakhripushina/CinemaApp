@@ -9,7 +9,6 @@ import com.example.cinema_app.data.ICinemaRepository
 import com.example.cinema_app.data.entity.Cinema
 import com.example.cinema_app.data.entity.LikedCinema
 import com.example.cinema_app.domain.ICinemaListInteractor
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -39,7 +38,7 @@ class CinemaDetailViewModel
     }
 
     fun onSetLikeClickListener(cinemaItem: Cinema, isChecked: Boolean) =
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             if (isChecked)
                 cinemaRepository.insertLikedCinema(LikedCinema(cinemaItem.originalId))
             else

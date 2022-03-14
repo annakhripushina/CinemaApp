@@ -13,28 +13,28 @@ import io.reactivex.rxjava3.core.Flowable
 @Dao
 interface CinemaDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertCinema(cinema: Cinema?)
+    suspend fun insertCinema(cinema: Cinema?)
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insertFavouriteCinema(favouriteCinema: FavouriteCinema?)
+    suspend fun insertFavouriteCinema(favouriteCinema: FavouriteCinema?)
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insertLikedCinema(likedCinema: LikedCinema?)
+    suspend fun insertLikedCinema(likedCinema: LikedCinema?)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertScheduleCinema(ScheduleCinema: ScheduleCinema?)
+    suspend fun insertScheduleCinema(ScheduleCinema: ScheduleCinema?)
 
     @Query("DELETE FROM cinemaTable")
-    fun deleteAll()
+    suspend fun deleteAll()
 
     @Query("DELETE FROM likedTable WHERE originalId == :cinemaOriginalId")
-    fun deleteLikedCinema(cinemaOriginalId: Int)
+    suspend fun deleteLikedCinema(cinemaOriginalId: Int)
 
     @Query("DELETE FROM favouriteTable WHERE originalId == :cinemaOriginalId")
-    fun deleteFavouriteCinema(cinemaOriginalId: Int)
+    suspend fun deleteFavouriteCinema(cinemaOriginalId: Int)
 
     @Query("DELETE FROM scheduleTable WHERE originalId = :id")
-    fun deleteScheduleCinema(id: Int)
+    suspend fun deleteScheduleCinema(id: Int)
 
     @Query("SELECT * FROM cinemaTable")
     fun getAll(): Flowable<List<Cinema>>
@@ -55,9 +55,9 @@ interface CinemaDao {
     fun searchCinema(title: String): Flowable<List<Cinema>>
 
     @Query("UPDATE cinemaTable SET titleColor = :titleColor WHERE id = :id")
-    fun updateTitleColor(titleColor: Int, id: Int)
+    suspend fun updateTitleColor(titleColor: Int, id: Int)
 
     @Query("UPDATE cinemaTable SET dateViewed = :dateViewed WHERE originalId = :originalId")
-    fun updateDateViewed(dateViewed: String, originalId: Int)
+    suspend fun updateDateViewed(dateViewed: String, originalId: Int)
 
 }

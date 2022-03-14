@@ -8,7 +8,6 @@ import com.example.cinema_app.data.ICinemaRepository
 import com.example.cinema_app.data.entity.Cinema
 import com.example.cinema_app.data.entity.FavouriteCinema
 import com.example.cinema_app.domain.ICinemaListInteractor
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -36,16 +35,16 @@ class FavouriteViewModel
     }
 
     fun onAddFavouriteCinema(cinemaItem: Cinema) =
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             cinemaRepository.insertFavouriteCinema(FavouriteCinema(cinemaItem.originalId))
         }
 
     fun onRemoveFavouriteCinema(cinemaItem: Cinema) =
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             cinemaRepository.deleteFavouriteCinema(cinemaItem.originalId)
         }
 
-    fun updateTitleColor(titleColor: Int, id: Int) = viewModelScope.launch(Dispatchers.IO) {
+    fun updateTitleColor(titleColor: Int, id: Int) = viewModelScope.launch {
         cinemaRepository.updateTitleColor(titleColor, id)
     }
 

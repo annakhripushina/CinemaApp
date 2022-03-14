@@ -11,7 +11,6 @@ import com.example.cinema_app.domain.ICinemaListInteractor
 import com.example.cinema_app.utils.SingleLiveEvent
 import io.reactivex.rxjava3.core.SingleObserver
 import io.reactivex.rxjava3.disposables.Disposable
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -63,7 +62,7 @@ class CinemaListViewModel
                 override fun onSubscribe(d: Disposable) {}
 
                 override fun onSuccess(list: List<Cinema>) {
-                    viewModelScope.launch(Dispatchers.IO) {
+                    viewModelScope.launch {
                         if (page == 1) cinemaRepository.deleteAll()
 
                         list?.forEach {
@@ -87,16 +86,16 @@ class CinemaListViewModel
     }
 
     fun onAddFavouriteCinema(cinemaItem: Cinema) =
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             cinemaRepository.insertFavouriteCinema(FavouriteCinema(cinemaItem.originalId))
         }
 
     fun onRemoveFavouriteCinema(cinemaItem: Cinema) =
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             cinemaRepository.deleteFavouriteCinema(cinemaItem.originalId)
         }
 
-    fun updateTitleColor(titleColor: Int, id: Int) = viewModelScope.launch(Dispatchers.IO) {
+    fun updateTitleColor(titleColor: Int, id: Int) = viewModelScope.launch {
         cinemaRepository.updateTitleColor(titleColor, id)
     }
 
