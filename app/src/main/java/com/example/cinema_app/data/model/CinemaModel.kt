@@ -23,7 +23,7 @@ data class CinemaModel(
 
 internal fun CinemaModel.toDomainModel() = Cinema(
     originalId = this.id,
-    title = this.originalTitle,
+    title = this.title,
     description = this.overview,
     image = "https://image.tmdb.org/t/p/w500/" + this.posterPath,
     titleColor = Color.BLACK,

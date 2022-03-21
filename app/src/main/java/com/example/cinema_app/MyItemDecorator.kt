@@ -15,7 +15,7 @@ class MyItemDecorator : ItemDecoration() {
         parent: RecyclerView,
         state: RecyclerView.State
     ) {
-        outRect.set(20, 20, 20, 20)
+        outRect.set(10, 10, 10, 10)
     }
 
     override fun onDraw(c: Canvas, parent: RecyclerView) {

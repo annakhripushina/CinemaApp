@@ -11,7 +11,8 @@ interface CinemaService {
     @GET("movie/{category}")
     fun getCinemaPage(
         @Path("category") category: String,
-        @Query("page") page: Int
+        @Query("page") page: Int,
+        @Query("language") language: String = "ru-RUS"
     ): Single<CinemaListModel>
 
     @GET("movie/latest")

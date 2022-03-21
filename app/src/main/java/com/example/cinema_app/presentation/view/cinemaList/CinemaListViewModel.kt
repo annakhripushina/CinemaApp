@@ -41,6 +41,10 @@ class CinemaListViewModel
     val comment: String
         get() = mComment
 
+//    init {
+//        onGetCinemaList()
+//    }
+
     fun onGetAllCinema(): LiveData<List<Cinema>> {
         cinemaRepository.getAll()
             .subscribe(
